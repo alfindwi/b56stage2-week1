@@ -1,3 +1,5 @@
+import { SearchResult } from "../../../types/user"
+
 export interface RegisterFormProps{
     fullname: string,
     email: string,
@@ -16,4 +18,9 @@ export interface ForgotFormProps{
 export interface ResetPassFormProps{
     newpassword: string,
     confirmpassword: string
+}
+
+export interface SearchState {
+    query: string
+    results: SearchResult[]
 }

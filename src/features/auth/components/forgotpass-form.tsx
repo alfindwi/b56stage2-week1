@@ -1,6 +1,7 @@
 import { useLoginForm } from "../hooks/use-login-form"
-import { Box, Button, Text, Input } from "@chakra-ui/react"
 import "../styles/styles.css"
+import { Box, Button, Link as ChakraLink, Input, Text } from "@chakra-ui/react"
+import { Link as ReactRouterLink } from "react-router-dom"
 
 
 
@@ -17,7 +18,11 @@ export function ForgotForm(){
         <Button onClick={handleSubmit} _hover={{backgroundColor: "brand.green-disabled"}}
         backgroundColor="#04A51E" color="white" border="none" borderRadius="20px" padding="10px">Send Instruction</Button>
         </Box>
-        <Text color="white" fontFamily={"Plus Jakarta Sans"} fontSize="12px" marginTop={"10px"}>Already have account? <Text as="a" href="" color={"brand.green"} fontSize="12px" fontFamily={"Plus Jakarta Sans"} fontWeight={"bold"} >Login</Text></Text>
+        <Text color="white" fontFamily={"Plus Jakarta Sans"} fontSize="12px" marginTop={"10px"}>Already have account?
+            <ChakraLink as={ReactRouterLink} to="/login" _hover={{textDecoration: "none", color: "none"}}  color={"brand.green"} fontSize="12px" fontFamily={"Plus Jakarta Sans"} fontWeight={"bold"} marginLeft="5px">
+                Login
+            </ChakraLink>
+        </Text>
     </Box>
     )
 }

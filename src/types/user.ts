@@ -1,8 +1,7 @@
 
 export interface User {
     id: number;
-    name: string;
-    username: string;
+    fullname: string;
     email: string;
   }
   
@@ -12,4 +11,11 @@ export interface User {
     title: string;
     body: string;
   }
+
+  export interface SearchResult {
+    name: string
+    username: string
+    bio:string
+    avatar:string
+}
   

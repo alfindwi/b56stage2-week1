@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { LoginFormProps } from "../features/auth/types"
+import { LoginFormProps } from "../types"
 
 
 export function useLoginForm() {

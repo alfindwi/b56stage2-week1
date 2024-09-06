@@ -2,14 +2,17 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import { ChakraProvider, extendTheme, ThemeOverride } from '@chakra-ui/react'
+import { Provider } from 'react-redux'
+import { store } from './store/store.ts'
 
 const themeConfig : ThemeOverride = {
   colors: {
     brand:{
       green:"#04A51E",
-      backgroundColor:"#1D1D1D",
+      bg:"#1D1D1D",
       "green-disabled":"#005E0E",
-      "text-input" : "#B2B2B2"
+      "text-input" : "#B2B2B2",
+      "profile": "#262626"
     }
   },
   fontSizes:{
@@ -24,15 +27,28 @@ const themeConfig : ThemeOverride = {
   fontStyle:{
     heading: `'Plus Jakarta Sans', sans-serif`,
     body: `'Plus Jakarta Sans', sans-serif`,
-  }
+  },
+  borderRadius : {
+      none: '0',
+      sm: '0.125rem',
+      base: '0.25rem',
+      md: '0.375rem',
+      lg: '0.5rem',
+      xl: '0.75rem',
+      '2xl': '1rem',
+      '3xl': '1.5rem',
+      full: '9999px',
+    },
 }
 
 const theme = extendTheme (themeConfig satisfies ThemeOverride)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <Provider store={store}>
     <ChakraProvider theme={theme}>   
     <App />
     </ChakraProvider>
+    </Provider>
   </StrictMode>,
 )

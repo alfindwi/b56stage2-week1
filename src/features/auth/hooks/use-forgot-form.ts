@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ForgotFormProps } from "../features/auth/types"
+import { ForgotFormProps } from "../types"
 
 
 export function useForgotForm() {

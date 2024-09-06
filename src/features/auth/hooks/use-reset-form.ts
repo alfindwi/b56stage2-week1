@@ -1,10 +1,11 @@
 import { useState } from "react"
-import { ForgotFormProps } from "../features/auth/types"
+import { ResetPassFormProps } from "../types"
 
 
 export function useResetForm() {
-    const [form, setForm] = useState<ForgotFormProps>({
-        email: "",
+    const [form, setForm] = useState<ResetPassFormProps>({
+        newpassword: "",
+        confirmpassword: ""
     })
     
     function handleChange(e: React.ChangeEvent<HTMLInputElement>){
