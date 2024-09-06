@@ -12,7 +12,6 @@ export function Home() {
             height="auto"
             bg="brand.bg"
             color="white"
-            border="1px solid #545454"
             marginLeft="325px" 
             marginRight="430px"
         >

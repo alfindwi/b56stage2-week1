@@ -10,7 +10,6 @@ function App() {
     const id = Number(localStorage.getItem("id") as string);
     const email = localStorage.getItem("email") as string ;
     const fullname = localStorage.getItem("fullname") as string ;
-
     dispatch(setUser({
       id,
       email,
@@ -24,8 +23,6 @@ function App() {
 
   
   return (
-
-
     <AppRoute/>
   )
 }
