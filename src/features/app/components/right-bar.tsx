@@ -2,30 +2,39 @@ import { Avatar, Box, Button, Flex, Heading, Icon, Image, Text } from "@chakra-u
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import "../styles/styles.css";
 
-export function RightBar() {
+interface RigthBarProps {
+    isProfileVisible: boolean;
+    onEditProfileClick: () => void;
+}
+
+export function RightBar({ isProfileVisible, onEditProfileClick }: RigthBarProps) {
+   
     return (
         <Flex 
             direction="column"
             width="410px"
             height="100vh"
             bg="brand.bg"
-            padding="2px 50px 10px 40px"
+            padding="10px 50px 10px 40px"
             color="white"
             border="1px solid #545454"
             position="fixed"
             right={"0"}
             top={"0"}            
         >
-            <ProfileRight/>
-            <SuggestForYou/>
+            <ProfileRight isProfileVisible={isProfileVisible} onEditProfileClick={onEditProfileClick} />
+            <SuggestForYou />
             <DevelopedBy/>
         </Flex>
     )
 }
 
-export function ProfileRight() {
+export function ProfileRight({isProfileVisible, onEditProfileClick}: RigthBarProps) {
+    if (isProfileVisible) {
+        return null;
+    }
     return (
-        <Box  mr={"10px"} backgroundColor={"brand.profile"} height={"235px"} width={"340px"} position={"relative"} padding={"5px 0px 12px 0px"} borderRadius={"md"} >
+        <Box mr={"10px"} backgroundColor={"brand.profile"} height={"235px"} width={"340px"} position={"relative"} padding={"5px 0px 12px 0px"} borderRadius={"md"} >
                 <Box display="flex"
                 flexDirection="column"
                 alignItems="flex-start">
@@ -53,21 +62,25 @@ export function ProfileRight() {
                 margin={"0px 30px"} 
                 src='/src/styles/profile.png' 
                 name='Dan Abrahmov' />
+                {!isProfileVisible && (
                 <Button 
-                left={"73%"}
-                top={"10px"} 
-                size={"sm"}
-                border={"1px solid white"} 
-                bg={"transparent"} 
-                color={"white"} 
-                fontFamily={"Plus Jakarta Sans"} 
-                fontWeight={"500"} 
-                _hover={{color: "none"}} 
-                _active={{color: "none"}}
-                borderRadius={"50px"} 
-                fontSize={"10px"}
-                >Edit Profile
+                    left={"73%"}
+                    top={"10px"} 
+                    size={"sm"}
+                    border={"1px solid white"} 
+                    bg={"transparent"} 
+                    color={"white"} 
+                    fontFamily={"Plus Jakarta Sans"} 
+                    fontWeight={"500"} 
+                    _hover={{color: "none"}} 
+                    _active={{color: "none"}}
+                    borderRadius={"50px"} 
+                    fontSize={"10px"}
+                    onClick={onEditProfileClick}
+                >
+                    Edit Profile
                 </Button>
+            )}  
                    <Box margin={"10px 10px"}>
                    <Text fontFamily={"Plus Jakarta Sans"} fontSize={"18px"} fontWeight={"700"}>✨ Stella Audhina ✨</Text>
                     <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@audhinafh</Text>
@@ -242,7 +255,6 @@ export function SuggestForYou() {
     )
 }
 
-
 export function DevelopedBy() {
     return (
         <Box mt={"13px"} backgroundColor={"brand.profile"} height={"75px"} width={"340px"} position={"relative"} padding={"6px 0px 12px 0px"} borderRadius={"md"}>
@@ -267,4 +279,6 @@ export function DevelopedBy() {
         </Box>
     );
 }
+
+
 

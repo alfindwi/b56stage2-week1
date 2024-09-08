@@ -18,8 +18,6 @@ export interface SearchResult {
   avatar:string
 }
 
-
-
 export interface Follows{
   name: string
   username: string
@@ -31,4 +29,15 @@ export interface Follows{
 export interface FollowsContentProps {
   activeTab: "followers" | "following";
   setActiveTab: (tab: "followers" | "following") => void;
+}
+
+export interface ProfileContent {
+  name: string
+  username: string
+  content:string
+  avatar:string
+  image: string
+  post_date: string
+  likeCount: number
+  commentCount: number
 }
