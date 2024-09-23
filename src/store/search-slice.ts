@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SearchResult } from "../types/user";
+import { SearchResult } from "../entities/user";
 
 interface SearchState {
     query: string

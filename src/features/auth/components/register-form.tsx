@@ -1,41 +1,13 @@
 import { Box, Button, Link as ChakraLink, Input, Spinner, Text } from "@chakra-ui/react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { useDispatch, useSelector } from "react-redux"
-import { Link as ReactRouterLink, useNavigate } from "react-router-dom"
-import { setUser } from "../../../store/auth-slice"
-import { RegisterFormInput, registerSchema } from "../schemas/register"
+import { Link as ReactRouterLink } from "react-router-dom"
 import "../styles/styles.css"
+import { useRegisterForm } from "../hooks/use-register-form"
 
 export function RegisterForm(){
-    const {
-        register, 
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<RegisterFormInput>({
-        resolver: zodResolver(registerSchema),
-    })
-
-    const navigate = useNavigate()
-
-    const users = useSelector((state: any) => state.auth)
-    const dispatch = useDispatch();
-
-    async function onSubmit(data: RegisterFormInput) {
-        localStorage.setItem("email" , data.email)
-        localStorage.setItem("fullname", data.fullName)
-        dispatch(setUser({
-            id: 1,
-            fullname: data.fullName,
-            email: data.email
-        }));
-
-    navigate("/")
-    }
-
+    const {register,handleSubmit,onSubmit,errors,isSubmitting} = useRegisterForm()
+    
     return (
         <Box margin="50px" >
-            <Text color={"white"}>{JSON.stringify(users)}</Text>
             <Text fontSize={"3xl"} color= "brand.green" fontFamily={"Plus Jakarta Sans"} fontWeight={"bold"}>circle</Text>
             <Text fontSize={"xl"} color= "white" fontFamily={"Plus Jakarta Sans"} fontWeight={"bold"} marginBottom={"10px"}>Create account Circle</Text>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -68,7 +40,7 @@ export function RegisterForm(){
                 <p style={{color: "red", margin: 0, fontFamily: "Plus Jakarta Sans"}}>{errors.email.message}</p>
             )}
             <Input
-            {...register("password")}  
+            {...register("passwordUsers")}  
             padding="10px" 
             border="1px solid #545454" 
             borderRadius="5px" 
@@ -77,8 +49,8 @@ export function RegisterForm(){
             placeholder="Password" 
             _placeholder={{color: 'brand.text-input'}} 
             color={"white"}/>
-            {errors.password && (
-                <p style={{color: "red", margin: 0, fontFamily: "Plus Jakarta Sans"}}>{errors.password.message}</p>
+            {errors.passwordUsers && (
+                <p style={{color: "red", margin: 0, fontFamily: "Plus Jakarta Sans"}}>{errors.passwordUsers.message}</p>
             )}
             <Button 
             type="submit" 

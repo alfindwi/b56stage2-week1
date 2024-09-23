@@ -5,6 +5,7 @@ import { CiHeart } from "react-icons/ci";
 import { useDispatch, useSelector, } from "react-redux";
 import { fetchContent } from "../../../store/profile-slice";
 import { AppDispatch, RootState } from "../../../store/store";
+import { useHome } from "../hooks/useHome";
 import { EditProfile } from "./edit-profile";
 
 
@@ -35,6 +36,7 @@ export function Profile(){
 }
 
 export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () => void }){
+    const user = useSelector((state: RootState) => state.auth);
     return (
         <Box ml="3px" height={"300px"} width={"530px"} position={"relative"}borderRadius={"md"} >
                 <Box display="flex"
@@ -45,7 +47,7 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
                 fontFamily={"Plus Jakarta Sans"} 
                 fontWeight={"550"} 
                 fontSize={"23px"}
-                > ✨ Stella Audhina ✨
+                > {user.fullName}
                 </Text>
                 <Image 
                 src="/src/styles/image.png" 
@@ -62,8 +64,8 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
                 zIndex={"1"} 
                 border={"2px solid black"} 
                 margin={"0px 30px"} 
-                src='/src/styles/profile.png' 
-                name='Dan Abrahmov' />
+                src={user.image}
+                name={user.fullName} />
                 <Button 
                 left={"83%"}
                 top={"10px"} 
@@ -81,8 +83,8 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
                 >Edit Profile
                 </Button>
                    <Box margin={"20px 10px"}>
-                   <Text fontFamily={"Plus Jakarta Sans"} fontSize={"18px"} fontWeight={"700"}>✨ Stella Audhina ✨</Text>
-                    <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@audhinafh</Text>
+                   <Text fontFamily={"Plus Jakarta Sans"} fontSize={"18px"} fontWeight={"700"}>{user.fullName}</Text>
+                    <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{user.fullName}</Text>
                     <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >picked over by the worms, and weird fishes</Text>
                     <Flex align={"center"} padding={"4px 0px"}>
                         <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>291</Text>
@@ -92,7 +94,7 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
                     </Flex>
                    </Box>
                 </Box>
-        </Box> 
+        </Box>
     )
 }
 
@@ -103,47 +105,49 @@ export function PostCard() {
     })
     const content = useSelector((state: RootState) => state.profile.content);
     console.log(content);
+
+    const {data} = useHome();
     
     return (
-        <Flex width="520px">
+        (data?.map ((thread) => (
+            <Flex width="520px">
         <Flex direction="column" mt="10px" ml="10px" mb="0px" width="100%">
-            {content.map((content) => (
             <Flex mt="10px" borderBottom="1px solid #545454" >
                 <Avatar
                     size='sm'
-                    src='/src/styles/profile.png'
-                    name='Indah Pra Karya'
+                    src={thread.user.image}
+                    name={thread.user.fullName}
                 />
                 <Box ml="10px" width="100%">
                     <Flex>
                         <Text fontWeight="700" fontFamily="Plus Jakarta Sans" fontSize="12px">
-                            {content.name}
+                            {thread.user.fullName}
                         </Text>
                         <Text ml="5px" mb="5px" fontFamily="Plus Jakarta Sans" fontSize="12px" color="gray.500">
-                            {content.username} <Text as="span" color="gray.500" ml="1px" mr="1px">•</Text> {content.post_date}
+                            {thread.user.username} <Text as="span" color="gray.500" ml="1px" mr="1px">•</Text> {new Date(thread.createdAt).toTimeString().toString().slice(0, 5)}
                         </Text>
                     </Flex>
                     <Text fontSize="12px" fontFamily="Plus Jakarta Sans" fontWeight="400" color="white">
-                        {content.content}
+                        {thread.content}
                     </Text>
-                    {content.image && content.image !== "" && (
-                        <Img mt="10px" src={content.image} width="320px" height="400px" />
+                    {thread.image && thread.image !== "" && (
+                        <Img mt="10px" src={thread.image} width={"400px"} height={"300px"}  />
                     )}
                     <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                             <Icon as={CiHeart} mr="5px" />
-                            {content.likeCount}
+                            {thread.likesCount}
                         </Flex>
                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                             <Icon as={BiMessageSquareDetail} mr="5px" />
-                            {content.commentCount} Replies
+                            {thread.repliesCount} Replies
                         </Flex>
                     </Flex>
                 </Box>
             </Flex>
-            ))}
         </Flex>
-    </Flex>
+        </Flex>
+        )))
     );
 }
 

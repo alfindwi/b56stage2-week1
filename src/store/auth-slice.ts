@@ -1,26 +1,44 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../types/user";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { UserStoreDTO } from "../features/auth/types/dto/dto";
+import { apiV1 } from "../libs/api";
 
-const initialState : User = {} as User
+const initialState: UserStoreDTO = {} as UserStoreDTO;
+
+export const fetchDummyUsers = createAsyncThunk(
+  "users/fetchDummyUsers",
+  async () => {
+    const response = await apiV1.get("/users");
+    return response.data;
+  }
+);
 
 const authSlice = createSlice({
-    name : "auth",
-    initialState,
-    reducers : {
-        setUser(state, action : PayloadAction<User>){
-            return {
-                ...state,
-                id: action.payload.id,
-                fullname: action.payload.fullname,
-                email: action.payload.email,
-            }
-        },
-        removeUser(){
-            return {} as User;
-        },
-    }
-})
+  name: "auth",
+  initialState,
+  reducers: {
+    setUser(state, action: PayloadAction<UserStoreDTO>) {
+      return {
+        ...state,
+        id: action.payload.id,
+        fullName: action.payload.fullName,
+        email: action.payload.email,
+        role: action.payload.role,
+      };
+    },
+    removeUser() {
+      return {} as UserStoreDTO;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchDummyUsers.fulfilled, (state, action) => {
+      return {
+        ...state,
+        test: action.payload,
+      };
+    });
+  },
+});
 
-export const {setUser, removeUser} = authSlice.actions;
+export const { setUser, removeUser } = authSlice.actions;
 
-export default authSlice.reducer
+export default authSlice.reducer;

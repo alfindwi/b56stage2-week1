@@ -5,16 +5,16 @@
 
     export function LoginForm(){
 
-        const { handleChange, handleSubmit } = useLoginForm()
+        const {register, onSubmit, handleSubmit, errors } = useLoginForm()
 
         return (
+            <form onSubmit={handleSubmit(onSubmit)}>
             <Box m={50}>
                 <Text fontSize={"3xl"} color= "brand.green" fontFamily={"Plus Jakarta Sans"} fontWeight={"bold"}>circle</Text>
                 <Text fontSize={"xl"} color= "white" fontFamily={"Plus Jakarta Sans"} fontWeight={"bold"} marginBottom={"10px"}>Login to Circle</Text>
                 <Box display="flex" flexDirection="column" gap="10px" width="300px">
                 <Input 
-                name="email" 
-                onChange={handleChange} 
+                {...register("email")} 
                 size={"md"} 
                 border="1px solid #545454" 
                 borderRadius="5px" 
@@ -22,9 +22,11 @@
                 type="email" 
                 placeholder="Email/Username" 
                 _placeholder={{color: 'brand.text-input'}} color={"white"}/>
+                {errors.email && (
+                <p style={{color: "red", margin: 0, fontFamily: "Plus Jakarta Sans"}}>{errors.email.message}</p>
+                )}
                 <Input 
-                name="password" 
-                onChange={handleChange} 
+                {...register("passwordUsers")} 
                 size={"md"} 
                 border="1px solid #545454" 
                 borderRadius="5px" 
@@ -32,6 +34,9 @@
                 type="password" 
                 placeholder="Password" 
                 _placeholder={{color: 'brand.text-input'}} color={"white"}/>
+                {errors.passwordUsers && (
+                <p style={{color: "red", margin: 0, fontFamily: "Plus Jakarta Sans"}}>{errors.passwordUsers.message}</p>
+                )}
                 <ChakraLink as={ReactRouterLink} to="/forgotpassword"
                 _hover={{textDecoration: "none", color: "none"}} 
                 display= "flex" 
@@ -41,7 +46,7 @@
                 color="white">
                     Forgot your password?
                 </ChakraLink>
-                <Button as={ReactRouterLink} to="/" onClick={handleSubmit} _hover={{backgroundColor: "brand.green-disabled"}}
+                <Button type="submit" _hover={{backgroundColor: "brand.green-disabled"}}
                 backgroundColor="#04A51E" color="white" border="none" borderRadius="20px" padding="5px" >Login</Button>
                 </Box>
                 <Text color="white" fontFamily={"Plus Jakarta Sans"} fontSize="12px" marginTop={"10px"}>Don't have an account yet? 
@@ -49,6 +54,8 @@
                         Create account
                     </ChakraLink>
                 </Text>
-            </Box>
+            </Box>            
+            </form>
+            
         )
     }

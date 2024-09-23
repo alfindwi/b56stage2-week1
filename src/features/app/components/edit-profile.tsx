@@ -1,4 +1,4 @@
-import { Box, Text, Input, Textarea, Button, Avatar, Image, Icon, Flex } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, Icon, Image, Input, Text, Textarea } from "@chakra-ui/react";
 import { GrGallery } from "react-icons/gr";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
@@ -7,6 +7,7 @@ interface EditProfileProps {
 }
 
 export function EditProfile({ onClose }: EditProfileProps) {
+    
     return (
         <Box 
             ml="16px" 

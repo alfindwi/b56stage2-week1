@@ -2,13 +2,14 @@ import { Avatar, Box, Button, Flex, Icon, Img, Input, Text } from "@chakra-ui/re
 import { useEffect, useState } from "react";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { CiHeart } from "react-icons/ci";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { GrGallery } from "react-icons/gr";
 import { IoIosArrowRoundBack, IoIosCloseCircle } from "react-icons/io";
+import { useHome } from "../hooks/useHome";
+
 
 export function Home() {
     const [isWhatHappenVisible, setIsWhatHappenVisible] = useState(true);
-
     useEffect(() => {
         setIsWhatHappenVisible(true);
     }, []);
@@ -34,41 +35,59 @@ export function Home() {
 function WhatHappen() {
     const [show, setShow] = useState(false);
     const [currentView, setCurrentView] = useState<'whatHappen' | 'postCard'>('whatHappen');
-
     const toggleImage = () => setShow(!show);
     const goToPostCard = () => setCurrentView('postCard');
     const goToWhatHappen = () => setCurrentView('whatHappen');
+
+    const {register, handleSubmit, errors, isSubmitting, onSubmit, data} = useHome();
 
     return (
         <>
             {currentView === 'whatHappen' && (
                 <>
                     <Text color={"white"} padding={"20px 20px 8px 20px"} fontSize={"xl"} fontFamily={"Plus Jakarta Sans"} fontWeight={"bold"}>Home</Text>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                     <Flex padding="5px 20px 5px 20px" align="center">
-                        <Avatar
-                            size="sm"
-                            src="/src/styles/cewe.png" 
-                            name="Mohammed Jawahir"
-                        />
-                        <Input
-                            ml="10px"
-                            name="text" 
-                            size={"sm"} 
-                            border="none"
-                            _focus={{border: "none", boxShadow: "none"}}
-                            borderRadius="5px" 
-                            backgroundColor="#1D1D1D" 
-                            type="text" 
-                            placeholder="What is happening?!" 
-                            _placeholder={{color: 'brand.text-input'}} color={"white"}
-                        />
-                        <Button size={"md"} bg={"none"} _hover={{bg: "none"}} onClick={toggleImage}>
-                            <Icon as={GrGallery} color="brand.green" _hover={{bg: "none"}}></Icon>
+                        <Avatar size="sm" src="/src/styles/cewe.png" name="Mohammed Jawahir" />
+                        <Box ml="10px" width="100%">
+                            <Input
+                                size={"sm"}
+                                border="none"
+                                _focus={{ border: "none", boxShadow: "none" }}
+                                borderRadius="5px"
+                                backgroundColor="#1D1D1D"
+                                type="text"
+                                placeholder="What is happening?!"
+                                _placeholder={{ color: 'brand.text-input' }}
+                                color={"white"}
+                                {...register("content")}
+                            />
+                            {errors.content && (
+                                <p style={{ color: "red", margin: 0, fontFamily: "Plus Jakarta Sans" }}>
+                                    {errors.content.message}
+                                </p>
+                            )}
+                        </Box>
+                        <Button size={"md"} bg={"none"} _hover={{ bg: "none" }} onClick={toggleImage}>
+                            <Icon as={GrGallery} color="brand.green" _hover={{ bg: "none" }} />
                         </Button>
-                        <Button mr="7px" size={"sm"} bg={"brand.green-disabled"} fontSize={"11px"} fontWeight={"500"} color={"white"} padding={"8px 16px"} _active={{bg: "brand.green"}} borderRadius={"30px"} _hover={{bg: "brand.green"}}>
-                            Post
+                        <Button
+                            type="submit"
+                            mr="7px"
+                            size={"sm"}
+                            bg={"brand.green-disabled"}
+                            fontSize={"11px"}
+                            fontWeight={"500"}
+                            color={"white"}
+                            padding={"8px 16px"}
+                            _active={{ bg: "brand.green" }}
+                            borderRadius={"30px"}
+                            _hover={{ bg: "brand.green" }}
+                        >
+                            {isSubmitting ? "Submitting..." : "Post"}
                         </Button>
                     </Flex>
+
                     {show && (
                         <Box position="relative" ml={"75px"} mb={"20px"}>
                             <Img 
@@ -91,143 +110,45 @@ function WhatHappen() {
                             />
                         </Box>
                     )}
-                    <Flex  
-                        
-                        border="1px solid #545454"
-                        padding="12px 16px"
-                        height={"auto"}
-                        width={"545px"}
-                        onClick={goToPostCard}    
-                        cursor="pointer"
-                    >
-                        <Avatar size="sm" src='/src/styles/indah.png' name='Indah Pra Karya' />
-                        <Box ml="10px" width="100%">
-                            <Flex>
-                                <Text fontWeight="700" fontFamily="Plus Jakarta Sans" fontSize="12px">
-                                    Indah Pra Karya
-                                </Text>
-                                <Text ml="5px" mb="5px" fontFamily="Plus Jakarta Sans" fontSize="12px" color="gray.500">
-                                    @indahpra <Text as="span" color="gray.500" ml="1px" mr="1px">•</Text> 4h
-                                </Text>
-                            </Flex>
-                            <Text fontSize="12px" fontFamily="Plus Jakarta Sans" fontWeight="400" color="white">
-                                Kalian pernah ga sih bet on saving? Jadi by calculation sebenernya kita ga survive sampe tanggal tertentu. Tapi entah gimana bisa aja gitu. Ada aja jalannya augmented reality real time puppet I made. You can try it now went below in the thread.
-                            </Text>
-                            <Text fontSize="11px" mt="5px" fontFamily="Plus Jakarta Sans" fontWeight="400" color="gray.500">
-                                11:32 PM <Text as="span" color="gray.500" ml="2px" mr="2px">•</Text> Jul 26, 2023
-                            </Text>
-                            <Flex mt="10px" color="gray.500" fontSize="sm">
-                                <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
-                                    <Icon as={FaHeart} color="red.500" mr="5px" />
-                                    36
+                    </form>
+                    {Array.isArray(data) ? (
+                    data.map((thread) => (
+                        <Flex  
+                            border="1px solid #545454"
+                            padding="12px 16px"
+                            height={"auto"}
+                            width={"545px"}
+                            onClick={goToPostCard}    
+                            cursor="pointer"
+                        >
+                            <Avatar size="sm" src={thread.user.image} name={thread.user.fullName} />
+                            <Box ml="10px" width="100%">
+                                <Flex>
+                                    <Text fontWeight="700" fontFamily="Plus Jakarta Sans" fontSize="12px">
+                                        {thread.user.fullName}
+                                    </Text>
+                                    <Text ml="5px" mb="5px" fontFamily="Plus Jakarta Sans" fontSize="12px" color="gray.500">
+                                        @{thread.user.fullName} <Text as="span" color="gray.500" ml="1px" mr="1px">•</Text> {new Date(thread.createdAt).toTimeString().toString().slice(0, 5)}
+                                    </Text>
                                 </Flex>
-                                <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
-                                    <Icon as={BiMessageSquareDetail} mr="5px" />
-                                    381 Replies
+                                <Text fontSize="12px" fontFamily="Plus Jakarta Sans" fontWeight="400" color="white">
+                                    {thread.content}
+                                </Text>
+                                <Img mt="10px" src={thread.image} width={"400px"} height={"300px"} />
+                                <Flex mt="10px" color="gray.500" fontSize="sm">
+                                    <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
+                                        <Icon as={FaRegHeart} size={"15px"} mr="5px" />
+                                        {thread.likesCount}
+                                    </Flex>
+                                    <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
+                                        <Icon as={BiMessageSquareDetail} mr="5px" />
+                                        {thread.repliesCount} Replies
+                                    </Flex>
                                 </Flex>
-                            </Flex>
-                        </Box>
-                    </Flex>
-                    <Flex
-            border={"1px solid #545454"}
-            padding="12px 16px"
-        >
-            <Avatar
-                size='sm'
-                src='/src/styles/hijabi.png'
-                name='Indah Pra Karya'
-            />
-            <Box ml="10px" width="100%">
-                <Flex>
-                    <Text fontWeight="700" fontFamily={"Plus Jakarta Sans"} fontSize="12px">
-                    Mona
-                    </Text>
-                    <Text ml="5px" mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="12px" color="gray.500">
-                    @nmonarizqa <Text as={"span"} color="gray.500" ml={"1px"} mr={"1px"}>•</Text> 17h
-                    </Text>
-                </Flex>
-                <Text fontSize="12px" fontFamily={"Plus Jakarta Sans"} fontWeight="400" color="white">
-                Pernah nggak dapet dream job terus lama-lama ngerasa lah kok tidak seperti yang diharapkan (atau simply lelah) terus fall out of love dengan job/bidang tsb?</Text>
-                <Flex mt="10px" color="gray.500" fontSize="sm">
-                    <Flex fontFamily={"Plus Jakarta Sans"} fontWeight="400" fontSize={"12px"} alignItems="center" mr="20px">
-                        <Icon as={CiHeart} mr="5px" />
-                        293
-                    </Flex>
-                    <Flex fontFamily={"Plus Jakarta Sans"} fontWeight="400" fontSize={"12px"} alignItems="center" mr="20px">
-                        <Icon as={BiMessageSquareDetail} mr="5px" />
-                        381 Replies
-                    </Flex>
-                </Flex>
-            </Box>
-        </Flex>
-        <Flex
-            border={"1px solid #545454"}
-            padding="12px 16px"
-        >
-            <Avatar
-                size='sm'
-                src='/src/styles/profile.png'
-                name='Indah Pra Karya'
-            />
-            <Box ml="10px" width="100%">
-                <Flex>
-                    <Text fontWeight="700" fontFamily={"Plus Jakarta Sans"} fontSize="12px">
-                        tuantigabelas
-                    </Text>
-                    <Text ml="5px" mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="12px" color="gray.500">
-                        @tuantigabelas <Text as={"span"} color="gray.500" ml={"1px"} mr={"1px"}>•</Text> 10h
-                    </Text>
-                </Flex>
-                <Text fontSize="12px" fontFamily={"Plus Jakarta Sans"} fontWeight="400" color="white">
-                Dibanding rekan2 media menginterview saya terkait issue yg lg ramai, ada baiknya mending interview instansi yg ngasih izin, BKSDA dll, manfaatkan moment untuk mendorong regulasi nya jadi lebih ketat.
-                Ketua mpr kita pak Bamsut juga pelihara singa, ga mau push berita ini aja?
-                </Text>
-                <Flex mt="10px" color="gray.500" fontSize="sm">
-                    <Flex fontFamily={"Plus Jakarta Sans"} fontWeight="400" fontSize={"12px"} alignItems="center" mr="20px">
-                        <Icon as={CiHeart} mr="5px" />
-                        293
-                    </Flex>
-                    <Flex fontFamily={"Plus Jakarta Sans"} fontWeight="400" fontSize={"12px"} alignItems="center" mr="20px">
-                        <Icon as={BiMessageSquareDetail} mr="5px" />
-                        381 Replies
-                    </Flex>
-                </Flex>
-            </Box>
-        </Flex>
-        <Flex
-            border={"1px solid #545454"}
-            padding="12px 16px"
-        >
-            <Avatar
-                size='sm'
-                src='/src/styles/docter.png'
-                name='Indah Pra Karya'
-            />
-            <Box ml="10px" width="100%">
-                <Flex>
-                    <Text fontWeight="700" fontFamily={"Plus Jakarta Sans"} fontSize="12px">
-                    Compounding Quality
-                    </Text>
-                    <Text ml="5px" mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="12px" color="gray.500">
-                    @QCompounding <Text as={"span"} color="gray.500" ml={"1px"} mr={"1px"}>•</Text> Jul 25
-                    </Text>
-                </Flex>
-                <Text fontSize="12px" fontFamily={"Plus Jakarta Sans"} fontWeight="400" color="white">
-                52 Books you should know:                
-                </Text>
-                <Img mt="10px" src="/src/styles/buku.png" width={"320px"} height={"400px"} />
-                <Flex mb={"5px"} mt="10px" color="gray.500" fontSize="sm">
-                    <Flex fontFamily={"Plus Jakarta Sans"} fontWeight="400" fontSize={"12px"} alignItems="center" mr="20px">
-                        <Icon as={CiHeart} mr="5px" />
-                        889
-                    </Flex>
-                    <Flex fontFamily={"Plus Jakarta Sans"} fontWeight="400" fontSize={"12px"} alignItems="center" mr="20px">
-                        <Icon as={BiMessageSquareDetail} mr="5px" />
-                        381 Replies
-                    </Flex>
-                </Flex>
-            </Box>
-        </Flex>
+                            </Box>
+                        </Flex>
+                    ))
+                    ) : (null)}
                 </>
             )}
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ProfileContent } from "../types/user";
+import { ProfileContent } from "../entities/user";
 
 interface ContentState {
     content: ProfileContent[];

@@ -9,6 +9,7 @@ import { TbLogout2 } from "react-icons/tb";
 import { Link as ReactRouterLink } from "react-router-dom";
 import "../styles/styles.css";
 import { IoIosCloseCircle } from "react-icons/io";
+import { useHome } from "../hooks/useHome";
 
 interface LeftBarProps {
     onOpenCreatePost: () => void;
@@ -57,11 +58,16 @@ export function LeftBar({ onOpenCreatePost }: LeftBarProps) {
 export function CreatePost({ onClose }: { onClose: () => void }) {
   const [show, setShow] = useState(false);
 
+
   const toggleImage = () => setShow(!show);
   useEffect(() => {}, []);
 
+  const {register, handleSubmit, isSubmitting, onSubmit} = useHome();
+
   return (
-    <Flex
+    
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Flex
       position="fixed"
       top="50%"
       left="50%"
@@ -86,12 +92,11 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
           _hover={{ textDecoration: "none", bg: "none" }}
         />
       </Flex>
-
+      
       <Flex width="100%" align="center">
         <Avatar size="sm" src="/src/styles/cewe.png" name="Mohammed Jawahir" />
         <Input
           ml="10px"
-          name="text"
           size={"sm"}
           width="100%"
           padding={"10px"}
@@ -103,8 +108,8 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
           placeholder="What is happening?!"
           _placeholder={{ color: "brand.text-input" }}
           color={"white"}
+          {...register("content")}
         />
-        
       </Flex>
       {show && (
           <Flex justify="center" align="center" width="100%">
@@ -144,6 +149,7 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
           <Icon as={GrGallery} color="brand.green" />
         </Button>
         <Button
+         type="submit"
           size={"sm"}
           bg={"brand.green-disabled"}
           fontSize={"11px"}
@@ -154,11 +160,12 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
           borderRadius={"30px"}
           _hover={{ bg: "brand.green" }}
         >
-          Post
+          {isSubmitting ? "Submitting..." : "Post"}
         </Button>
       </Flex>
       
     </Flex>
+    </form>
   );
 }
 

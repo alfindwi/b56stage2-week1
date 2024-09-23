@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Follows } from "../types/user";
+import { Follows } from "../entities/user";
 
 interface FollowsState {
     followers: Follows[];

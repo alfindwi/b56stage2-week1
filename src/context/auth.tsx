@@ -1,5 +1,5 @@
-import React, { createContext, useReducer, useState } from "react";
-import { User } from "../types/user";
+import React, { createContext, useReducer} from "react";
+import { UserEntity } from "../entities/user";
 
 interface AuthContextType {
   state: AuthState
@@ -7,10 +7,10 @@ interface AuthContextType {
 }
 
 interface AuthState{
-  user : User
+  user : UserEntity
 }
 
-type AuthAction = {type : "SET_USER", payload: User}  | {type : "CLEAR_USER"}
+type AuthAction = {type : "SET_USER", payload: UserEntity}  | {type : "CLEAR_USER"}
 
 const initialState : AuthState = {} as AuthState
 
@@ -19,7 +19,7 @@ function authReducer(state: AuthState, action: AuthAction) {
     case "SET_USER":
       return{user: action.payload}
     case "CLEAR_USER":
-      return{user: {} as User}
+      return{user: {} as UserEntity}
     default:
       return state
   }

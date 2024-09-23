@@ -1,14 +1,13 @@
-import { useLoginForm } from "../hooks/use-login-form"
-import "../styles/styles.css"
 import { Box, Button, Link as ChakraLink, Input, Text } from "@chakra-ui/react"
 import { Link as ReactRouterLink } from "react-router-dom"
+import { useForgotForm } from "../hooks/use-forgot-form"
+import "../styles/styles.css"
 
 
 
 export function ForgotForm(){
 
-    const { handleChange, handleSubmit } = useLoginForm()
-
+    const { handleChange, handleSubmit } = useForgotForm()
     return (
     <Box margin="50px" >
         <Text fontSize={"3xl"} color= "brand.green" fontFamily={"Plus Jakarta Sans"} fontWeight={"bold"}>circle</Text>

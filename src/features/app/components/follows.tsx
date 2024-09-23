@@ -1,10 +1,9 @@
 import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
-import { fetchFollowers, fetchFollowing } from "../../../store/follows-slice";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../hooks/use-store";
 import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../hooks/use-store";
 import { RootState } from "../../../store/store";
-import { FollowsContentProps } from "../../../types/user";
+import { fetchFollowers, fetchFollowing } from "../../../store/follows-slice";
 
 
 export function Follows(){
@@ -37,7 +36,7 @@ export function Follows(){
 }
 
 
-export function FollowsContent({ activeTab, setActiveTab }: FollowsContentProps) {
+export function FollowsContent({ setActiveTab }: FollowsContentProps) {
 
     return (
         <Flex 

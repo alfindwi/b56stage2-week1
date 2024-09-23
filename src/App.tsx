@@ -1,31 +1,35 @@
-import { useEffect } from "react"
+import Cookies from "js-cookie"
+import { UserStoreDTO } from "./features/auth/types/dto/dto"
 import { useAppDispatch } from "./hooks/use-store"
+import { apiV1 } from "./libs/api"
 import { AppRoute } from "./routes"
 import { setUser } from "./store/auth-slice"
+import { useEffect } from "react"
 
 function App() {
-  const dispatch = useAppDispatch()
-  
-  async function checkAuth() {
-    const id = Number(localStorage.getItem("id") as string);
-    const email = localStorage.getItem("email") as string ;
-    const fullname = localStorage.getItem("fullname") as string ;
-    dispatch(setUser({
-      id,
-      email,
-      fullname,
-    }))
+  const dispatch = useAppDispatch();
+
+  async function getCurrentUser() {
+    const response = await apiV1.get<null, { data: UserStoreDTO }>(
+      "/auth/check",
+      {
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      }
+    );
+
+    dispatch(setUser(response.data));
+
   }
 
   useEffect(() => {
-    checkAuth()
-  }, [])
+    getCurrentUser();
+  }, []);
 
-  
-  return (
-    <AppRoute/>
-  )
+  return <AppRoute />;
 }
+
 
 
 export default App
