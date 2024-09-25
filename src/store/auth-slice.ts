@@ -23,7 +23,17 @@ const authSlice = createSlice({
         fullName: action.payload.fullName,
         email: action.payload.email,
         role: action.payload.role,
+        username: action.payload.username,
+        bio: action.payload.bio,
+        image : action.payload.image
       };
+    },
+    updateUsers(state, action) {
+      const updatedUser = action.payload;
+      state.fullName = updatedUser.fullName;
+      state.email = updatedUser.email;
+      state.image = updatedUser.image;
+      state.bio = updatedUser.bio;
     },
     removeUser() {
       return {} as UserStoreDTO;
@@ -33,12 +43,12 @@ const authSlice = createSlice({
     builder.addCase(fetchDummyUsers.fulfilled, (state, action) => {
       return {
         ...state,
-        test: action.payload,
+        user: action.payload,
       };
     });
   },
 });
 
-export const { setUser, removeUser } = authSlice.actions;
+export const { setUser, removeUser, updateUsers } = authSlice.actions;
 
 export default authSlice.reducer;

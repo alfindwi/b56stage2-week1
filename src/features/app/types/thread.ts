@@ -10,5 +10,5 @@ export type Thread = {
   
   export type CreateThreadDTO = {
     content: string;
-    image: string;
+    image: FileList;
   };

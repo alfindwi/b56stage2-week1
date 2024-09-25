@@ -8,3 +8,5 @@ export type Users = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type updateUserDTO = Pick <Users, "fullName" | "username" | "bio" | "image" | "id">

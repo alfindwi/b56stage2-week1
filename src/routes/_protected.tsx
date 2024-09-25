@@ -1,9 +1,9 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { Navigate, Outlet } from "react-router-dom";
+import { UserStoreDTO } from "../features/auth/types/dto/dto";
 import { useAppDispatch, useAppSelector } from "../hooks/use-store";
 import { apiV1 } from "../libs/api";
-import { UserStoreDTO } from "../features/auth/types/dto/dto";
 import { setUser } from "../store/auth-slice";
 
 export function ProtectedRoute() {
@@ -24,11 +24,7 @@ export function ProtectedRoute() {
 
     return response.data;
   }
-
-  const queryClient = useQueryClient();
-  const query = queryClient.getQueryData(["currentUser"]);
   
-  console.log("data query", query);
   
 
   const { isLoading } = useQuery({

@@ -1,13 +1,17 @@
 import { Avatar, Box, Button, Flex, Icon, Image, Input, Text, Textarea } from "@chakra-ui/react";
 import { GrGallery } from "react-icons/gr";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import { useAppSelector } from "../../../hooks/use-store";
+import { useEditProfile } from "../hooks/useEditProfile";
 
 interface EditProfileProps {
     onClose: () => void;
 }
 
 export function EditProfile({ onClose }: EditProfileProps) {
-    
+    const { username,fullName, image, bio} = useAppSelector((state) => state.auth);
+    const {register, handleSubmit, isSubmitting, onSubmit} = useEditProfile();
+
     return (
         <Box 
             ml="16px" 
@@ -20,6 +24,7 @@ export function EditProfile({ onClose }: EditProfileProps) {
             left="25%"
             zIndex={1}
         >
+            <form onSubmit={handleSubmit(onSubmit)}>
             <Box display="flex" flexDirection="column" alignItems="flex-start">
                 <Text 
                     padding="10px 20px" 
@@ -47,8 +52,8 @@ export function EditProfile({ onClose }: EditProfileProps) {
                     zIndex="1" 
                     border="2px solid black" 
                     margin="0px 30px" 
-                    src='/src/styles/profile.png' 
-                    name='Dan Abrahmov'
+                    src={image}
+                    name={fullName}
                 />
                 <Icon as={GrGallery} ml="57px" zIndex={"12"}  size={"20px"} color={"black"} cursor={"pointer"}/>
                 <Box mt="30px" ml="30px" width="450px">
@@ -62,6 +67,8 @@ export function EditProfile({ onClose }: EditProfileProps) {
                         _hover={{border:"1px solid #B2B2B2"}}
                         _placeholder={{color: "white"}}
                         _focus={{border:"1px solid #B2B2B2", boxShadow: "none"}}
+                        defaultValue={fullName}
+                        {...register("fullName")}
                     ></Input>
                     <Input 
                         mt="10px"
@@ -74,6 +81,8 @@ export function EditProfile({ onClose }: EditProfileProps) {
                         _hover={{border:"1px solid #B2B2B2"}}
                         _placeholder={{color: "white"}}
                         _focus={{border:"1px solid #B2B2B2", boxShadow: "none"}}
+                        defaultValue={username}
+                        {...register("username")}
                     />
                     <Textarea 
                         resize="none"
@@ -87,15 +96,18 @@ export function EditProfile({ onClose }: EditProfileProps) {
                         _hover={{border:"1px solid #B2B2B2"}}
                         _placeholder={{color: "white"}}
                         _focus={{border:"1px solid #B2B2B2", boxShadow: "none"}}
+                        defaultValue={bio}
+                        {...register ("bio")}
                     />
                 </Box>
             </Box>
-
+           
             <Flex borderTop="1px solid #B2B2B2" mt="20px">
-                <Button mt="15px" borderRadius="30px" textAlign="center" _hover={{bg:"brand.green", color:"white"}} size="md" ml="430px" bg="brand.green" color="white">
-                    save
+                <Button type="submit" mt="15px" borderRadius="30px" textAlign="center" _hover={{bg:"brand.green", color:"white"}} size="md" ml="430px" bg="brand.green" color="white">
+                    {isSubmitting ? "Saving..." : "Save"}
                 </Button>
             </Flex>
+            </form>
         </Box> 
     );
 }

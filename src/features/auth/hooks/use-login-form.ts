@@ -33,7 +33,6 @@ export function useLoginForm() {
 
 
                 const {user, token} = response.data
-                console.log("token" , token)
                 
                 dispatch(setUser(user));
 

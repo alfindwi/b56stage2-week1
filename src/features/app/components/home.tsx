@@ -35,11 +35,12 @@ export function Home() {
 function WhatHappen() {
     const [show, setShow] = useState(false);
     const [currentView, setCurrentView] = useState<'whatHappen' | 'postCard'>('whatHappen');
-    const toggleImage = () => setShow(!show);
+    
+    const toggleImage = () => setShow(!show);   
     const goToPostCard = () => setCurrentView('postCard');
     const goToWhatHappen = () => setCurrentView('whatHappen');
 
-    const {register, handleSubmit, errors, isSubmitting, onSubmit, data} = useHome();
+    const {register, handleSubmit, isSubmitting, onSubmit, data} = useHome();
 
     return (
         <>
@@ -62,15 +63,17 @@ function WhatHappen() {
                                 color={"white"}
                                 {...register("content")}
                             />
-                            {errors.content && (
-                                <p style={{ color: "red", margin: 0, fontFamily: "Plus Jakarta Sans" }}>
-                                    {errors.content.message}
-                                </p>
-                            )}
                         </Box>
                         <Button size={"md"} bg={"none"} _hover={{ bg: "none" }} onClick={toggleImage}>
-                            <Icon as={GrGallery} color="brand.green" _hover={{ bg: "none" }} />
+                            <Icon as={GrGallery} color="brand.green" _hover={{ bg: "none" }} onClick={() => document.getElementById("image")?.click()} />
                         </Button>
+                        <Input
+                        id="image"
+                        type="file" display={"none"} border="none" {...register("image")} size={"md"} bg={"none"} _hover={{ bg: "none" }} 
+                        onChange={(e) => {
+                            e.target.files ? e.target.files[0] : null;
+                          }}
+                        /> 
                         <Button
                             type="submit"
                             mr="7px"
@@ -83,6 +86,7 @@ function WhatHappen() {
                             _active={{ bg: "brand.green" }}
                             borderRadius={"30px"}
                             _hover={{ bg: "brand.green" }}
+
                         >
                             {isSubmitting ? "Submitting..." : "Post"}
                         </Button>
@@ -112,8 +116,9 @@ function WhatHappen() {
                     )}
                     </form>
                     {Array.isArray(data) ? (
-                    data.map((thread) => (
+                        data.map((thread) => (
                         <Flex  
+                            key={thread.id}
                             border="1px solid #545454"
                             padding="12px 16px"
                             height={"auto"}

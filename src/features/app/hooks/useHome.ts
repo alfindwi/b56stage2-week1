@@ -1,10 +1,12 @@
+import { useToast } from '@chakra-ui/react';
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
-import { apiV1 } from "../../../libs/api";
 import { ThreadEntity } from "../../../entities/thread";
+import { apiV1 } from "../../../libs/api";
 import { CreateThreadFormInputs, createThreadSchema } from "../../auth/schemas/thread";
 import { CreateThreadDTO } from "../types/thread";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 export function useHome() {
@@ -17,7 +19,17 @@ export function useHome() {
   });
 
   async function getThreads(): Promise<ThreadEntity[]> {
-    const response = await apiV1.get<null, {data : ThreadEntity[]}>("/thread");
+    const response = await apiV1.get<null, {data : ThreadEntity[]}>(
+      "/thread",
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      }
+    }
+    
+    );
+
+
     return response.data;
   }
 
@@ -27,20 +39,40 @@ export function useHome() {
   });
 
   const queryClient = useQueryClient();
+  const toast = useToast();
+
 
   async function createThread(data: CreateThreadDTO) {
-    const response = await apiV1.post<null, { data: ThreadEntity }>(
-      "/thread",
-      data
-    );
-
-    queryClient.invalidateQueries({ queryKey: ["thread"] });
-
-    return response.data;
+    const formData = new FormData();
+    formData.append("content", data.content);
+  
+    if (data.image && data.image[0]) {
+      formData.append("image", data.image[0]); // Ensure a file is selected
+    }
+  
+    try {
+      const response = await apiV1.post<null, { data: ThreadEntity }>(
+        "/thread",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+            "Content-Type": "multipart/form-data", // Ensure this header is set
+          },
+        }
+      );
+      queryClient.invalidateQueries({ queryKey: ["thread"] });
+      return response.data;
+    } catch (error) {
+      console.error("Error saat membuat thread:", error);
+      throw error;
+    }
   }
+  
+  
 
   const { mutateAsync: createThreadAsync } = useMutation<
-    CreateThreadDTO,
+    ThreadEntity,
     Error,
     CreateThreadDTO
   >({
@@ -48,16 +80,31 @@ export function useHome() {
     mutationFn: createThread,
   });
 
+
   async function onSubmit(data: CreateThreadFormInputs) {
-    console.log("Data yang disubmit:", data); 
+    console.log("Form submitted with data:", data); // Tambahkan log untuk debug
     try {
-        await createThreadAsync(data as CreateThreadDTO);
-        alert("Thread berhasil dibuat!");
+      await createThreadAsync(data as CreateThreadDTO);
+      toast({
+        title: "Thread berhasil dibuat!",
+        description: "Thread baru Anda telah sukses ditambahkan.",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
     } catch (error) {
-        console.error("Error saat membuat thread:", error);
-        alert("Gagal membuat thread, coba lagi.");
+      console.error("Error saat membuat thread:", error);
+      toast({
+        title: "Terjadi Kesalahan",
+        description: "Gagal Membuat Thread.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
-}
+  }
+  
+  
 
 
   return {
@@ -67,6 +114,7 @@ export function useHome() {
     isSubmitting,
     onSubmit,
     data,
+    alert,
     isLoading,
   };
 }

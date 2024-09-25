@@ -1,52 +1,46 @@
 import { Avatar, Box, Button, Flex, Heading, Icon, Image, Text } from "@chakra-ui/react";
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
-import { useHome } from "../hooks/useHome";
+import { useLocation } from "react-router-dom";
+import { useAppSelector } from "../../../hooks/use-store";
 import "../styles/styles.css";
 
 interface RigthBarProps {
     isProfileVisible: boolean;
     onEditProfileClick: () => void;
-}
-
-export function RightBar({ isProfileVisible, onEditProfileClick }: RigthBarProps) {
-
-   
-    return (
-        <Flex 
-            direction="column"
-            width="410px"
-            height="100vh"
-            bg="brand.bg"
-            padding="10px 50px 10px 40px"
-            color="white"
-            border="1px solid #545454"
-            position="fixed"
-            right={"0"}
-            top={"0"}            
-        >
-            <ProfileRight isProfileVisible={isProfileVisible} onEditProfileClick={onEditProfileClick} />
-            <SuggestForYou />
-            <DevelopedBy/>
-        </Flex>
-    )
-}
-
-export function ProfileRight({isProfileVisible, onEditProfileClick}: RigthBarProps) {
-    const {data,} = useHome();
-
-    console.log("data", data );
-
-    if (!Array.isArray(data)) {
-        return <div>No users found</div>;
-    }
-
-    if (isProfileVisible) {
-        return null;
-    }
+  }
+  
+  export function RightBar({ isProfileVisible, onEditProfileClick }: RigthBarProps) {
+    const location = useLocation(); // Mendapatkan URL path saat ini
 
     return (
-        (data?.map((thread) => (
-            <Box mr={"10px"} backgroundColor={"brand.profile"} height={"235px"} width={"340px"} position={"relative"} padding={"5px 0px 12px 0px"} borderRadius={"md"} >
+      <Flex
+        direction="column"
+        width="410px"
+        height="100vh"
+        bg="brand.bg"
+        padding="10px 50px 10px 40px"
+        color="white"
+        border="1px solid #545454"
+        position="fixed"
+        right="0"
+        top="0"
+      >
+    {location.pathname !== "/profile" && (
+        <ProfileRight
+          isProfileVisible={!isProfileVisible}
+          onEditProfileClick={onEditProfileClick}
+        />
+      )}        
+        <SuggestForYou />
+        <DevelopedBy />
+      </Flex>
+    );
+  }
+
+export function ProfileRight({onEditProfileClick}: RigthBarProps) {
+    const { username,fullName, image, bio} = useAppSelector((state) => state.auth);
+    return (        
+        <Box mr={"10px"} backgroundColor={"brand.profile"} height={"235px"} width={"340px"} position={"relative"} padding={"5px 0px 12px 0px"} borderRadius={"md"} >
                 <Box display="flex"
                 flexDirection="column"
                 alignItems="flex-start">
@@ -72,9 +66,9 @@ export function ProfileRight({isProfileVisible, onEditProfileClick}: RigthBarPro
                 zIndex={"1"} 
                 border={"2px solid black"} 
                 margin={"0px 30px"} 
-                src={thread.user.image}
-                name={thread.user.fullName}/>
-                {!isProfileVisible && (
+                src={image}
+                name={fullName}/>
+                
                 <Button 
                     left={"73%"}
                     top={"10px"} 
@@ -91,12 +85,11 @@ export function ProfileRight({isProfileVisible, onEditProfileClick}: RigthBarPro
                     onClick={onEditProfileClick}
                 >
                     Edit Profile
-                </Button>
-            )}  
+                </Button>  
                    <Box margin={"10px 10px"}>
-                   <Text fontFamily={"Plus Jakarta Sans"} fontSize={"18px"} fontWeight={"700"}>{thread.user.fullName}</Text>
-                    <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{thread.user.username}</Text>
-                    <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >{thread.user.bio}</Text>
+                   <Text fontFamily={"Plus Jakarta Sans"} fontSize={"18px"} fontWeight={"700"}>{fullName}</Text>
+                    <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{username}</Text>
+                    <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >{bio}</Text>
                     <Flex align={"center"} padding={"4px 0px"}>
                         <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>291</Text>
                         <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Following</Text>
@@ -106,7 +99,6 @@ export function ProfileRight({isProfileVisible, onEditProfileClick}: RigthBarPro
                    </Box>
                 </Box>
         </Box> 
-        )))
         
     )
 }
