@@ -9,4 +9,9 @@ export type Users = {
   updatedAt: Date;
 };
 
-export type updateUserDTO = Pick <Users, "fullName" | "username" | "bio" | "image" | "id">
+export type updateUserDTO = {
+  fullName: string;
+  username: string;
+  bio?: string;
+  image?: FileList;
+}

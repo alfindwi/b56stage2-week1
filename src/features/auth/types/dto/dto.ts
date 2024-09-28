@@ -1,3 +1,4 @@
+import { ReplyEntity, ThreadEntity } from "../../../../entities/thread";
 import { UserEntity } from "../../../../entities/user";
 
 export type LoginRequestDTO = Pick<UserEntity, "email" | "passwordUsers">
@@ -12,4 +13,8 @@ export type RegisterRequestDTO = Pick<UserEntity, "fullName" | "email" | "passwo
 export type RegisterResponseDTO = LoginResponseDTO;
 
 export type UserStoreDTO  = Omit<UserEntity, "passwordUsers">
+
+export type threadStoreDTO = ThreadEntity
+
+export type replyStoreDTO = ReplyEntity
 

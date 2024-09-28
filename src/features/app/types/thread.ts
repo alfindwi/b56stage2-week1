@@ -12,3 +12,4 @@ export type Thread = {
     content: string;
     image: FileList;
   };
+

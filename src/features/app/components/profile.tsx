@@ -84,8 +84,8 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
                 </Button>
                    <Box margin={"20px 10px"}>
                    <Text fontFamily={"Plus Jakarta Sans"} fontSize={"18px"} fontWeight={"700"}>{user.fullName}</Text>
-                    <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{user.fullName}</Text>
-                    <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >picked over by the worms, and weird fishes</Text>
+                    <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{user.username}</Text>
+                    <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >{user.bio}</Text>
                     <Flex align={"center"} padding={"4px 0px"}>
                         <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>291</Text>
                         <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Following</Text>
@@ -103,11 +103,8 @@ export function PostCard() {
     useEffect(() => {
         dispatch(fetchContent());
     })
-    const content = useSelector((state: RootState) => state.profile.content);
-    console.log(content);
 
     const {data} = useHome();
-    
     return (
         (data?.map ((thread) => (
             <Flex width="520px">
@@ -150,4 +147,3 @@ export function PostCard() {
         )))
     );
 }
-

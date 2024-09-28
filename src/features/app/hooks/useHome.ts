@@ -47,7 +47,7 @@ export function useHome() {
     formData.append("content", data.content);
   
     if (data.image && data.image[0]) {
-      formData.append("image", data.image[0]); // Ensure a file is selected
+      formData.append("image", data.image[0]);
     }
   
     try {
@@ -57,7 +57,7 @@ export function useHome() {
         {
           headers: {
             Authorization: `Bearer ${Cookies.get("token")}`,
-            "Content-Type": "multipart/form-data", // Ensure this header is set
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -82,7 +82,6 @@ export function useHome() {
 
 
   async function onSubmit(data: CreateThreadFormInputs) {
-    console.log("Form submitted with data:", data); // Tambahkan log untuk debug
     try {
       await createThreadAsync(data as CreateThreadDTO);
       toast({
@@ -91,6 +90,7 @@ export function useHome() {
         status: "success",
         duration: 2000,
         isClosable: true,
+        position: "top",
       });
     } catch (error) {
       console.error("Error saat membuat thread:", error);
@@ -103,9 +103,6 @@ export function useHome() {
       });
     }
   }
-  
-  
-
 
   return {
     register,

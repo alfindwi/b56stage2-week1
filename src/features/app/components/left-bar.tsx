@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Flex, Icon, Img, Input, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, FormControl, FormLabel, Icon, Img, Input, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FaRegHeart } from "react-icons/fa";
@@ -145,9 +145,12 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
         width="100%"
         alignItems="center"
       >
-        <Button size={"md"} bg={"none"} _hover={{ bg: "none" }} onClick={toggleImage}>
-          <Icon as={GrGallery} color="brand.green" />
-        </Button>
+        <FormControl display="flex" alignItems="center">
+          <FormLabel cursor={"pointer"} size={"md"} color={"brand.green"} bg={"none"} _hover={{ bg: "none" }} onClick={toggleImage} mb="0">
+            <GrGallery/>
+          </FormLabel>
+            <Input hidden type="file" {...register("image")} />
+        </FormControl>
         <Button
          type="submit"
           size={"sm"}
@@ -160,7 +163,8 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
           borderRadius={"30px"}
           _hover={{ bg: "brand.green" }}
         >
-          {isSubmitting ? "Submitting..." : "Post"}
+          {isSubmitting ? (<Spinner size={"sm"} position="absolute" top="27%" left="27%" transform="translate(-50%, -50%)" />
+        ) : "Post"}
         </Button>
       </Flex>
       

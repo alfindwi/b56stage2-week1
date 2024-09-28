@@ -24,9 +24,8 @@ export function ProtectedRoute() {
 
     return response.data;
   }
-  
-  
 
+  
   const { isLoading } = useQuery({
     queryKey: ["currentUser"],
     queryFn: getCurrentUser,

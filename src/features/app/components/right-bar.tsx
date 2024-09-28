@@ -1,8 +1,10 @@
 import { Avatar, Box, Button, Flex, Heading, Icon, Image, Text } from "@chakra-ui/react";
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
-import { useAppSelector } from "../../../hooks/use-store";
+import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
 import "../styles/styles.css";
+import { useEffect } from "react";
+import { fetchDummyUsers } from "../../../store/auth-slice";
 
 interface RigthBarProps {
     isProfileVisible: boolean;
@@ -38,7 +40,11 @@ interface RigthBarProps {
   }
 
 export function ProfileRight({onEditProfileClick}: RigthBarProps) {
+    const dispatch = useAppDispatch();
     const { username,fullName, image, bio} = useAppSelector((state) => state.auth);
+    useEffect(() => {
+        dispatch(fetchDummyUsers());
+      }, [dispatch]);      
     return (        
         <Box mr={"10px"} backgroundColor={"brand.profile"} height={"235px"} width={"340px"} position={"relative"} padding={"5px 0px 12px 0px"} borderRadius={"md"} >
                 <Box display="flex"
@@ -285,6 +291,3 @@ export function DevelopedBy() {
         </Box>
     );
 }
-
-
-

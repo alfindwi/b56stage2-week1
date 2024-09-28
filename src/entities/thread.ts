@@ -11,3 +11,15 @@ export interface ThreadEntity {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ReplyEntity {
+  id: number;
+  content: string;
+  image: string;
+  likes: number;
+  user: UserEntity;
+  threadId: number;
+
+  createdAt: Date;
+  updatedAt: Date;
+}

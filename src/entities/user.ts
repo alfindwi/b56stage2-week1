@@ -4,7 +4,7 @@ export interface UserEntity {
   id: number;
   fullName: string;
   email: string;
-  image?: string;
+  image: string;
   bio?: string;
   passwordUsers: string;
   username: string;
