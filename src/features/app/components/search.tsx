@@ -25,13 +25,17 @@ export function Search(){
 }
 
 export function SearchContent() {
-    const dispatch: AppDispatch = useAppDispatch();
-    const searchQuery = useSelector((state: RootState) => state.search.query)
-    const searchResults  = useSelector((state: RootState) => state.search.results)
+  const dispatch: AppDispatch = useAppDispatch();
+  const searchQuery = useSelector((state: RootState) => state.search.query);
+  const searchResults = useSelector((state: RootState) => state.search.results);
 
-    const filteredResults = searchResults.filter((result) =>
-        result.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  const filteredResults = Array.isArray(searchResults) 
+  ? searchResults.filter(result => 
+      result.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  : [];
+
+
     return (
         <Flex direction="column" width="100%" height="auto" color="white" p="20px">
       <InputGroup mb="20px">
@@ -60,9 +64,9 @@ export function SearchContent() {
         {searchQuery && filteredResults.map((search) => (
           <Flex alignItems="center" justifyContent="space-between" mb="10px">
             <Flex alignItems="left">
-              <Avatar src={search.avatar} name={search.name} size="md" mr="10px" mb={"10px"} />
+              <Avatar src={search.image} name={search.fullName} size="md" mr="10px" mb={"10px"} />
               <Box>
-                <Text fontSize="md" fontWeight="bold">{search.name}</Text>
+                <Text fontSize="md" fontWeight="bold">{search.fullName}</Text>
                 <Text fontSize="xs" color="gray.400">{search.username}</Text>
                 <Text fontSize="9px" color="gray.500">{search.bio}</Text>
               </Box>

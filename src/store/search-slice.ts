@@ -1,63 +1,57 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SearchResult } from "../entities/user";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SearchResultEntity } from "../entities/user";
+import { apiV1 } from "../libs/api";
 
 interface SearchState {
     query: string
-    results: SearchResult[]
+    results: SearchResultEntity[]
 }
+
+export const fetchDummyUsers = createAsyncThunk(
+  "users/fetchDummyUsers",
+  async () => {
+    const response = await apiV1.get("/users");
+    console.log("ini response data",response.data)
+    return response.data; 
+  }
+);
 
 const initialState : SearchState = {
     query: "",
-    results: [
-        {
-            name: "rach",
-            username: "@fortherAch",
-            bio: "All for Jesus and the A #GoBraves",
-            avatar: "/src/styles/profile.png"
-        },
-        {
-            name: "rach",
-            username: "@Rache243",
-            bio: "catch me @ a concert or behind a bar",
-            avatar: "/src/styles/profile.png"
-        },
-        {
-            name: "rach",
-            username: "@racheltjhia",
-            bio: "𓆩︎☠︎𓆪",
-            avatar: "/src/styles/profile.png"
-        },
-        {
-            name: "Rachel Lindsay",
-            username: "@TheRachLindsay",
-            bio: "✨Media Personality ⚖️Attorney 🎙 @Higher_Learning  🎬 @ExtraTV  🎬 @mtvghosted",
-            avatar: "/src/styles/profile.png"
-        },
-        {
-            name: "Rachel Bright",
-            username: "@Rach_Bright",
-            bio: "",
-            avatar: "/src/styles/profile.png"
-        },
-        {
-            name: "Alvin Dwi",
-            username: "@alvindvvi",
-            bio: "fortis fortuna adivuat",
-            avatar: "/src/styles/cewe.png"
-        }
-    ]
+    results: [],
 }
 
 const searchSlice = createSlice({
     name: "search",
     initialState,
     reducers: {
-        setQuery: (state, action: PayloadAction<string>) => {
-            state.query = action.payload
-        },
-        resetSearch: () => initialState,
-    }
-})
-
+      setQuery: (state, action: PayloadAction<string>) => {
+        state.query = action.payload;
+      },
+      filterResults: (state) => {
+        const query = state.query.toLowerCase();
+        state.results = state.results.filter((result) =>
+          result.fullName.toLowerCase().includes(query)
+        );
+      },
+      
+      resetSearch: (state) => {
+        state.query = "";
+      },
+    },
+    extraReducers: (builder) => {
+        builder.addCase(fetchDummyUsers.fulfilled, (state, action) => {
+          console.log("Data yang diterima:", action.payload); 
+          // Ambil hanya properti yang dibutuhkan
+          state.results = action.payload.data.map((user: any) => ({
+            fullName: user.fullName,
+            username: user.username,
+            bio: user.bio,
+            image: user.image,
+          }));
+        });
+      }        
+  });
+  
 export const { setQuery, resetSearch } = searchSlice.actions;
 export default searchSlice.reducer;

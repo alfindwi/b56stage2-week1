@@ -14,3 +14,11 @@ export interface UserEntity {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface SearchResultEntity {
+  id: number;
+  fullName: string;
+  username: string;
+  image: string;
+  bio: string;
+}

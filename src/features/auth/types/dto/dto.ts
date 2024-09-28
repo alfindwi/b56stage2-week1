@@ -1,5 +1,5 @@
 import { ReplyEntity, ThreadEntity } from "../../../../entities/thread";
-import { UserEntity } from "../../../../entities/user";
+import { SearchResultEntity, UserEntity } from "../../../../entities/user";
 
 export type LoginRequestDTO = Pick<UserEntity, "email" | "passwordUsers">
 
@@ -17,4 +17,6 @@ export type UserStoreDTO  = Omit<UserEntity, "passwordUsers">
 export type threadStoreDTO = ThreadEntity
 
 export type replyStoreDTO = ReplyEntity
+
+export type searchStoreDTO = SearchResultEntity
 
