@@ -3,11 +3,13 @@ import { UserEntity } from "./user";
 export interface ThreadEntity {
   id: number;
   content: string;
-  image: string;
+  image?: string; // Jika image bersifat opsional
   likesCount: number;
   repliesCount: number;
+  userId: number;
+
   user: UserEntity;
-  
+
   createdAt: Date;
   updatedAt: Date;
 }

@@ -12,7 +12,7 @@ interface RigthBarProps {
   }
   
   export function RightBar({ isProfileVisible, onEditProfileClick }: RigthBarProps) {
-    const location = useLocation(); // Mendapatkan URL path saat ini
+    const location = useLocation();
 
     return (
       <Flex
@@ -41,7 +41,7 @@ interface RigthBarProps {
 
 export function ProfileRight({onEditProfileClick}: RigthBarProps) {
     const dispatch = useAppDispatch();
-    const { username,fullName, image, bio} = useAppSelector((state) => state.auth);
+    const { username,fullName, image, bio, followers, following} = useAppSelector((state) => state.auth);
     useEffect(() => {
         dispatch(fetchDummyUsers());
       }, [dispatch]);      
@@ -97,9 +97,9 @@ export function ProfileRight({onEditProfileClick}: RigthBarProps) {
                     <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{username}</Text>
                     <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >{bio}</Text>
                     <Flex align={"center"} padding={"4px 0px"}>
-                        <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>291</Text>
+                        <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>{followers}</Text>
                         <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Following</Text>
-                        <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} >23</Text>
+                        <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} >{following}</Text>
                         <Text ml="4px"  color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Followers</Text>
                     </Flex>
                    </Box>

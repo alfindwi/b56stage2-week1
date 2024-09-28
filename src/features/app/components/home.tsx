@@ -164,7 +164,7 @@ function WhatHappen() {
                                         {thread.user.fullName}
                                     </Text>
                                     <Text ml="5px" mb="5px" fontFamily="Plus Jakarta Sans" fontSize="12px" color="gray.500">
-                                        @{thread.user.username} <Text as="span" color="gray.500" ml="1px" mr="1px">•</Text> {new Date(thread.createdAt).toTimeString().toString().slice(0, 5)}
+                                        @{thread.user.username} <Text as="span" color="gray.500" ml="1px" mr="1px">•</Text> {new Date(thread.createdAt).toLocaleString('en-US', {hour: 'numeric', minute: 'numeric'})}
                                     </Text>
                                 </Flex>
                                 <Text fontSize="12px" fontFamily="Plus Jakarta Sans" fontWeight="400" color="white">
@@ -214,7 +214,7 @@ function WhatHappen() {
                         </Flex>
                            
 
-                           {/* Main Post Reply */}
+                           {/* User */}
                            {selectedThread && (
                             <Flex padding="12px 16px" key={selectedThread.id}>
                                <Avatar size="sm" src={selectedThread.user.image} name={selectedThread.user.fullName} />
@@ -314,6 +314,8 @@ function WhatHappen() {
                                )}
                            </Flex>
                             </form>
+
+                            {/* Main Post Reply*/}
 
                             {Array.isArray(replyData) ? (
                                 replyData.map((reply) => (

@@ -10,6 +10,8 @@ export interface UserEntity {
   username: string;
   socialConnection: socialConnection;
   role: string;
+  followers: number;
+  following : number;
 
   createdAt: Date;
   updatedAt: Date;

@@ -1,9 +1,10 @@
 import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../hooks/use-store";
+import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
 import { RootState } from "../../../store/store";
 import { fetchFollowers, fetchFollowing } from "../../../store/follows-slice";
+import { fetchDummyUsers } from "../../../store/auth-slice";
 
 
 export function Follows(){
@@ -36,8 +37,8 @@ export function Follows(){
 }
 
 
-export function FollowsContent({ setActiveTab }: FollowsContentProps) {
-
+export function FollowsContent({activeTab, setActiveTab}: {activeTab: "followers" | "following", setActiveTab: React.Dispatch<React.SetStateAction<"followers" | "following">>}) {
+    
     return (
         <Flex 
             direction="row" 
@@ -64,7 +65,11 @@ export function FollowsContent({ setActiveTab }: FollowsContentProps) {
 
 export function Followers() {
     const followers = useSelector((state: RootState) => state.follows.followers);
-
+    const dispatch = useAppDispatch();
+    const { username,fullName, image, bio} = useAppSelector((state) => state.auth);
+    useEffect(() => {
+        dispatch(fetchDummyUsers());
+      }, [dispatch]);   
     return (
       <Flex
         padding="12px 16px"

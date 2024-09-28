@@ -2,11 +2,11 @@ import { Avatar, Box, Button, Flex, Icon, Image, Img, Text } from "@chakra-ui/re
 import { useEffect, useState } from "react";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { CiHeart } from "react-icons/ci";
-import { useDispatch, useSelector, } from "react-redux";
-import { fetchContent } from "../../../store/profile-slice";
-import { AppDispatch, RootState } from "../../../store/store";
-import { useHome } from "../hooks/useHome";
+import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
+import { fetchThreadsByUserId } from "../../../store/profile-slice";
+import { RootState } from "../../../store/store";
 import { EditProfile } from "./edit-profile";
+import { useSelector } from "react-redux";
 
 
 export function Profile(){
@@ -99,17 +99,28 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
 }
 
 export function PostCard() {
-    const dispatch = useDispatch<AppDispatch>();
-    useEffect(() => {
-        dispatch(fetchContent());
-    })
+    const dispatch = useAppDispatch();
+    const threads = useAppSelector((state) => state.thread.threads);
+    const userId = useAppSelector((state) => state.auth.id);
 
-    const {data} = useHome();
+    useEffect(() => {
+        if (userId) {
+            console.log("Fetching threads for userId:", userId);
+            dispatch(fetchThreadsByUserId(userId));
+        } else {
+            console.error("userId is undefined");
+        }
+    }, [dispatch, userId]);
+
+
+
     return (
-        (data?.map ((thread) => (
-            <Flex width="520px">
+        <>
+        {Array.isArray(threads) && threads.length > 0 ? (
+            threads.map((thread) => (
+                <Flex width="520px" key={thread.id}>
         <Flex direction="column" mt="10px" ml="10px" mb="0px" width="100%">
-            <Flex mt="10px" borderBottom="1px solid #545454" >
+            <Flex mt="10px" borderBottom="1px solid #545454">
                 <Avatar
                     size='sm'
                     src={thread.user.image}
@@ -128,7 +139,7 @@ export function PostCard() {
                         {thread.content}
                     </Text>
                     {thread.image && thread.image !== "" && (
-                        <Img mt="10px" src={thread.image} width={"400px"} height={"300px"}  />
+                        <Img mt="10px" src={thread.image} width={"400px"} height={"300px"} />
                     )}
                     <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
@@ -144,6 +155,8 @@ export function PostCard() {
             </Flex>
         </Flex>
         </Flex>
-        )))
+            ))
+            ) : null}
+        </>
     );
 }
