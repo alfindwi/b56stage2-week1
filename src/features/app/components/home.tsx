@@ -8,6 +8,7 @@ import { IoIosArrowRoundBack, IoIosCloseCircle } from "react-icons/io";
 import { ThreadEntity } from "../../../entities/thread";
 import { useHome } from "../hooks/useHome";
 import { useReply } from "../hooks/useReply";
+import { useAppSelector } from "../../../hooks/use-store";
 
 
 export function Home() {
@@ -63,9 +64,16 @@ function WhatHappen() {
         setThreadId(id);
     };
 
-    const {register, handleSubmit, isSubmitting, onSubmit, data} = useHome();
+    
+
+
     const validThreadId = threadId ?? 0;
     const {register: reply, handleSubmit: replySubmit, isSubmitting: replyIsSubmitting, onSubmit: replyOnSubmit, data: replyData} = useReply(validThreadId);
+    const { register, handleSubmit, isSubmitting, onSubmit, data, addLikeAsync } = useHome();
+    const userId = useAppSelector((state) => state.auth.id);
+    const handleLike = (threadId: number) => {
+        addLikeAsync({ threadId, userId });
+    };
       return (
         <>
             {currentView === 'whatHappen' && (
@@ -172,7 +180,7 @@ function WhatHappen() {
                                 </Text>
                                 <Img mt="10px" src={thread.image} width={"400px"} height={"300px"} />
                                 <Flex mt="10px" color="gray.500" fontSize="sm">
-                                    <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
+                                    <Flex fontFamily="Plus Jakarta Sans" onClick={() => handleLike(thread.id)} fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                                         <Icon as={FaRegHeart} size={"15px"} mr="5px" />
                                         {thread.likesCount}
                                     </Flex>

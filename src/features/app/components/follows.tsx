@@ -1,23 +1,14 @@
 import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
+import { useAppDispatch } from "../../../hooks/use-store";
+import { fetchFollowing } from "../../../store/following-slice";
+import { fetchFollowers, followUser, unfollowUser } from "../../../store/follows-slice";
 import { RootState } from "../../../store/store";
-import { fetchFollowers, fetchFollowing } from "../../../store/follows-slice";
-import { fetchDummyUsers } from "../../../store/auth-slice";
 
 
 export function Follows(){
-    const dispatch = useAppDispatch();
     const [activeTab, setActiveTab] = useState<"followers" | "following">("followers");
-
-    useEffect(() => {
-      dispatch(fetchFollowers());
-    }, [dispatch]);
-
-    useEffect(() => {
-        dispatch(fetchFollowing());
-      }, [dispatch]);
 
     return (
         <Flex
@@ -64,86 +55,151 @@ export function FollowsContent({activeTab, setActiveTab}: {activeTab: "followers
 
 
 export function Followers() {
-    const followers = useSelector((state: RootState) => state.follows.followers);
-    const dispatch = useAppDispatch();
-    const { username,fullName, image, bio} = useAppSelector((state) => state.auth);
-    useEffect(() => {
-        dispatch(fetchDummyUsers());
-      }, [dispatch]);   
-    return (
-      <Flex
-        padding="12px 16px"
-        width="100%"
-        maxWidth="100%" 
-        direction={"column"}
-      >
-        {followers.map((followers) => (
-           <Flex mt={"10px"} ml="5px" width="100%">
-           <Avatar
-             size="sm"
-             src= {followers.avatar}
-             name="Indah Pra Karya"
-           />
-             <Flex ml={"10px"} direction={"column"}>
-               <Text fontWeight="700" fontFamily={"Plus Jakarta Sans"} fontSize="12px">
-                 {followers.name}
-               </Text>
-               <Text mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="12px" color="gray.500">
-                 {followers.username}
-               </Text>
-               <Text mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="11px" color="White">
-               {followers.bio}
-               </Text>
-             </Flex>
-             <Button  _hover={{bg: "none"}} marginLeft={"auto"} bg={"none"} mb={"40px"} border={followers.follow ? "1px solid #909090" : "1px solid white"} color={followers.follow ? "#909090" : "white"} fontSize={"12px"} borderRadius={"full"} size={"sm"}>
-                {followers.follow ? "Following" : "Follow"}
-             </Button>
-           </Flex>
-        ))}
-      
-        
-        
-      </Flex>
-    );
+  const dispatch = useAppDispatch();
+  const { followers, loading, error } = useSelector((state: RootState) => state.follows);
+
+  useEffect(() => {
+      dispatch(fetchFollowers());
+  }, [dispatch]);
+
+  const handleFollowToggle = (userId: number, isFollowing: boolean) => {
+    if (isFollowing) {
+      dispatch(unfollowUser(userId)); // Jika sudah following, panggil unfollow
+    } else {
+      dispatch(followUser(userId)); // Jika belum following, panggil follow
+    }
+  };
+
+  return (
+    <Flex padding="12px 16px" width="100%" maxWidth="100%" direction="column">
+      {followers.map((follow) => {
+        const follower = follow.followers;
+
+        if (!follower) return null; 
+
+        return (
+          <Flex key={follower.id} mt="10px" ml="5px" width="100%">
+            <Avatar
+              size="sm"
+              src={follower.image || undefined}
+              name={follower.fullName}
+            />
+            <Flex ml="10px" direction="column">
+              <Text fontWeight="700" fontFamily="Plus Jakarta Sans" fontSize="12px">
+                {follower.fullName}
+              </Text>
+              <Text mb="5px" fontFamily="Plus Jakarta Sans" fontSize="12px" color="gray.500">
+                {follower.username}
+              </Text>
+              <Text mb="5px" fontFamily="Plus Jakarta Sans" fontSize="11px" color="white">
+                {follower.bio}
+              </Text>
+            </Flex>
+            <Button
+              _hover={{ bg: "none" }}
+              marginLeft="auto"
+              bg="none"
+              mb="40px"
+              border="1px solid #909090"
+              color={follow.isFollowing ? "#909090" : "white"}
+              fontSize="12px"
+              borderRadius="full"
+              size="sm"
+              onClick={() => handleFollowToggle(follower.id, follow.isFollowing || false)}
+            >
+            {follow.isFollowing ? "Following" : "Follow"}
+            </Button>
+          </Flex>
+        );
+      })}
+    </Flex>
+  );
 }
 
 export function Following() {
-    const following = useSelector((state: RootState) => state.follows.following);
+  const dispatch = useAppDispatch();
+  const { following, loading, error } = useSelector((state: RootState) => state.following);
 
+  // Fetch the following list when the component mounts
+  useEffect(() => {
+    dispatch(fetchFollowing());
+  }, [dispatch]);
+
+  // Display loading state
+  if (loading) {
     return (
-      <Flex
-        padding="12px 16px"
-        width="100%"
-        maxWidth="100%" 
-        direction={"column"}
-      >
-        {following.map((following) => (
-           <Flex mt={"10px"} ml="5px" width="100%">
-           <Avatar
-             size="sm"
-             src= {following.avatar}
-             name="Indah Pra Karya"
-           />
-             <Flex ml={"10px"} direction={"column"}>
-               <Text fontWeight="700" fontFamily={"Plus Jakarta Sans"} fontSize="12px">
-                 {following.name}
-               </Text>
-               <Text mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="12px" color="gray.500">
-                 {following.username}
-               </Text>
-               <Text mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="11px" color="White">
-               {following.bio}
-               </Text>
-             </Flex>
-             <Button  _hover={{bg: "none"}} marginLeft={"auto"} bg={"none"} mb={"40px"} border={following.follow ? "1px solid #909090" : "1px solid white"} color={following.follow ? "#909090" : "white"} fontSize={"12px"} borderRadius={"full"} size={"sm"}>
-                {following.follow ? "Following" : "Follow"}
-             </Button>
-           </Flex>
-        ))}
-      
-        
-        
+      <Flex justify="center" align="center" height="100vh">
+        <Text fontSize="lg" color="gray.500">Loading...</Text>
       </Flex>
     );
+  }
+
+  // Display error message if any
+  if (error) {
+    return (
+      <Flex justify="center" align="center" height="100vh">
+        <Text fontSize="lg" color="red.500">Error: {error}</Text>
+      </Flex>
+    );
+  }
+
+  // If no following are found, display a message
+  if (following.length === 0) {
+    return (
+      <Flex justify="center" align="center" height="100vh">
+        <Text fontSize="lg" color="gray.500">You are not following anyone yet.</Text>
+      </Flex>
+    );
+  }
+
+  // Render the list of users being followed
+  return (
+    <Flex
+      padding="12px 16px"
+      width="100%"
+      maxWidth="100%"
+      direction={"column"}
+    >
+      {following.map((followItem) => {
+        const followingUser = followItem.following; 
+
+        return (
+          <Flex mt={"10px"} ml="5px" width="100%" key={followingUser.id}>
+            <Avatar
+              size="sm"
+              src={followingUser.image} 
+              name={followingUser.fullName}
+            />
+            <Flex ml={"10px"} direction={"column"}>
+              <Text fontWeight="700" fontFamily={"Plus Jakarta Sans"} fontSize="12px">
+                {followingUser.fullName} 
+              </Text>
+              <Text mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="12px" color="gray.500">
+                {followingUser.username} 
+              </Text>
+              <Text mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="11px" color="White">
+                {followingUser.bio}
+              </Text>
+            </Flex>
+            <Button
+              _hover={{ bg: "none" }}
+              marginLeft={"auto"}
+              bg={"none"}
+              mb={"40px"}
+              border="1px solid #909090"
+              color="#909090"
+              fontSize={"12px"}
+              borderRadius={"full"}
+              size={"sm"}
+            >
+              Following
+            </Button>
+          </Flex>
+        );
+      })}
+    </Flex>
+  );
 }
+
+
 

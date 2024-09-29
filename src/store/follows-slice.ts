@@ -1,47 +1,92 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Follows } from "../entities/user";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { apiV1 } from "../libs/api";
+import { FollowEntity } from "../entities/follow";
 
-interface FollowsState {
-    followers: Follows[];
-    following: Follows[];
+interface FollowersState {
+    followers: FollowEntity[];
+    loading: boolean;
+    error: string | null;
 }
 
-const initialState: FollowsState = {
+const initialState: FollowersState = {
     followers: [],
-    following: []
+    loading: false,
+    error: null,
 };
 
+// Async thunk to fetch followers
 export const fetchFollowers = createAsyncThunk(
-    "follows/fetchFollowers",
+    "followers/fetchFollowers",
     async () => {
-      const response = await fetch("https://api.npoint.io/0cb85411906a331ae12f"); 
-      const data: Follows[] = await response.json();
-      return data;
+        const response = await apiV1.get(`/followers`);
+        return response.data.map((follow: any) => ({
+            ...follow,
+            followers: follow.follower,
+        }));
     }
 );
 
-export const fetchFollowing = createAsyncThunk(
-    "follows/fetchFollowing",
-    async () => {
-      const response = await fetch("https://api.npoint.io/b54de9691718c3db9bb3"); 
-      const data: Follows[] = await response.json();
-      return data;
+    export const followUser = createAsyncThunk(
+    'followers/followUser',
+    async (userId: number) => {
+      await apiV1.post(`/follow`, { followingId: userId });
+      return userId; 
     }
-);
+  );
+  
+  
+  
+  export const unfollowUser = createAsyncThunk(
+    "followers/unfollowUser",
+    async (userId: number) => {
+      await apiV1.post(`/unfollow`, { followingId: userId });
+      return userId; 
+    }
+  );
+  
 
-const followsSlice = createSlice({
-    name: "follows",
+
+
+  const followersSlice = createSlice({
+    name: "followers",
     initialState,
-    reducers: {},
+    reducers: {
+      clearFollowers(state) {
+        state.followers = [];
+      },
+    },
     extraReducers: (builder) => {
-        builder
-            .addCase(fetchFollowers.fulfilled, (state, action) => {
-                state.followers = action.payload;
-            })
-            .addCase(fetchFollowing.fulfilled, (state, action) => {
-                state.following = action.payload;
-            });
-    }
-});
+      builder
+        .addCase(fetchFollowers.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(fetchFollowers.fulfilled, (state, action: PayloadAction<FollowEntity[]>) => {
+          state.followers = action.payload;
+          state.loading = false;
+        })
+        .addCase(followUser.fulfilled, (state, action) => {
+          const user = state.followers.find(f => f.followers.id === action.meta.arg);
+          if (user) {
+            user.isFollowing = true; // Update state setelah follow
+          }
+        })
+        .addCase(unfollowUser.fulfilled, (state, action) => {
+          const user = state.followers.find(f => f.followers.id === action.meta.arg);
+          if (user) {
+            user.isFollowing = false; // Update state setelah unfollow
+          }
+        })
+        .addCase(fetchFollowers.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.error.message || "Failed to fetch followers.";
+        });
+    },
+  });
+  
+  
 
-export default followsSlice.reducer;
+
+export const { clearFollowers } = followersSlice.actions;
+
+export default followersSlice.reducer;

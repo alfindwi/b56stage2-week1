@@ -8,7 +8,6 @@ import { apiV1 } from "../../../libs/api";
 import { CreateThreadFormInputs, createThreadSchema } from "../../auth/schemas/thread";
 import { CreateThreadDTO } from "../types/thread";
 
-
 export function useHome() {
   const {
     register,
@@ -18,22 +17,20 @@ export function useHome() {
     resolver: zodResolver(createThreadSchema),
   });
 
+  // Fungsi untuk mengambil threads dari API
   async function getThreads(): Promise<ThreadEntity[]> {
-    const response = await apiV1.get<null, {data : ThreadEntity[]}>(
+    const response = await apiV1.get<null, {data: ThreadEntity[]}>(
       "/thread",
-    {
-      headers: {
-        Authorization: `Bearer ${Cookies.get("token")}`,
+      {
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
       }
-    }
-    
     );
-
-
     return response.data;
   }
 
-  const { data, isLoading} = useQuery<ThreadEntity[], Error, ThreadEntity[]>({
+  const { data, isLoading } = useQuery<ThreadEntity[], Error>({
     queryKey: ["thread"],
     queryFn: getThreads,
   });
@@ -41,15 +38,15 @@ export function useHome() {
   const queryClient = useQueryClient();
   const toast = useToast();
 
-
+  // Fungsi untuk membuat thread baru
   async function createThread(data: CreateThreadDTO) {
     const formData = new FormData();
     formData.append("content", data.content);
-  
+
     if (data.image && data.image[0]) {
       formData.append("image", data.image[0]);
     }
-  
+
     try {
       const response = await apiV1.post<null, { data: ThreadEntity }>(
         "/thread",
@@ -68,19 +65,13 @@ export function useHome() {
       throw error;
     }
   }
-  
-  
 
-  const { mutateAsync: createThreadAsync } = useMutation<
-    ThreadEntity,
-    Error,
-    CreateThreadDTO
-  >({
+  const { mutateAsync: createThreadAsync } = useMutation<ThreadEntity, Error, CreateThreadDTO>({
     mutationKey: ["createThread"],
     mutationFn: createThread,
   });
 
-
+  // Fungsi untuk submit form thread
   async function onSubmit(data: CreateThreadFormInputs) {
     try {
       await createThreadAsync(data as CreateThreadDTO);
@@ -104,6 +95,40 @@ export function useHome() {
     }
   }
 
+  // Fungsi untuk menambah like
+  async function addLike(threadId: number, userId: number): Promise<void> {
+    await apiV1.post(`/threads/${threadId}/like`, { userId }, {
+      headers: {
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    });
+  }
+
+  const { mutate: addLikeAsync } = useMutation({
+    mutationFn: ({ threadId, userId }: { threadId: number; userId: number }) => addLike(threadId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["thread"] });
+      toast({
+        title: "Like berhasil ditambahkan!",
+        description: "Anda telah menyukai thread ini.",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "top",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Terjadi kesalahan",
+        description: "Gagal menambahkan like.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "top",
+      });
+    },
+  });
+
   return {
     register,
     handleSubmit,
@@ -111,7 +136,7 @@ export function useHome() {
     isSubmitting,
     onSubmit,
     data,
-    alert,
     isLoading,
+    addLikeAsync,
   };
 }
