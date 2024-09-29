@@ -28,7 +28,7 @@ export function Follows(){
 }
 
 
-export function FollowsContent({activeTab, setActiveTab}: {activeTab: "followers" | "following", setActiveTab: React.Dispatch<React.SetStateAction<"followers" | "following">>}) {
+export function FollowsContent({setActiveTab}: {activeTab: "followers" | "following", setActiveTab: React.Dispatch<React.SetStateAction<"followers" | "following">>}) {
     
     return (
         <Flex 
@@ -56,7 +56,7 @@ export function FollowsContent({activeTab, setActiveTab}: {activeTab: "followers
 
 export function Followers() {
   const dispatch = useAppDispatch();
-  const { followers, loading, error } = useSelector((state: RootState) => state.follows);
+  const { followers} = useSelector((state: RootState) => state.follows);
 
   useEffect(() => {
       dispatch(fetchFollowers());
