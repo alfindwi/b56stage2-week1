@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import axios from "axios"
 import { useForm } from "react-hook-form"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
@@ -15,7 +14,6 @@ export function useRegisterForm() {
         register, 
         handleSubmit,
         formState: { errors, isSubmitting },
-        setError,
     } = useForm<RegisterFormInput>({
         resolver: zodResolver(registerSchema),
     })
@@ -43,25 +41,7 @@ export function useRegisterForm() {
             navigate("/")
 
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response) {
-                const { response: { data } } = error;
-    
-                if (Array.isArray(data.message)) {
-                    data.message.forEach((errorMsg: string) => {
-                        if (errorMsg.includes("fullName")) {
-                            setError("fullName", { type: "custom", message: errorMsg });
-                        }
-                        if (errorMsg.includes("passwordUsers")) {
-                            setError("passwordUsers", { type: "custom", message: errorMsg });
-                        }
-                        if (errorMsg.includes("email")) {
-                            setError("email", { type: "custom", message: errorMsg });
-                        }
-                    });
-                }
-    
-                console.log("error", data);
-            }
+            console.log(error)
         }
     }
     return {
