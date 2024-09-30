@@ -8,6 +8,7 @@ import { LoginFormInput, loginSchema } from "../schemas/login"
 import Cookies from "js-cookie";
 import "../styles/styles.css"
 import { LoginRequestDTO, LoginResponseDTO } from "../types/dto/dto"
+import { apiV1 } from "../../../libs/api"
 
 export function useLoginForm() {
     const {
@@ -24,8 +25,8 @@ export function useLoginForm() {
 
     async function onSubmit(data: LoginFormInput) {
         try {
-            const response = await axios.post<null, {data: LoginResponseDTO}, LoginRequestDTO>(
-                "http://localhost:4000/api/v1/auth/login", 
+            const response = await apiV1.post<null, {data: LoginResponseDTO}, LoginRequestDTO>(
+                "/login", 
                 {
                    email: data.email,
                    passwordUsers: data.passwordUsers

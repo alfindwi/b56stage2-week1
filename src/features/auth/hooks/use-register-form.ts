@@ -8,6 +8,7 @@ import { RegisterFormInput, registerSchema } from "../schemas/register"
 import "../styles/styles.css"
 import Cookies from "js-cookie"
 import { RegisterRequestDTO, RegisterResponseDTO } from "../types/dto/dto"
+import { apiV1 } from "../../../libs/api"
 
 export function useRegisterForm() {
     const {
@@ -24,8 +25,8 @@ export function useRegisterForm() {
 
     async function onSubmit(data: RegisterFormInput) {
         try {
-            const response = await axios.post<null, {data: RegisterResponseDTO}, RegisterRequestDTO>(
-                "http://localhost:4000/api/v1/auth/register", 
+            const response = await apiV1.post<null, {data: RegisterResponseDTO}, RegisterRequestDTO>(
+                "/register", 
                 {
                     ...data
                 })
