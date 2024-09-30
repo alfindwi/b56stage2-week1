@@ -26,7 +26,7 @@ export function useLoginForm() {
     async function onSubmit(data: LoginFormInput) {
         try {
             const response = await apiV1.post<null, {data: LoginResponseDTO}, LoginRequestDTO>(
-                "/login", 
+                "/auth/login", 
                 {
                    email: data.email,
                    passwordUsers: data.passwordUsers

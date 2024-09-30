@@ -26,7 +26,7 @@ export function useRegisterForm() {
     async function onSubmit(data: RegisterFormInput) {
         try {
             const response = await apiV1.post<null, {data: RegisterResponseDTO}, RegisterRequestDTO>(
-                "/register", 
+                "/auth/register", 
                 {
                     ...data
                 })
