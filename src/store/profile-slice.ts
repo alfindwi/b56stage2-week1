@@ -27,7 +27,6 @@ export const fetchThreadsByUserId = createAsyncThunk(
   }
 );
 
-// Slice untuk state threads
 const threadSlice = createSlice({
   name: "thread",
   initialState,

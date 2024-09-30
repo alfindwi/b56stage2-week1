@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import threadSlice from "./profile-slice";
+import threadReducer from "./profile-slice";
 import searchReducer from "./search-slice";
 import authReducer from "./auth-slice";
 import followsReducer from "./follows-slice";
@@ -11,7 +11,7 @@ export const store = configureStore({
       search: searchReducer,
       follows: followsReducer,
       following: followingReducer,
-      thread: threadSlice
+      thread: threadReducer,
     }
 })
 
