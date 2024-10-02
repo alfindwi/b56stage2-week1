@@ -39,76 +39,88 @@ interface RigthBarProps {
     );
   }
 
-export function ProfileRight({onEditProfileClick}: RigthBarProps) {
+export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
     const dispatch = useAppDispatch();
-    const { username,fullName, image, bio, followers, following} = useAppSelector((state) => state.auth);
+    
+    const { username, fullName, image, bio, followers, followeds } = useAppSelector((state) => state.auth);
+  
     useEffect(() => {
-        dispatch(fetchDummyUsers());
-      }, [dispatch]);      
-    return (        
-        <Box mr={"10px"} backgroundColor={"brand.profile"} height={"235px"} width={"340px"} position={"relative"} padding={"5px 0px 12px 0px"} borderRadius={"md"} >
-                <Box display="flex"
-                flexDirection="column"
-                alignItems="flex-start">
-                <Text 
-                padding={"5px 20px"} 
-                fontFamily={"Plus Jakarta Sans"} 
-                fontWeight={"550"} 
-                fontSize={"14px"}
-                >My Profile
-                </Text>
-                <Image 
-                src="/src/styles/image.png" 
-                width="435px" 
-                height={"65px"} 
-                padding={"0px 15px"} 
-                borderRadius='3xl'/>
-                <Avatar 
-                size='lg' 
-                position={"absolute"} 
-                top={"42%"} 
-                left={"10%"} 
-                transform={"translate(-50%, -50%)" } 
-                zIndex={"1"} 
-                border={"2px solid black"} 
-                margin={"0px 30px"} 
-                src={image}
-                name={fullName}/>
-                
-                <Button 
-                    left={"73%"}
-                    top={"10px"} 
-                    size={"sm"}
-                    border={"1px solid white"} 
-                    bg={"transparent"} 
-                    color={"white"} 
-                    fontFamily={"Plus Jakarta Sans"} 
-                    fontWeight={"500"} 
-                    _hover={{color: "none"}} 
-                    _active={{color: "none"}}
-                    borderRadius={"50px"} 
-                    fontSize={"10px"}
-                    onClick={onEditProfileClick}
-                >
-                    Edit Profile
-                </Button>  
-                   <Box margin={"10px 10px"}>
-                   <Text fontFamily={"Plus Jakarta Sans"} fontSize={"18px"} fontWeight={"700"}>{fullName}</Text>
-                    <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{username}</Text>
-                    <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >{bio}</Text>
-                    <Flex align={"center"} padding={"4px 0px"}>
-                        <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>{followers}</Text>
-                        <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Following</Text>
-                        <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} >{following}</Text>
-                        <Text ml="4px"  color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Followers</Text>
-                    </Flex>
-                   </Box>
-                </Box>
-        </Box> 
-        
-    )
-}
+      dispatch(fetchDummyUsers());
+    }, [dispatch]);
+  
+    const followerCount = followers?.length || 0;
+    const followedCount = followeds?.length || 0;
 
+  
+    return (
+      <Box mr={"10px"} backgroundColor={"brand.profile"} height={"235px"} width={"340px"} position={"relative"} padding={"5px 0px 12px 0px"} borderRadius={"md"}>
+        <Box display="flex" flexDirection="column" alignItems="flex-start">
+          <Text padding={"5px 20px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"550"} fontSize={"14px"}>
+            My Profile
+          </Text>
+          <Image src="/src/styles/image.png" width="435px" height={"65px"} padding={"0px 15px"} borderRadius="3xl" />
+          <Avatar
+            size="lg"
+            position={"absolute"}
+            top={"42%"}
+            left={"10%"}
+            transform={"translate(-50%, -50%)"}
+            zIndex={"1"}
+            border={"2px solid black"}
+            margin={"0px 30px"}
+            src={image}
+            name={fullName}
+          />
+  
+          <Button
+            left={"73%"}
+            top={"10px"}
+            size={"sm"}
+            border={"1px solid white"}
+            bg={"transparent"}
+            color={"white"}
+            fontFamily={"Plus Jakarta Sans"}
+            fontWeight={"500"}
+            _hover={{ color: "none" }}
+            _active={{ color: "none" }}
+            borderRadius={"50px"}
+            fontSize={"10px"}
+            onClick={onEditProfileClick}
+          >
+            Edit Profile
+          </Button>
+  
+          <Box margin={"10px 10px"}>
+            <Text fontFamily={"Plus Jakarta Sans"} fontSize={"18px"} fontWeight={"700"}>
+              {fullName}
+            </Text>
+            <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>
+              @{username}
+            </Text>
+            <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"}>
+              {bio}
+            </Text>
+            <Flex align={"center"} padding={"4px 0px"}>
+  {/* Tampilkan jumlah followeds (Following) dan followers */}
+  <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
+    {followedCount}
+  </Text>
+  <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
+    Following
+  </Text>
+  <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
+    {followerCount}
+  </Text>
+  <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
+    Followers
+  </Text>
+            </Flex>
+          </Box>
+        </Box>
+      </Box>
+    );
+}
+  
 export function SuggestForYou() {
     return(
         <Box mt={"8px"} backgroundColor={"brand.profile"} height={"275px"} width={"340px"} position={"relative"} padding={"8px 0px 12px 0px"} borderRadius={"md"} >

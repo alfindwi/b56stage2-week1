@@ -34,7 +34,7 @@ export function useRegisterForm() {
                 const {user, token} = response.data
                 console.log("token" , token)    
                 
-                dispatch(setUser(user, ));
+                dispatch(setUser(user));
 
                 Cookies.set("token", token, {expires: 1 } )
         

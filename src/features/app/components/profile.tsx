@@ -19,6 +19,8 @@ export function Profile(){
     const handleCloseEditProfile = () => {
         setEditProfileVisible(false);
     };
+
+    
     return (
         <Flex
             direction="column"
@@ -118,7 +120,7 @@ export function PostCard() {
         <>
         {Array.isArray(threads) && threads.length > 0 ? (
             threads.map((thread) => (
-                <Flex width="520px" key={thread.id}>
+            <Flex width="520px" key={thread.id}>
         <Flex direction="column" mt="10px" ml="10px" mb="0px" width="100%">
             <Flex mt="10px" borderBottom="1px solid #545454">
                 <Avatar
@@ -154,9 +156,10 @@ export function PostCard() {
                 </Box>
             </Flex>
         </Flex>
-        </Flex>
+            </Flex>
             ))
             ) : null}
         </>
     );
 }
+

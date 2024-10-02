@@ -38,7 +38,6 @@ export function useHome() {
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  // Fungsi untuk membuat thread baru
   async function createThread(data: CreateThreadDTO) {
     const formData = new FormData();
     formData.append("content", data.content);

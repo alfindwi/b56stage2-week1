@@ -4,6 +4,7 @@ import searchReducer from "./search-slice";
 import authReducer from "./auth-slice";
 import followsReducer from "./follows-slice";
 import followingReducer from "./following-slice";
+import profileReducer from "./profile-user-slice";
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
       follows: followsReducer,
       following: followingReducer,
       thread: threadReducer,
+      profile: profileReducer,
     }
 })
 

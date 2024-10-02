@@ -14,6 +14,14 @@ export type RegisterResponseDTO = LoginResponseDTO;
 
 export type UserStoreDTO  = Omit<UserEntity, "passwordUsers">
 
+export type ProfileUserStoreDTO  = {
+    id: number;
+    fullName: string;
+    username: string;
+    bio: string;
+    image: string;
+}
+
 export type threadStoreDTO = ThreadEntity
 
 export type replyStoreDTO = ReplyEntity

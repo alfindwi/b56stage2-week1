@@ -12,8 +12,8 @@ const initialState: ThreadState = {
   error: null,
 };
 
-export const fetchThreadsByUserId = createAsyncThunk(
-  "thread/fetchByUserId",
+export const fetchThreadsProfile = createAsyncThunk(
+  "thread/fetchThreadsProfile",
   async (userId: number) => {
     try {
       const response = await apiV1.get(`users/${userId}/thread`);
@@ -26,13 +26,13 @@ export const fetchThreadsByUserId = createAsyncThunk(
   }
 );
 
-const threadSlice = createSlice({
-  name: "thread",
+const profileSlice = createSlice({
+  name: "profile",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(fetchThreadsByUserId.fulfilled, (state, action) => {
+    .addCase(fetchThreadsProfile.fulfilled, (state, action) => {
       console.log("Fetch fulfilled:", action.payload); 
       state.threads = action.payload.data.map((thread : ThreadEntity) => ({
         ...thread,
@@ -44,4 +44,4 @@ const threadSlice = createSlice({
   },
 });
 
-export default threadSlice.reducer;
+export default profileSlice.reducer;

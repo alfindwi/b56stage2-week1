@@ -26,23 +26,18 @@ export function useLoginForm() {
           const response = await apiV1.post<null, { data: LoginResponseDTO }, LoginRequestDTO>(
             "/auth/login",
             {
-              email: data.email,
-              passwordUsers: data.passwordUsers,
+              ...data,
             }
           );
-      
+                
           const { user, token } = response.data;
       
-          // Menyimpan token ke cookies
           Cookies.set("token", token, { expires: 1 });
       
-          // Dispatch user ke state management
           dispatch(setUser(user));
       
-          // Navigasi ke halaman utama setelah login sukses
           navigate("/");
         } catch (error) {
-          // Menangani error dengan lebih mendetail
           if ((error as any).response) {
             console.error("Error response:", (error as any).response.data);
             console.error("Error status:", (error as any).response.status);
@@ -52,7 +47,7 @@ export function useLoginForm() {
             console.error("Error message:", (error as any).message);
           }
         }
-      }
+    }
       
     
     return {

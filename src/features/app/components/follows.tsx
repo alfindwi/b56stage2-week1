@@ -64,9 +64,9 @@ export function Followers() {
 
   const handleFollowToggle = (userId: number, isFollowing: boolean) => {
     if (isFollowing) {
-      dispatch(unfollowUser(userId)); // Jika sudah following, panggil unfollow
+      dispatch(unfollowUser(userId));
     } else {
-      dispatch(followUser(userId)); // Jika belum following, panggil follow
+      dispatch(followUser(userId)); 
     }
   };
 
@@ -120,21 +120,11 @@ export function Following() {
   const dispatch = useAppDispatch();
   const { following, loading, error } = useSelector((state: RootState) => state.following);
 
-  // Fetch the following list when the component mounts
   useEffect(() => {
     dispatch(fetchFollowing());
   }, [dispatch]);
 
-  // Display loading state
-  if (loading) {
-    return (
-      <Flex justify="center" align="center" height="100vh">
-        <Text fontSize="lg" color="gray.500">Loading...</Text>
-      </Flex>
-    );
-  }
 
-  // Display error message if any
   if (error) {
     return (
       <Flex justify="center" align="center" height="100vh">
@@ -143,16 +133,6 @@ export function Following() {
     );
   }
 
-  // If no following are found, display a message
-  if (following.length === 0) {
-    return (
-      <Flex justify="center" align="center" height="100vh">
-        <Text fontSize="lg" color="gray.500">You are not following anyone yet.</Text>
-      </Flex>
-    );
-  }
-
-  // Render the list of users being followed
   return (
     <Flex
       padding="12px 16px"
