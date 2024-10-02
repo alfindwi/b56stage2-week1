@@ -36,7 +36,7 @@ const threadSlice = createSlice({
       console.log("Fetch fulfilled:", action.payload); 
       state.threads = action.payload.data.map((thread : ThreadEntity) => ({
         ...thread,
-        repliesCount: thread.repliesCount ? thread.repliesCount : 0 
+        repliesCount: thread.replies ? thread.replies : 0 
       }));
       state.error = null;
     })

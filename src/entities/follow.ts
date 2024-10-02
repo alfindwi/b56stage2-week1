@@ -1,12 +1,12 @@
 import { UserEntity } from "./user";
 
 export interface FollowEntity {
-    follower: any;
     id       :   number
-    followerId:  number
-    followingId : number
-
     followers: UserEntity
+    followerId:  number
+
+    followed: UserEntity
+    followedId : number
 
     isFollowing?: boolean
     

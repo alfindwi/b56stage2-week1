@@ -74,7 +74,7 @@ export const fetchFollowers = createAsyncThunk(
         .addCase(unfollowUser.fulfilled, (state, action) => {
           const user = state.followers.find(f => f.followers.id === action.meta.arg);
           if (user) {
-            user.isFollowing = false; // Update state setelah unfollow
+            user.isFollowing = false;
           }
         })
         .addCase(fetchFollowers.rejected, (state, action) => {
@@ -84,9 +84,6 @@ export const fetchFollowers = createAsyncThunk(
     },
   });
   
-  
-
-
 export const { clearFollowers } = followersSlice.actions;
 
 export default followersSlice.reducer;

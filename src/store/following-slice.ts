@@ -1,60 +1,86 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FollowingEntity } from "../entities/follow"; // Pastikan ini sudah benar
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { apiV1 } from "../libs/api";
+import { FollowEntity } from "../entities/follow";
 
-// Defining the following state structure
-interface FollowingState {
-  following: FollowingEntity[]; 
-  loading: boolean;
-  error: string | null;
+interface FollowersState {
+    followed: FollowEntity[];
+    loading: boolean;
+    error: string | null;
 }
 
-const initialState: FollowingState = {
-  following: [],
-  loading: false,
-  error: null,
+const initialState: FollowersState = {
+  followed: [],
+    loading: false,
+    error: null,
 };
 
-export const fetchFollowing = createAsyncThunk(
-  "followers/fetchFollowing",
-  async () => {
-    const response = await apiV1.get("/following");
-    console.log("API Response data:", response.data);
-
-    return response.data.map((follow: any) => ({
-      id: follow.id,
-      followerId: follow.followerId,
-      followingId: follow.followingId,
-      following: follow.following, 
-      isFollowing: follow.isFollowing, 
-    }));
-  }
+export const fetchFolloweds = createAsyncThunk(
+    "followeds/fetchFolloweds",
+    async () => {
+        const response = await apiV1.get(`/following`);
+        return response.data.map((followed: any) => ({
+            ...followed,
+            followeds: followed.following,
+        }));
+    }
 );
 
-const followingSlice = createSlice({
-  name: "following",
-  initialState,
-  reducers: {
-    clearFollowing(state) {
-      state.following = [];
-    },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchFollowing.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchFollowing.fulfilled, (state, action: PayloadAction<FollowingEntity[]>) => {
-        state.following = action.payload; 
-        state.loading = false;
-      })
-      .addCase(fetchFollowing.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string; 
-      });
-  },
-});
+    export const followedUser = createAsyncThunk(
+    'following/followedUser',
+    async (userId: number) => {
+      await apiV1.post(`/follow`, { followingId: userId });
+      return userId; 
+    }
+  );
+  
+  
+  
+  export const unfollowUser = createAsyncThunk(
+    "followers/unfollowUser",
+    async (userId: number) => {
+      await apiV1.post(`/unfollow`, { followingId: userId });
+      return userId; 
+    }
+  );
+  
 
-export const { clearFollowing } = followingSlice.actions;
-export default followingSlice.reducer;
+  const followedsSlice = createSlice({
+    name: "followed",
+    initialState,
+    reducers: {
+      clearFollowers(state) {
+        state.followed = [];
+      },
+    },
+    extraReducers: (builder) => {
+      builder
+        .addCase(fetchFolloweds.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(fetchFolloweds.fulfilled, (state, action: PayloadAction<FollowEntity[]>) => {
+          state.followed = action.payload;
+          state.loading = false;
+        })
+        .addCase(followedUser.fulfilled, (state, action) => {
+          const user = state.followed.find(f => f.followed.id === action.meta.arg);
+          if (user) {
+            user.isFollowing = true; // Update state setelah follow
+          }
+        })
+        .addCase(unfollowUser.fulfilled, (state, action) => {
+          const user = state.followed.find(f => f.followed.id === action.meta.arg);
+          if (user) {
+            user.isFollowing = false;
+          }
+        })
+        .addCase(fetchFolloweds.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.error.message || "Failed to fetch followers.";
+        });
+    },
+  });
+  
+export const { clearFollowers } = followedsSlice.actions;
+
+export default followedsSlice.reducer;

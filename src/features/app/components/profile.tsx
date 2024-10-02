@@ -7,6 +7,7 @@ import { fetchThreadsByUserId } from "../../../store/profile-slice";
 import { RootState } from "../../../store/store";
 import { EditProfile } from "./edit-profile";
 import { useSelector } from "react-redux";
+import { fetchFolloweds } from "../../../store/following-slice";
 
 
 export function Profile(){
@@ -38,7 +39,18 @@ export function Profile(){
 }
 
 export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () => void }){
+    const dispatch = useAppDispatch();
     const user = useSelector((state: RootState) => state.auth);
+    const { followed} = useSelector((state: RootState) => state.following);
+    const { followers } = useSelector((state: RootState) => state.follows);
+
+    useEffect(() => {
+        dispatch(fetchFolloweds());
+    }, [dispatch]);
+
+    useEffect(() => {
+      dispatch(fetchFolloweds());
+    }, [dispatch]);
     return (
         <Box ml="3px" height={"300px"} width={"530px"} position={"relative"}borderRadius={"md"} >
                 <Box display="flex"
@@ -89,9 +101,9 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
                     <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{user.username}</Text>
                     <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >{user.bio}</Text>
                     <Flex align={"center"} padding={"4px 0px"}>
-                        <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>291</Text>
+                        <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>{followed.length}</Text>
                         <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Following</Text>
-                        <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} >23</Text>
+                        <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} >{followers.length}</Text>
                         <Text ml="4px"  color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Followers</Text>
                     </Flex>
                    </Box>
@@ -146,11 +158,11 @@ export function PostCard() {
                     <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                             <Icon as={CiHeart} mr="5px" />
-                            {thread.likesCount}
+                            {thread.likes?.length}
                         </Flex>
                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                             <Icon as={BiMessageSquareDetail} mr="5px" />
-                            {thread.repliesCount} Replies
+                            {thread.replies?.length} Replies
                         </Flex>
                     </Flex>
                 </Box>

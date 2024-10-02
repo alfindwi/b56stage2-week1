@@ -17,7 +17,6 @@ export function useHome() {
     resolver: zodResolver(createThreadSchema),
   });
 
-  // Fungsi untuk mengambil threads dari API
   async function getThreads(): Promise<ThreadEntity[]> {
     const response = await apiV1.get<null, {data: ThreadEntity[]}>(
       "/thread",
@@ -70,7 +69,6 @@ export function useHome() {
     mutationFn: createThread,
   });
 
-  // Fungsi untuk submit form thread
   async function onSubmit(data: CreateThreadFormInputs) {
     try {
       await createThreadAsync(data as CreateThreadDTO);

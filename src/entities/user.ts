@@ -8,11 +8,10 @@ export interface UserEntity {
   bio?: string;
   passwordUsers: string;
   username: string;
-  socialConnection: socialConnection;
+  socialConnection: socialConnection | null;
   role: string;
-  followers: number;
-  following : number;
-
+  followeds: number;
+  followers: number; 
   createdAt: Date;
   updatedAt: Date;
 }

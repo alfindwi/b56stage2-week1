@@ -11,6 +11,10 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
 import { fetchThreadsProfile } from "../../../store/profile-user-slice";
 import { useHome } from "../hooks/useHome";
 import { useReply } from "../hooks/useReply";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import { fetchFolloweds } from "../../../store/following-slice";
+import { fetchFollowers } from "../../../store/follows-slice";
 
 
 export function Home() {
@@ -87,6 +91,16 @@ function WhatHappen() {
     const {register: reply, handleSubmit: replySubmit, isSubmitting: replyIsSubmitting, onSubmit: replyOnSubmit, data: replyData} = useReply(validThreadId);
     const { register, handleSubmit, isSubmitting, onSubmit, data } = useHome();
     const profiles = useAppSelector((state) => state.profile.threads)
+    const { followed} = useSelector((state: RootState) => state.following);
+    const { followers } = useSelector((state: RootState) => state.follows);
+
+    useEffect(() => {
+        dispatch(fetchFollowers());
+    }, [dispatch]);
+
+    useEffect(() => {
+      dispatch(fetchFolloweds());
+    }, [dispatch]);
 
       return (
         <>  
@@ -209,11 +223,11 @@ function WhatHappen() {
                                     <Flex mt="10px" color="gray.500" fontSize="sm">
                                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                                             <Icon as={FaRegHeart} size={"15px"} mr="5px" />
-                                            {thread.likesCount}
+                                            {thread.likes?.length}
                                         </Flex>
                                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                                             <Icon as={BiMessageSquareDetail} mr="5px" />
-                                            {thread.repliesCount} Replies
+                                            {thread.replies?.length} Replies
                                         </Flex>
                                     </Flex>
                                 </Box>
@@ -289,9 +303,9 @@ function WhatHappen() {
                          <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{selectedUser.username}</Text>
                          <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >{selectedUser.bio}</Text>
                          <Flex align={"center"} padding={"4px 0px"}>
-                             <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>{selectedUser.followers}</Text>
+                             <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>{followed.length}</Text>
                              <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Following</Text>
-                             <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} >0</Text>
+                             <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} >{followers.length}</Text>
                              <Text ml="4px"  color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Followers</Text>
                          </Flex>
                         </Box>
@@ -324,11 +338,11 @@ function WhatHappen() {
                                     <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
                                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                                             <Icon as={CiHeart} mr="5px" />
-                                            {thread.likesCount}
+                                            {thread.likes?.length}
                                         </Flex>
                                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                                             <Icon as={BiMessageSquareDetail} mr="5px" />
-                                            {thread.repliesCount} Replies
+                                            {thread.replies?.length} Replies
                                         </Flex>
                                     </Flex>
                                 </Box>
@@ -391,11 +405,11 @@ function WhatHappen() {
                                    <Flex mt="10px" color="gray.500" fontSize="sm">
                                        <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                                            <Icon as={FaHeart} color="red.500" mr="5px" />
-                                           {selectedThread.likesCount}
+                                           {selectedThread.likes?.length}
                                        </Flex>
                                        <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
                                            <Icon as={BiMessageSquareDetail} mr="5px" />
-                                           {selectedThread.repliesCount} Replies
+                                           {selectedThread.replies?.length} Replies
                                        </Flex>
                                    </Flex>
                                </Box>
@@ -498,7 +512,7 @@ function WhatHappen() {
                                         <Flex mt="10px" color="gray.500" fontSize="sm">
                                             <Flex fontFamily={"Plus Jakarta Sans"} fontWeight="400" fontSize={"12px"} alignItems="center" mr="20px">
                                                 <Icon as={CiHeart} mr="5px" />
-                                                0
+                                                {reply.likes?.length}
                                             </Flex>
                                         </Flex>
                                         </Box>

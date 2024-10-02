@@ -4,24 +4,34 @@ export interface ThreadEntity {
   id: number;
   content: string;
   image?: string;
-  likesCount: number;
-  repliesCount: number;
   userId: number;
 
   user: UserEntity;
 
   createdAt: Date;
   updatedAt: Date;
+
+  replies?: ReplyEntity[]; 
+
+  likes?: likeEntity[];
 }
 
 export interface ReplyEntity {
   id: number;
   content: string;
   image: string;
-  likes: number;
+  likes?: likeEntity[];
   user: UserEntity;
   threadId: number;
 
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface likeEntity {
+  id: number;
+  threadId: number;
+  userId: number;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,10 +1,14 @@
 import { Avatar, Box, Button, Flex, Heading, Icon, Image, Text } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
-import "../styles/styles.css";
-import { useEffect } from "react";
 import { fetchDummyUsers } from "../../../store/auth-slice";
+import { fetchFollowers, followUser, unfollowUser } from "../../../store/follows-slice";
+import "../styles/styles.css";
+import { fetchFolloweds } from "../../../store/following-slice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
 
 interface RigthBarProps {
     isProfileVisible: boolean;
@@ -42,16 +46,22 @@ interface RigthBarProps {
 export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
     const dispatch = useAppDispatch();
     
-    const { username, fullName, image, bio, followers, followeds } = useAppSelector((state) => state.auth);
+    const { username, fullName, image, bio } = useAppSelector((state) => state.auth);
+    const { followed} = useSelector((state: RootState) => state.following);
+    const { followers } = useSelector((state: RootState) => state.follows);
+
+    useEffect(() => {
+        dispatch(fetchFollowers());
+    }, [dispatch]);
+
+    useEffect(() => {
+      dispatch(fetchFolloweds());
+    }, [dispatch]);
   
     useEffect(() => {
       dispatch(fetchDummyUsers());
     }, [dispatch]);
-  
-    const followerCount = followers?.length || 0;
-    const followedCount = followeds?.length || 0;
 
-  
     return (
       <Box mr={"10px"} backgroundColor={"brand.profile"} height={"235px"} width={"340px"} position={"relative"} padding={"5px 0px 12px 0px"} borderRadius={"md"}>
         <Box display="flex" flexDirection="column" alignItems="flex-start">
@@ -101,20 +111,20 @@ export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
               {bio}
             </Text>
             <Flex align={"center"} padding={"4px 0px"}>
-  {/* Tampilkan jumlah followeds (Following) dan followers */}
-  <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
-    {followedCount}
-  </Text>
-  <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
-    Following
-  </Text>
-  <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
-    {followerCount}
-  </Text>
-  <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
-    Followers
-  </Text>
+              <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
+                  {followed.length}
+              </Text>
+              <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
+                  Following
+              </Text>
+              <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
+                  {followers.length}
+              </Text>
+              <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
+                  Followers
+              </Text>
             </Flex>
+            
           </Box>
         </Box>
       </Box>

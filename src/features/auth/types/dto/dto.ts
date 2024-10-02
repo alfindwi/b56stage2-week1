@@ -12,7 +12,16 @@ export type RegisterRequestDTO = Pick<UserEntity, "fullName" | "email" | "passwo
 
 export type RegisterResponseDTO = LoginResponseDTO;
 
-export type UserStoreDTO  = Omit<UserEntity, "passwordUsers">
+export type UserStoreDTO  = Omit<UserEntity, "passwordUsers"> 
+
+export type FollowDTO = {
+    id: number;
+    followerId: number;
+    followedId: number;
+    createdAt: string;
+    updatedAt: string;
+};
+  
 
 export type ProfileUserStoreDTO  = {
     id: number;

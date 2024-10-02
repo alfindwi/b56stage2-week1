@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../hooks/use-store";
-import { fetchFollowing } from "../../../store/following-slice";
+import { fetchFolloweds } from "../../../store/following-slice";
 import { fetchFollowers, followUser, unfollowUser } from "../../../store/follows-slice";
 import { RootState } from "../../../store/store";
 
@@ -118,10 +118,10 @@ export function Followers() {
 
 export function Following() {
   const dispatch = useAppDispatch();
-  const { following, loading, error } = useSelector((state: RootState) => state.following);
+  const { followed, error } = useSelector((state: RootState) => state.following);
 
   useEffect(() => {
-    dispatch(fetchFollowing());
+    dispatch(fetchFolloweds());
   }, [dispatch]);
 
 
@@ -140,14 +140,14 @@ export function Following() {
       maxWidth="100%"
       direction={"column"}
     >
-      {following.map((followItem) => {
-        const followingUser = followItem.following; 
+      {followed.map((followers) => {
+        const followingUser = followers.followed; 
 
         return (
           <Flex mt={"10px"} ml="5px" width="100%" key={followingUser.id}>
             <Avatar
               size="sm"
-              src={followingUser.image} 
+              src={followingUser.image}
               name={followingUser.fullName}
             />
             <Flex ml={"10px"} direction={"column"}>

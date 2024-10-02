@@ -10,12 +10,15 @@ const initialState: UserStoreDTO = {
   username: "",
   bio: "",
   image: "",
+  followeds: 0,
+  followers: 0,
 } as UserStoreDTO;
 
 export const fetchDummyUsers = createAsyncThunk(
   "users/fetchDummyUsers",
   async () => {
     const response = await apiV1.get("/users");
+    
     return response.data;
   }
 );
@@ -34,6 +37,8 @@ const authSlice = createSlice({
         username: action.payload.username,
         bio: action.payload.bio,
         image: action.payload.image,
+        followeds: action.payload.followeds,
+        followers: action.payload.followers,
       };
     },
     updateUsers(state, action: PayloadAction<UserStoreDTO>) {
@@ -43,6 +48,8 @@ const authSlice = createSlice({
       state.bio = updatedUser.bio; 
       state.email = updatedUser.email;
       state.image = updatedUser.image;
+      state.followeds = updatedUser.followeds;
+      state.followers = updatedUser.followers;
     },
     removeUser() {
       return {} as UserStoreDTO;
