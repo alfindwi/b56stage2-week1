@@ -120,7 +120,6 @@ function WhatHappen() {
 
 
     const handleLikeReply = (replyId: number) => {
-        // Find the reply from the array of replies
         const reply = replyLikes.find(r => r.id === replyId);
     
         if (reply?.isLikedReply) {
@@ -228,7 +227,7 @@ function WhatHappen() {
                                     _hover={{ color: "white" }} 
                                     zIndex="10" 
                                     onClick={() => {
-                                        setShow(false); // Menghilangkan preview
+                                        setShow(false); 
                                     }}
                                 />
                             </Box>

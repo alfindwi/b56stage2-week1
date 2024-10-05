@@ -165,7 +165,7 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
           <FormLabel cursor={"pointer"} size={"md"} color={"brand.green"} bg={"none"} _hover={{ bg: "none" }} mb="0">
             <GrGallery/>
           </FormLabel>
-            <Input hidden type="file" {...register("image")} onChange={handleChangeImage} />
+            <Input hidden type="file" {...register("image")}/>
         </FormControl>
         <Button
          type="submit"
