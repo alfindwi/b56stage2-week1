@@ -75,8 +75,6 @@ export function Followers() {
   return (
     <Flex padding="12px 16px" width="100%" maxWidth="100%" direction="column">
       {followers.length === 0 ? (
-        <Text>No followers found.</Text> // Jika tidak ada followers
-      ) : (
         followers.map((follow) => {
           const follower = follow.follower;
           const isFollowingUser = follow.isFollowing;
@@ -112,7 +110,7 @@ export function Followers() {
             </Flex>
           );
         })
-      )}
+      ): null}
     </Flex>
   );
 }

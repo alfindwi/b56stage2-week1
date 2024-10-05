@@ -77,7 +77,6 @@ function WhatHappen() {
     dispatch(unfollowUser(followedId));
   };
 
-    const toggleImage = () => setShow(!show);
     const goToPostCard = (thread: ThreadEntity, ) => {
         setSelectedThread(thread);
         setCurrentView('postCard');
@@ -213,7 +212,7 @@ function WhatHappen() {
                     {show && (
                             <Box position="relative" ml={"75px"} mb={"20px"}>
                                 <Img 
-                                    src={image || ""} // Menggunakan state image
+                                    src={image || ""}
                                     width={"350px"}
                                     height={"390px"}
                                     borderRadius={"10px"}
@@ -553,7 +552,7 @@ function WhatHappen() {
                            <form onSubmit={replySubmit(replyOnSubmit)} >
                            <Flex padding="5px 20px" border="1px solid #545454" direction="column">
                                <Flex align="center">
-                                   <Avatar size="sm" src="/src/styles/cewe.png" name="Mohammed Jawahir" />
+                                   <Avatar size="sm" src="https://res.cloudinary.com/db2rr1kej/image/upload/v1728142149/uploads/o8ivurqezrpbzwpj7k0y.png" name="Mohammed Jawahir" />
                                    <Input
                                        ml="10px"
                                        size="sm"
@@ -569,10 +568,10 @@ function WhatHappen() {
                                    />
                                    <Flex alignItems="center" justifyContent="space-between">
                                     <FormControl display="flex" alignItems="center">
-                                        <FormLabel cursor={"pointer"} size={"md"} color={"brand.green"} bg={"none"} _hover={{ bg: "none" }} onClick={toggleImage} mb="0">
+                                        <FormLabel cursor={"pointer"} size={"md"} color={"brand.green"} bg={"none"} _hover={{ bg: "none" }} mb="0">
                                         <GrGallery/>
                                         </FormLabel>
-                                        <Input hidden type="file" {...reply("image")} />
+                                        <Input hidden type="file" {...reply("image" ,{ onChange: handleChangeImage })}/>
                                     </FormControl>
                                     </Flex>
                                     <Button
@@ -596,7 +595,7 @@ function WhatHappen() {
                                </Flex>
                                {show && (
                                    <Box display="flex" ml="46px" mb="20px" dir="column" position="relative" mt="20px">
-                                       <Img src="/src/styles/buku.png" width="380px" height="380px" ml="10px" borderRadius="10px" />
+                                       <Img src={image || ""} width="380px" height="380px" ml="10px" borderRadius="10px" />
                                        <Icon 
                                            as={IoIosCloseCircle} 
                                            color="white" 
@@ -607,7 +606,7 @@ function WhatHappen() {
                                            cursor="pointer" 
                                            _hover={{ color: "white" }} 
                                            zIndex="10"
-                                           onClick={toggleImage}
+                                           onClick={() => setShow(false)}
                                        />
                                    </Box>
                                )}
@@ -650,12 +649,10 @@ function WhatHappen() {
                                                 alignItems="center" 
                                                 mr="20px"
                                             >
-                                                {/* Gunakan 'find' untuk mendapatkan data reply yang benar */}
                                                 <Icon 
                                                 as={replyLikes.find(r => r.id === reply.id)?.isLikedReply ? FcLike : FaRegHeart} 
                                                 mr="5px" 
                                                 />
-                                                {/* Gunakan 'likesCount' untuk menampilkan jumlah likes */}
                                                 {replyLikes.find(r => r.id === reply.id)?.likesCount || 0}
                                             </Flex>
                                             </Flex>
