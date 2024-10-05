@@ -3,21 +3,22 @@ import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FaRegHeart } from "react-icons/fa";
 import { GrGallery } from "react-icons/gr";
+import { IoIosCloseCircle } from "react-icons/io";
 import { IoCloseCircleOutline, IoHomeOutline } from "react-icons/io5";
 import { RiUserSearchLine } from "react-icons/ri";
 import { TbLogout2 } from "react-icons/tb";
 import { Link as ReactRouterLink } from "react-router-dom";
-import "../styles/styles.css";
-import { IoIosCloseCircle } from "react-icons/io";
 import { useHome } from "../hooks/useHome";
+import "../styles/styles.css";
+import { useLogout } from "../../auth/hooks/use-logout-form";
 
 interface LeftBarProps {
     onOpenCreatePost: () => void;
 }
 
 export function LeftBar({ onOpenCreatePost }: LeftBarProps) {
+  const { logout } = useLogout();
   
-
     return (
         <Flex 
         direction="column"
@@ -46,7 +47,7 @@ export function LeftBar({ onOpenCreatePost }: LeftBarProps) {
                 Create Post
             </Button>
 
-            <Button as= {ReactRouterLink} to="/login" leftIcon={<TbLogout2 fontSize="20px" />} bg={"transparent"} _active={{color: "#B2B2B2"}} fontWeight={"500"} display={"flex"} justifyContent={"start"} padding={"10px 20px"} color={"white"} mt={"auto"} fontFamily={"Plus Jakarta Sans"} _hover={{textDecoration:"none", bg: "#303030"}}>
+            <Button onClick={logout} leftIcon={<TbLogout2 fontSize="20px" />} bg={"transparent"} _active={{color: "#B2B2B2"}} fontWeight={"500"} display={"flex"} justifyContent={"start"} padding={"10px 20px"} color={"white"} mt={"auto"} fontFamily={"Plus Jakarta Sans"} _hover={{textDecoration:"none", bg: "#303030"}}>
                 Logout
             </Button>
         </Flex>
@@ -56,11 +57,26 @@ export function LeftBar({ onOpenCreatePost }: LeftBarProps) {
 
 
 export function CreatePost({ onClose }: { onClose: () => void }) {
+  const [image, setImage] = useState<string | null>(null); 
+
+    const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            const imageUrl = URL.createObjectURL(file);
+            setImage(imageUrl); 
+            setShow(true);
+        } else {
+            setImage(null);
+            setShow(false);
+        }
+    };
+
+    const handleClosePreview = () => {
+      setShow(false); // Hide the preview
+      setImage(null); // Clear the image
+  };
+
   const [show, setShow] = useState(false);
-
-
-  const toggleImage = () => setShow(!show);
-  useEffect(() => {}, []);
 
   const {register, handleSubmit, isSubmitting, onSubmit} = useHome();
 
@@ -115,7 +131,7 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
           <Flex justify="center" align="center" width="100%">
             <Box position="relative">
               <Img
-                src="/src/styles/buku.png"
+                src={image || ""}
                 width={"400px"}
                 height={"315px"}
                 borderRadius={"10px"}
@@ -126,12 +142,12 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
                 as={IoIosCloseCircle}
                 color="white"
                 position="absolute"
-                top="10px"
+                top="20px"
                 right="10px"
                 cursor="pointer"
                 fontSize={"20px"}
                 _hover={{ color: "white" }}
-                onClick={toggleImage}
+                onClick={handleClosePreview}
               />
             </Box>
           </Flex>
@@ -146,10 +162,10 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
         alignItems="center"
       >
         <FormControl display="flex" alignItems="center">
-          <FormLabel cursor={"pointer"} size={"md"} color={"brand.green"} bg={"none"} _hover={{ bg: "none" }} onClick={toggleImage} mb="0">
+          <FormLabel cursor={"pointer"} size={"md"} color={"brand.green"} bg={"none"} _hover={{ bg: "none" }} mb="0">
             <GrGallery/>
           </FormLabel>
-            <Input hidden type="file" {...register("image")} />
+            <Input hidden type="file" {...register("image")} onChange={handleChangeImage} />
         </FormControl>
         <Button
          type="submit"

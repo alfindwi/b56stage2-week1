@@ -26,6 +26,16 @@ export const fetchThreadsByUserId = createAsyncThunk(
   }
 );
 
+export const fetchUserData = async (userId: number) => {
+  try {
+    const response = await apiV1.get(`users/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    return null;
+  }
+};
+
 const threadSlice = createSlice({
   name: "thread",
   initialState,

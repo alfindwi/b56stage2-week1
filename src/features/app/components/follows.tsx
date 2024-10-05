@@ -1,8 +1,8 @@
 import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../hooks/use-store";
-import { fetchFolloweds } from "../../../store/following-slice";
+import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
+import { fetchFolloweds, followedUser } from "../../../store/following-slice";
 import { fetchFollowers, followUser, unfollowUser } from "../../../store/follows-slice";
 import { RootState } from "../../../store/store";
 
@@ -54,42 +54,38 @@ export function FollowsContent({setActiveTab}: {activeTab: "followers" | "follow
 }
 
 
+
 export function Followers() {
   const dispatch = useAppDispatch();
-  const { followers} = useSelector((state: RootState) => state.follows);
+  const { followers } = useAppSelector((state) => state.follows);
 
   useEffect(() => {
-      dispatch(fetchFollowers());
+    dispatch(fetchFollowers());
   }, [dispatch]);
 
-  const handleFollowToggle = (userId: number, isFollowing: boolean) => {
+  const handleFollowToggle = (followerId: number, isFollowing: boolean) => {
     if (isFollowing) {
-      dispatch(unfollowUser(userId));
+      dispatch(unfollowUser(followerId)); 
     } else {
-      dispatch(followUser(userId)); 
+      dispatch(followUser(followerId)); 
     }
   };
 
   return (
     <Flex padding="12px 16px" width="100%" maxWidth="100%" direction="column">
       {followers.map((follow) => {
-        const follower = follow.followers;
-
-        if (!follower) return null; 
+        const follower = follow.follower;
+        const isFollowingUser = follow.isFollowing; 
 
         return (
           <Flex key={follower.id} mt="10px" ml="5px" width="100%">
-            <Avatar
-              size="sm"
-              src={follower.image || undefined}
-              name={follower.fullName}
-            />
+            <Avatar size="sm" src={follower.image} name={follower.fullName} />
             <Flex ml="10px" direction="column">
               <Text fontWeight="700" fontFamily="Plus Jakarta Sans" fontSize="12px">
                 {follower.fullName}
               </Text>
               <Text mb="5px" fontFamily="Plus Jakarta Sans" fontSize="12px" color="gray.500">
-                {follower.username}
+                @{follower.username}
               </Text>
               <Text mb="5px" fontFamily="Plus Jakarta Sans" fontSize="11px" color="white">
                 {follower.bio}
@@ -101,13 +97,13 @@ export function Followers() {
               bg="none"
               mb="40px"
               border="1px solid #909090"
-              color={follow.isFollowing ? "#909090" : "white"}
+              color={isFollowingUser ? "#909090" : "white"}
               fontSize="12px"
               borderRadius="full"
               size="sm"
-              onClick={() => handleFollowToggle(follower.id, follow.isFollowing || false)}
+              onClick={() => handleFollowToggle(follower.id, isFollowingUser)}
             >
-            {follow.isFollowing ? "Following" : "Follow"}
+              {isFollowingUser ? "Following" : "Follow"}
             </Button>
           </Flex>
         );
@@ -116,32 +112,27 @@ export function Followers() {
   );
 }
 
+
 export function Following() {
   const dispatch = useAppDispatch();
-  const { followed, error } = useSelector((state: RootState) => state.following);
+  const { followed } = useSelector((state: RootState) => state.following);
 
   useEffect(() => {
     dispatch(fetchFolloweds());
   }, [dispatch]);
 
-
-  if (error) {
-    return (
-      <Flex justify="center" align="center" height="100vh">
-        <Text fontSize="lg" color="red.500">Error: {error}</Text>
-      </Flex>
-    );
-  }
+  const handleFollowClick = (userId: number, isFollowing: boolean) => {
+    if (isFollowing) {
+      dispatch(unfollowUser(userId)); 
+    } else {
+      dispatch(followedUser(userId));
+    }
+  };
 
   return (
-    <Flex
-      padding="12px 16px"
-      width="100%"
-      maxWidth="100%"
-      direction={"column"}
-    >
-      {followed.map((followers) => {
-        const followingUser = followers.followed; 
+    <Flex padding="12px 16px" width="100%" maxWidth="100%" direction={"column"}>
+      {followed.map((following) => {
+        const followingUser = following.followed;
 
         return (
           <Flex mt={"10px"} ml="5px" width="100%" key={followingUser.id}>
@@ -152,10 +143,10 @@ export function Following() {
             />
             <Flex ml={"10px"} direction={"column"}>
               <Text fontWeight="700" fontFamily={"Plus Jakarta Sans"} fontSize="12px">
-                {followingUser.fullName} 
+                {followingUser.fullName}
               </Text>
               <Text mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="12px" color="gray.500">
-                {followingUser.username} 
+                @ {followingUser.username}
               </Text>
               <Text mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontSize="11px" color="White">
                 {followingUser.bio}
@@ -171,8 +162,9 @@ export function Following() {
               fontSize={"12px"}
               borderRadius={"full"}
               size={"sm"}
+              onClick={() => handleFollowClick(followingUser.id, following.isFollowing || false)}
             >
-              Following
+              {following.isFollowing ? "Following" : "Follow"}
             </Button>
           </Flex>
         );

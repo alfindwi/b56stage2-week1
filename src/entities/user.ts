@@ -1,3 +1,4 @@
+import { FollowDTO } from "../features/auth/types/dto/dto";
 import { socialConnection } from "./social-connection";
 
 export interface UserEntity {
@@ -5,16 +6,18 @@ export interface UserEntity {
   fullName: string;
   email: string;
   image: string;
+  backgroundImage: string;
   bio?: string;
   passwordUsers: string;
   username: string;
   socialConnection: socialConnection | null;
   role: string;
-  followeds: number;
-  followers: number; 
+  followeds: FollowDTO[]; 
+  followers: FollowDTO[]; 
   createdAt: Date;
   updatedAt: Date;
 }
+
 
 export interface SearchResultEntity {
   id: number;

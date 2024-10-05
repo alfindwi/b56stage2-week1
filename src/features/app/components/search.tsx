@@ -1,10 +1,11 @@
 import { Avatar, Box, Button, Flex, Icon, Input, InputGroup, InputLeftElement, InputRightElement, Text } from "@chakra-ui/react";
-import { RiUserSearchLine } from "react-icons/ri";
-import { AppDispatch, RootState } from "../../../store/store";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../hooks/use-store";
-import { setQuery, resetSearch } from "../../../store/search-slice";
+import { useEffect } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
+import { RiUserSearchLine } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchFollowing, followUser, unfollowUser } from "../../../store/follows-slice";
+import { resetSearch, setQuery } from "../../../store/search-slice";
+import { AppDispatch, RootState } from "../../../store/store";
 
 
 export function Search(){
@@ -25,19 +26,35 @@ export function Search(){
 }
 
 export function SearchContent() {
-  const dispatch: AppDispatch = useAppDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const searchQuery = useSelector((state: RootState) => state.search.query);
   const searchResults = useSelector((state: RootState) => state.search.results);
+  const { following } = useSelector((state: RootState) => state.follows);
+
+    useEffect(() => {
+    dispatch(fetchFollowing()); 
+  }, [dispatch]);
+
+  const isFollowing = (userId: number) => {
+    return following.some((user) => user.followed?.id === userId);
+  };
+
+  const handleFollow = (followedId: number) => {
+    dispatch(followUser(followedId));
+  };
+
+  const handleUnfollow = (followedId: number) => {
+    dispatch(unfollowUser(followedId));
+  };
 
   const filteredResults = Array.isArray(searchResults) 
-  ? searchResults.filter(result => 
-      result.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  : [];
+    ? searchResults.filter(result => 
+        result.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
-
-    return (
-        <Flex direction="column" width="100%" height="auto" color="white" p="20px">
+  return (
+    <Flex direction="column" width="100%" height="auto" color="white" p="20px">
       <InputGroup mb="20px">
         <InputLeftElement pointerEvents="none">
           <Icon as={RiUserSearchLine} color="gray.500" />
@@ -62,84 +79,83 @@ export function SearchContent() {
 
       <Flex direction="column" mt="20px">
         {searchQuery && filteredResults.map((search) => (
-          <Flex alignItems="center" justifyContent="space-between" mb="10px">
+          console.log("Filtered Results:", filteredResults),
+          <Flex alignItems="center"  justifyContent="space-between" mb="10px" key={search.id}>
             <Flex alignItems="left">
-              <Avatar src={search.image} name={search.fullName} size="md" mr="10px" mb={"10px"} />
+              <Avatar src={search.image} name={search.fullName} size="md" mr="10px" mb="10px" />
               <Box>
                 <Text fontSize="md" fontWeight="bold">{search.fullName}</Text>
                 <Text fontSize="xs" color="gray.400">{search.username}</Text>
                 <Text fontSize="9px" color="gray.500">{search.bio}</Text>
               </Box>
             </Flex>
-            <Button mb={"25px"} border={"1px solid white"} color={"white"} _hover={{bg: "brand.bg"}} bg={"brand.bg"} borderRadius="full" size="sm" fontSize={"sm"}>
-              Follow
+            <Button
+              mb="25px"
+              border="1px solid white"
+              color={isFollowing(search.id) ? "#909090" : "white"}
+              _hover={isFollowing(search.id) ? { bg: "#none" } : { bg: "#none" }}
+              bg="none"
+              borderRadius="full"
+              size="sm"
+              fontSize="sm"
+              onClick={async () => {
+                try {
+                  if (isFollowing(search.id)) {
+                    await handleUnfollow(search.id);
+                  } else {
+                    await handleFollow(search.id); 
+                  }
+                } catch (error) {
+                  console.error("Error following/unfollowing:", error);
+                }
+              }}
+            >
+              {isFollowing(search.id) ? "Following" : "Follow"}
             </Button>
           </Flex>
         ))}
 
         {(searchQuery && filteredResults.length === 0) && (
-                <Flex alignItems={"center"} justifyContent={"center"} mt={"30px"} direction="column">
-                <Text
-                mt={"200px"}
-                color={"white"} 
-                fontSize={"md"} 
-                alignItems={"center"} 
-                fontFamily={"Plus Jakarta Sans"} 
-                fontWeight={"bold"}>
-                    No results for “{searchQuery}”
-                </Text>
-                <Text
-                mt={"8px"}
-                color={"brand.text-input"} 
-                fontSize={"11px"} 
-                textAlign={"justify"}
-                alignItems={"center"} 
-                fontFamily={"Plus Jakarta Sans"} >
-                    Try searching for something else or check the 
-                </Text>
-                <Text
-                mt={"8px"}
-                color={"brand.text-input"} 
-                fontSize={"11px"} 
-                textAlign={"justify"}
-                alignItems={"center"} 
-                fontFamily={"Plus Jakarta Sans"}>
-                    spelling of what you typed.
-                </Text>
-            </Flex>
-            )}
+          <Flex alignItems={"center"} justifyContent={"center"} mt={"30px"} direction="column">
+            <Text
+              mt={"200px"}
+              color={"white"} 
+              fontSize={"md"} 
+              fontFamily={"Plus Jakarta Sans"} 
+              fontWeight={"bold"}>
+              No results for “{searchQuery}”
+            </Text>
+            <Text
+              mt={"8px"}
+              color={"brand.text-input"} 
+              fontSize={"11px"} 
+              textAlign={"justify"}
+              fontFamily={"Plus Jakarta Sans"} >
+              Try searching for something else or check the spelling of what you typed.
+            </Text>
+          </Flex>
+        )}
 
-       {(!searchQuery || filteredResults.length > 0) && !searchQuery && (
-                <Flex alignItems={"center"} justifyContent={"center"} mt={"30px"} direction="column">
-                    <Text
-                        mt={"200px"}
-                        color={"white"} 
-                        fontSize={"md"} 
-                        alignItems={"center"} 
-                        fontFamily={"Plus Jakarta Sans"} 
-                        fontWeight={"bold"}>
-                        Write and search something
-                    </Text>
-                    <Text
-                        mt={"8px"}
-                        color={"brand.text-input"} 
-                        fontSize={"11px"} 
-                        textAlign={"justify"}
-                        alignItems={"center"} 
-                        fontFamily={"Plus Jakarta Sans"} >
-                        Try searching for something else or check the 
-                    </Text>
-                    <Text
-                        mt={"8px"}
-                        color={"brand.text-input"} 
-                        fontSize={"11px"} 
-                        textAlign={"justify"}
-                        alignItems={"center"} 
-                        fontFamily={"Plus Jakarta Sans"}>
-                        spelling of what you typed.
-                    </Text>
-                </Flex>
-            )}
+        {(!searchQuery && filteredResults.length === 0) && (
+          <Flex alignItems={"center"} justifyContent={"center"} mt={"30px"} direction="column">
+            <Text
+              mt={"200px"}
+              color={"white"} 
+              fontSize={"md"} 
+              fontFamily={"Plus Jakarta Sans"} 
+              fontWeight={"bold"}>
+              Write and search something
+            </Text>
+            <Text
+              mt={"8px"}
+              color={"brand.text-input"} 
+              fontSize={"11px"} 
+              textAlign={"justify"}
+              fontFamily={"Plus Jakarta Sans"} >
+              Try searching for something else or check the spelling of what you typed.
+            </Text>
+          </Flex>
+        )}
       </Flex>
     </Flex>
   );

@@ -42,8 +42,8 @@ const searchSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchDummyUsers.fulfilled, (state, action) => {
           console.log("Data yang diterima:", action.payload); 
-          // Ambil hanya properti yang dibutuhkan
           state.results = action.payload.data.map((user: any) => ({
+            id: user.id,
             fullName: user.fullName,
             username: user.username,
             bio: user.bio,

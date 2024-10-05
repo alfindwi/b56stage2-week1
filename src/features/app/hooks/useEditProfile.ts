@@ -32,6 +32,9 @@ import { useToast } from "@chakra-ui/react";
       if (data.image && data.image[0]) {
         formData.append("image", data.image[0]);
       }
+      if(data.backgroundImage && data.backgroundImage[0]){
+        formData.append("backgroundImage", data.backgroundImage[0]);
+      }
       const response = await apiV1.patch<null, { data: UserEntity }>(
         `/users/${userId}`,
         formData,

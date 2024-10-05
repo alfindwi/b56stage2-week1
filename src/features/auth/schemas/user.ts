@@ -5,6 +5,7 @@ export const userSchema = z.object({
   username: z.string().min(1),
   bio: z.string().min(1),
   fullName: z.string().min(1),
+  backgroundImage: z.instanceof(FileList || null),
 });
 
 

@@ -68,6 +68,7 @@ export function useHome() {
     mutationKey: ["createThread"],
     mutationFn: createThread,
   });
+  
 
   async function onSubmit(data: CreateThreadFormInputs) {
     try {
@@ -92,39 +93,6 @@ export function useHome() {
     }
   }
 
-  // Fungsi untuk menambah like
-  async function addLike(threadId: number, userId: number): Promise<void> {
-    await apiV1.post(`/threads/${threadId}/like`, { userId }, {
-      headers: {
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
-    });
-  }
-
-  const { mutate: addLikeAsync } = useMutation({
-    mutationFn: ({ threadId, userId }: { threadId: number; userId: number }) => addLike(threadId, userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["thread"] });
-      toast({
-        title: "Like berhasil ditambahkan!",
-        description: "Anda telah menyukai thread ini.",
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "top",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Terjadi kesalahan",
-        description: "Gagal menambahkan like.",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "top",
-      });
-    },
-  });
 
   return {
     register,
@@ -134,6 +102,5 @@ export function useHome() {
     onSubmit,
     data,
     isLoading,
-    addLikeAsync,
   };
 }

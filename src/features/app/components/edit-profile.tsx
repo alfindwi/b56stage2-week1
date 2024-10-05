@@ -9,7 +9,7 @@ interface EditProfileProps {
 }
 
 export function EditProfile({ onClose }: EditProfileProps) {
-    const { username,fullName, image, bio} = useAppSelector((state) => state.auth);
+    const { username,fullName, image, bio, backgroundImage} = useAppSelector((state) => state.auth);
     const {register, handleSubmit, isSubmitting, onSubmit} = useEditProfile();
     return (
         <Box 
@@ -36,12 +36,23 @@ export function EditProfile({ onClose }: EditProfileProps) {
                     <Icon onClick={onClose} color={"brand.text-input"} as={IoCloseCircleOutline} cursor={"pointer"} ml="330px"/>
                 </Text>
                 <Image 
-                    src="/src/styles/image.png" 
+                    src={backgroundImage}
                     width="700px" 
                     height="89px"
                     padding="0px 15px" 
                     borderRadius='3xl'
                 />
+                <FormControl>
+                    <FormLabel position="absolute"
+                    top="10%" 
+                    left="50%"
+                    transform="translate(-100%, -300%)"
+                    zIndex="2"
+                    color="brand.green">
+                        <GrGallery color="#B2B2B2" />
+                    </FormLabel>
+                    <Input hidden type="file" {...register("backgroundImage")}  />
+                </FormControl>
                 <Avatar
                     size='lg' 
                     position="absolute" 

@@ -5,6 +5,10 @@ import authReducer from "./auth-slice";
 import followsReducer from "./follows-slice";
 import followingReducer from "./following-slice";
 import profileReducer from "./profile-user-slice";
+import likeReducer from "./threadLike-slice";
+import replyReducer from "./replyLike-slice"
+import suggestionReducer from "./suggestion-slice"
+import userReducer from "./user-profile"
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +18,10 @@ export const store = configureStore({
       following: followingReducer,
       thread: threadReducer,
       profile: profileReducer,
+      like: likeReducer,
+      reply: replyReducer,
+      suggestion: suggestionReducer,
+      user: userReducer
     }
 })
 

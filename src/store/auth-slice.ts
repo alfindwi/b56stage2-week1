@@ -10,15 +10,13 @@ const initialState: UserStoreDTO = {
   username: "",
   bio: "",
   image: "",
-  followeds: 0,
-  followers: 0,
+  backgroundImage: "",
 } as UserStoreDTO;
 
 export const fetchDummyUsers = createAsyncThunk(
   "users/fetchDummyUsers",
   async () => {
     const response = await apiV1.get("/users");
-    
     return response.data;
   }
 );
@@ -38,6 +36,7 @@ const authSlice = createSlice({
         bio: action.payload.bio,
         image: action.payload.image,
         followeds: action.payload.followeds,
+        backgroundImage: action.payload.backgroundImage,
         followers: action.payload.followers,
       };
     },
@@ -48,16 +47,18 @@ const authSlice = createSlice({
       state.bio = updatedUser.bio; 
       state.email = updatedUser.email;
       state.image = updatedUser.image;
+      state.backgroundImage = updatedUser.backgroundImage;
       state.followeds = updatedUser.followeds;
       state.followers = updatedUser.followers;
     },
     removeUser() {
       return {} as UserStoreDTO;
     },
+    logout() {
+      return initialState;
+    },
   },
 });
 
-
-export const { setUser, removeUser, updateUsers } = authSlice.actions;
-
+export const { setUser, removeUser, updateUsers, logout } = authSlice.actions;
 export default authSlice.reducer;

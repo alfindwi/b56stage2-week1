@@ -9,6 +9,7 @@ import "../styles/styles.css";
 import { fetchFolloweds } from "../../../store/following-slice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
+import { fetchSuggestedUsers } from "../../../store/suggestion-slice";
 
 interface RigthBarProps {
     isProfileVisible: boolean;
@@ -37,7 +38,7 @@ interface RigthBarProps {
           onEditProfileClick={onEditProfileClick}
         />
       )}        
-        <SuggestForYou />
+        <SuggestForYou  userId={useAppSelector((state) => state.auth.id)}/>
         <DevelopedBy />
       </Flex>
     );
@@ -46,7 +47,7 @@ interface RigthBarProps {
 export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
     const dispatch = useAppDispatch();
     
-    const { username, fullName, image, bio } = useAppSelector((state) => state.auth);
+    const { username, fullName, image, bio, backgroundImage} = useAppSelector((state) => state.auth);
     const { followed} = useSelector((state: RootState) => state.following);
     const { followers } = useSelector((state: RootState) => state.follows);
 
@@ -68,7 +69,7 @@ export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
           <Text padding={"5px 20px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"550"} fontSize={"14px"}>
             My Profile
           </Text>
-          <Image src="/src/styles/image.png" width="435px" height={"65px"} padding={"0px 15px"} borderRadius="3xl" />
+          <Image src={backgroundImage || "/src/styles/image.png" } width="435px" height={"65px"} padding={"0px 15px"} borderRadius="3xl" />
           <Avatar
             size="lg"
             position={"absolute"}
@@ -130,164 +131,74 @@ export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
       </Box>
     );
 }
-  
-export function SuggestForYou() {
-    return(
-        <Box mt={"8px"} backgroundColor={"brand.profile"} height={"275px"} width={"340px"} position={"relative"} padding={"8px 0px 12px 0px"} borderRadius={"md"} >
-                <Heading fontSize={"13px"} padding={"2px 24px"} mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"700"}>Suggested for you</Heading>
-                <Flex alignItems="center" mt={"12px"} padding="0 24px" justifyContent="space-between">
-                    <Flex alignItems="center">
-                    <Avatar 
-                        size='sm'
-                        src='/src/styles/profile.png' 
-                        name='Mohammed Jawahir' 
-                    />
-                    <Box ml="12px">
-                        <Text fontSize={"12px"} fontWeight={"600"} fontFamily={"Plus Jakarta Sans"}>
-                            Mohammed Jawahir
-                        </Text>
-                        <Text fontSize={"12px"} fontWeight={"400"} fontFamily={"Plus Jakarta Sans"} color={"#909090"}>
-                            @em.jawir
-                        </Text>
-                    </Box>
-                    </Flex>
-                    <Button
-                     display={"flex"}
-                     justifyItems={"center"}
-                     size={"sm"}
-                     border={"1px solid #909090"} 
-                     bg={"transparent"} 
-                     color={"#909090"} 
-                     fontFamily={"Plus Jakarta Sans"} 
-                     fontWeight={"500"} 
-                     _hover={{color: "none"}} 
-                     _active={{color: "none"}}
-                     borderRadius={"50px"} 
-                     fontSize={"11px"}>Following</Button>
-                </Flex>
-                <Flex alignItems="center" mt={"13px"} padding="0 24px" justifyContent="space-between">
-                    <Flex alignItems="center">
-                    <Avatar 
-                        size='sm'
-                        src='/src/styles/cewe.png' 
-                        name='Mohammed Jawahir' 
-                    />
-                    <Box ml="12px">
-                        <Text fontSize={"12px"} fontWeight={"600"} fontFamily={"Plus Jakarta Sans"}>
-                            Shakia Kimathi
-                        </Text>
-                        <Text fontSize={"12px"} fontWeight={"400"} fontFamily={"Plus Jakarta Sans"} color={"#909090"}>
-                            @shakiakim
-                        </Text>
-                    </Box>
-                    </Flex>
-                    <Button
-                     display={"flex"}
-                     justifyItems={"center"}
-                     size={"sm"}
-                     border={"1px solid white"} 
-                     bg={"transparent"} 
-                     color={"white"} 
-                     fontFamily={"Plus Jakarta Sans"} 
-                     fontWeight={"500"} 
-                     _hover={{color: "none"}} 
-                     _active={{color: "none"}}
-                     borderRadius={"50px"} 
-                     fontSize={"11px"}>Follow</Button>
-                </Flex>
-                <Flex alignItems="center" mt={"13px"} padding="0 24px" justifyContent="space-between">
-                    <Flex alignItems="center">
-                    <Avatar 
-                        size='sm'
-                        src='/src/styles/kuning.png' 
-                        name='Mohammed Jawahir' 
-                    />
-                    <Box ml="12px">
-                        <Text fontSize={"12px"} fontWeight={"600"} fontFamily={"Plus Jakarta Sans"}>
-                           Naveen Singh
-                        </Text>
-                        <Text fontSize={"12px"} fontWeight={"400"} fontFamily={"Plus Jakarta Sans"} color={"#909090"}>
-                        @naveeeen
-                        </Text>
-                    </Box>
-                    
-                    </Flex>
-                    <Button
-                     display={"flex"}
-                     justifyItems={"center"}
-                     size={"sm"} 
-                     border={"1px solid white"} 
-                     bg={"transparent"} 
-                     color={"white"} 
-                     fontFamily={"Plus Jakarta Sans"} 
-                     fontWeight={"500"} 
-                     _hover={{color: "none"}} 
-                     _active={{color: "none"}}
-                     borderRadius={"50px"} 
-                     fontSize={"11px"}>Follow</Button>
-                </Flex>
-                <Flex alignItems="center" mt={"13px"} padding="0 24px" justifyContent="space-between">
-                    <Flex alignItems="center">
-                    <Avatar 
-                        size='sm'
-                        src='/src/styles/jenifier.png' 
-                        name='Mohammed Jawahir' 
-                    />
-                    <Box ml="12px">
-                        <Text fontSize={"12px"} fontWeight={"600"} fontFamily={"Plus Jakarta Sans"}>
-                        Jennifer Stewart                        </Text>
-                        <Text fontSize={"12px"} fontWeight={"400"} fontFamily={"Plus Jakarta Sans"} color={"#909090"}>
-                        @jenniferste                        
-                        </Text>
-                    </Box>
-                    </Flex>
-                    <Button
-                     display={"flex"}
-                     justifyItems={"center"}
-                     size={"sm"} 
-                     border={"1px solid white"} 
-                     bg={"transparent"} 
-                     color={"white"} 
-                     fontFamily={"Plus Jakarta Sans"} 
-                     fontWeight={"500"} 
-                     _hover={{color: "none"}} 
-                     _active={{color: "none"}}
-                     borderRadius={"50px"} 
-                     fontSize={"11px"}>Follow</Button>
-                </Flex>
-                <Flex alignItems="center" mt={"13px"} padding="0 24px" justifyContent="space-between">
-                    <Flex alignItems="center">
-                    <Avatar 
-                        size='sm'
-                        src='/src/styles/biru.png' 
-                        name='Mohammed Jawahir' 
-                    />
-                    <Box ml="12px">
-                        <Text fontSize={"12px"} fontWeight={"600"} fontFamily={"Plus Jakarta Sans"}>
-                        Zula Chizimu
-                        </Text>
-                        <Text fontSize={"12px"} fontWeight={"400"} fontFamily={"Plus Jakarta Sans"} color={"#909090"}>
-                        @zulachi                        
-                        </Text>
-                    </Box>
-                    </Flex>
-                    <Button
-                     display={"flex"}
-                     justifyItems={"center"}
-                     size={"sm"}  
-                     border={"1px solid white"} 
-                     bg={"transparent"} 
-                     color={"white"} 
-                     fontFamily={"Plus Jakarta Sans"} 
-                     fontWeight={"500"} 
-                     _hover={{color: "none"}} 
-                     _active={{color: "none"}}
-                     borderRadius={"50px"} 
-                     fontSize={"11px"}>Follow</Button>
-                </Flex>
-            </Box> 
-    )
+
+export function SuggestForYou({ userId }: { userId: number }) {
+  const dispatch = useAppDispatch();
+  const { users: suggestedUsers } = useAppSelector((state) => state.suggestion);
+  const { followers } = useAppSelector((state) => state.follows);
+
+  useEffect(() => {
+    dispatch(fetchFollowers());
+    dispatch(fetchSuggestedUsers(userId));
+  }, [dispatch, userId]);
+
+  const isFollowing = (userId: number) => followers.some((follow) => follow.follower.id === userId);
+
+  const handleFollowToggle = (suggestedUserId: number) => {
+    const isUserFollowing = isFollowing(suggestedUserId);
+    if (isUserFollowing) {
+      dispatch(unfollowUser(suggestedUserId));
+    } else {
+      dispatch(followUser(suggestedUserId));
+    }
+  };
+
+  return (
+    <Box mt={"8px"} backgroundColor={"brand.profile"} height={"275px"} width={"340px"} position={"relative"} padding={"8px 0px 12px 0px"} borderRadius={"md"}>
+      <Heading fontSize={"13px"} padding={"2px 24px"} mb={"5px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"700"}>
+        Suggested for you
+      </Heading>
+
+      {Array.isArray(suggestedUsers) && suggestedUsers.map((user) => (
+        <Flex key={user.id} alignItems="center" mt={"12px"} padding="0 24px" justifyContent="space-between">
+          <Flex alignItems="center">
+            <Avatar size='sm' src={user.image || '/default_profile.png'} name={user.fullName} />
+            <Box ml="12px">
+              <Text fontSize={"12px"} fontWeight={"600"} fontFamily={"Plus Jakarta Sans"}>
+                {user.fullName}
+              </Text>
+              <Text fontSize={"12px"} fontWeight={"400"} fontFamily={"Plus Jakarta Sans"} color={"#909090"}>
+                @{user.username}
+              </Text>
+            </Box>
+          </Flex>
+
+          <Button
+            display={"flex"}
+            justifyItems={"center"}
+            size={"sm"}
+            border={"1px solid #909090"} 
+            bg={"transparent"} 
+            color={isFollowing(user.id) ? "#909090" : "white"} 
+            fontFamily={"Plus Jakarta Sans"} 
+            fontWeight={"500"} 
+            _hover={{ color: "none" }} 
+            _active={{ color: "none" }}
+            borderRadius={"50px"} 
+            fontSize={"11px"}
+            onClick={() => handleFollowToggle(user.id)}
+          >
+            {isFollowing(user.id) ? "Following" : "Follow"}
+          </Button>
+        </Flex>
+      ))}
+    </Box>
+  );
 }
+
+
+
+
 
 export function DevelopedBy() {
     return (

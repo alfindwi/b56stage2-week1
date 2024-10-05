@@ -1,13 +1,17 @@
 import { Avatar, Box, Button, Flex, Icon, Image, Img, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { BiMessageSquareDetail } from "react-icons/bi";
-import { CiHeart } from "react-icons/ci";
+import { FaRegHeart } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
+import { fetchFolloweds } from "../../../store/following-slice";
 import { fetchThreadsByUserId } from "../../../store/profile-slice";
 import { RootState } from "../../../store/store";
 import { EditProfile } from "./edit-profile";
-import { useSelector } from "react-redux";
-import { fetchFolloweds } from "../../../store/following-slice";
+import { FcLike } from "react-icons/fc";
+import { likeThread, unlikeThread } from "../../../store/threadLike-slice";
+
+
 
 
 export function Profile(){
@@ -64,7 +68,7 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
                 > {user.fullName}
                 </Text>
                 <Image 
-                src="/src/styles/image.png" 
+                src={user.backgroundImage || "/src/styles/image.png" }
                 width="708px" 
                 height={"100px"}
                 padding={"0px 15px"} 
@@ -114,64 +118,77 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
 
 export function PostCard() {
     const dispatch = useAppDispatch();
+    
     const threads = useAppSelector((state) => state.thread.threads);
-    const userId = useAppSelector((state) => state.auth.id);
-
+    const userId = useAppSelector((state) => state.auth.id); // User login ID
+    const { likes } = useAppSelector((state) => state.like);
+  
+    const handleLike = (threadId: number) => {
+      const likeData = likes[threadId];
+      if (likeData?.isLiked) {
+        dispatch(unlikeThread(threadId));
+      } else {
+        dispatch(likeThread(threadId));
+      }
+    };
+  
     useEffect(() => {
-        if (userId) {
-            console.log("Fetching threads for userId:", userId);
-            dispatch(fetchThreadsByUserId(userId));
-        } else {
-            console.error("userId is undefined");
-        }
+      if (userId) {
+        console.log("Fetching threads for userId:", userId);
+        dispatch(fetchThreadsByUserId(userId));
+      } else {
+        console.error("userId is undefined");
+      }
     }, [dispatch, userId]);
-
-
-
+  
     return (
-        <>
+      <>
         {Array.isArray(threads) && threads.length > 0 ? (
-            threads.map((thread) => (
-            <Flex width="520px" key={thread.id}>
-        <Flex direction="column" mt="10px" ml="10px" mb="0px" width="100%">
-            <Flex mt="10px" borderBottom="1px solid #545454">
-                <Avatar
-                    size='sm'
-                    src={thread.user.image}
-                    name={thread.user.fullName}
-                />
-                <Box ml="10px" width="100%">
-                    <Flex>
+          threads.map((thread) => {
+            const likeData = likes[thread.id] || { isLiked: false, likesCount: 0 };
+            return (
+              <Flex width="520px" key={thread.id}>
+                <Flex direction="column" mt="10px" ml="10px" mb="0px" width="100%">
+                  <Flex mt="10px" borderBottom="1px solid #545454">
+                    <Avatar
+                      size='sm'
+                      src={thread.user.image}
+                      name={thread.user.fullName}
+                    />
+                    <Box ml="10px" width="100%">
+                      <Flex>
                         <Text fontWeight="700" fontFamily="Plus Jakarta Sans" fontSize="12px">
-                            {thread.user.fullName}
+                          {thread.user.fullName}
                         </Text>
                         <Text ml="5px" mb="5px" fontFamily="Plus Jakarta Sans" fontSize="12px" color="gray.500">
-                            {thread.user.username} <Text as="span" color="gray.500" ml="1px" mr="1px">•</Text> {new Date(thread.createdAt).toTimeString().toString().slice(0, 5)}
+                          {thread.user.username} <Text as="span" color="gray.500" ml="1px" mr="1px">•</Text> {new Date(thread.createdAt).toTimeString().toString().slice(0, 5)}
                         </Text>
-                    </Flex>
-                    <Text fontSize="12px" fontFamily="Plus Jakarta Sans" fontWeight="400" color="white">
+                      </Flex>
+                      <Text fontSize="12px" fontFamily="Plus Jakarta Sans" fontWeight="400" color="white">
                         {thread.content}
-                    </Text>
-                    {thread.image && thread.image !== "" && (
+                      </Text>
+                      {thread.image && thread.image !== "" && (
                         <Img mt="10px" src={thread.image} width={"400px"} height={"300px"} />
-                    )}
-                    <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
-                        <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
-                            <Icon as={CiHeart} mr="5px" />
-                            {thread.likes?.length}
+                      )}
+                      <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
+                        <Flex onClick={() => handleLike(thread.id)} cursor="pointer" fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
+                          <Icon as={likeData.isLiked ? FaRegHeart : FcLike} mr="5px" />
+                          {thread.likes?.length}
                         </Flex>
                         <Flex fontFamily="Plus Jakarta Sans" fontWeight="400" fontSize="12px" alignItems="center" mr="20px">
-                            <Icon as={BiMessageSquareDetail} mr="5px" />
-                            {thread.replies?.length} Replies
+                          <Icon as={BiMessageSquareDetail} mr="5px" />
+                          {thread.replies?.length} Replies
                         </Flex>
-                    </Flex>
-                </Box>
-            </Flex>
-        </Flex>
-            </Flex>
-            ))
-            ) : null}
-        </>
+                      </Flex>
+                    </Box>
+                  </Flex>
+                </Flex>
+              </Flex>
+            );
+          })
+        ) : null}
+      </>
     );
-}
+  }
+
 
