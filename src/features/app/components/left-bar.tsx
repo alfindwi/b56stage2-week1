@@ -59,17 +59,6 @@ export function LeftBar({ onOpenCreatePost }: LeftBarProps) {
 export function CreatePost({ onClose }: { onClose: () => void }) {
   const [image, setImage] = useState<string | null>(null); 
 
-    const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const file = e.target.files[0];
-            const imageUrl = URL.createObjectURL(file);
-            setImage(imageUrl); 
-            setShow(true);
-        } else {
-            setImage(null);
-            setShow(false);
-        }
-    };
 
     const handleClosePreview = () => {
       setShow(false); // Hide the preview
