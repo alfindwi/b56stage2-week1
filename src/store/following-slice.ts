@@ -5,13 +5,13 @@ import Cookies from "js-cookie";
 
 
 interface FollowersState {
-  followed: FollowEntity[]; 
+  following: FollowEntity[]; 
   loading: boolean;
   error: string | null;
 }
 
 const initialState: FollowersState = {
-  followed: [], 
+  following: [], 
   loading: false,
   error: null,
 };
@@ -78,7 +78,7 @@ const followedsSlice = createSlice({
   initialState,
   reducers: {
     clearFollowers(state) {
-      state.followed = [];
+      state.following = [];
     },
   },
   extraReducers: (builder) => {
@@ -88,7 +88,7 @@ const followedsSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchFolloweds.fulfilled, (state, action: PayloadAction<FollowEntity[]>) => {
-        state.followed = action.payload; 
+        state.following = action.payload; 
         state.loading = false;
       })
       .addCase(fetchFolloweds.rejected, (state, action) => {
@@ -96,7 +96,7 @@ const followedsSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(followedUser.fulfilled, (state, action) => {
-        const user = state.followed.find(f => f.followed.id === action.payload); 
+        const user = state.following.find(f => f.followed.id === action.payload); 
         if (user) {
           user.isFollowing = true; 
         } else {
@@ -104,7 +104,7 @@ const followedsSlice = createSlice({
         }
       })
       .addCase(unfollowUser.fulfilled, (state, action) => {
-        const user = state.followed.find(f => f.followed.id === action.payload); 
+        const user = state.following.find(f => f.followed.id === action.payload); 
         if (user) {
           user.isFollowing = false;
         } else {

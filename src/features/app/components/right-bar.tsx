@@ -4,7 +4,7 @@ import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
 import { fetchDummyUsers } from "../../../store/auth-slice";
-import { fetchFollowers, followUser, unfollowUser } from "../../../store/follows-slice";
+import { fetchFollowers, fetchFollowing, followUser, unfollowUser } from "../../../store/follows-slice";
 import "../styles/styles.css";
 import { fetchFolloweds } from "../../../store/following-slice";
 import { useSelector } from "react-redux";
@@ -48,7 +48,7 @@ export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
     const dispatch = useAppDispatch();
     
     const { username, fullName, image, bio, backgroundImage} = useAppSelector((state) => state.auth);
-    const { followed} = useSelector((state: RootState) => state.following);
+    const {following} = useSelector((state: RootState) => state.following);
     const { followers } = useSelector((state: RootState) => state.follows);
 
     useEffect(() => {
@@ -113,7 +113,7 @@ export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
             </Text>
             <Flex align={"center"} padding={"4px 0px"}>
               <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
-                  {followed.length}
+                  {following.length}
               </Text>
               <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>
                   Following
@@ -134,16 +134,16 @@ export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
 
 export function SuggestForYou({ userId }: { userId: number }) {
   const dispatch = useAppDispatch();
-  const { users: suggestedUsers} = useAppSelector((state) => state.suggestion);
-  const { followers } = useAppSelector((state) => state.follows);
+  const { users: suggestedUsers } = useAppSelector((state) => state.suggestion);
+  const { following } = useAppSelector((state) => state.follows); 
 
   useEffect(() => {
-    dispatch(fetchFollowers());
+    dispatch(fetchFollowing()); 
     dispatch(fetchSuggestedUsers(userId));
   }, [dispatch, userId]);
 
   const isFollowing = (suggestedUserId: number) => {
-    return followers.some((follow) => follow.follower.id === suggestedUserId);
+    return following.some((follow) => follow.followed.id === suggestedUserId);
   };
 
   const handleFollowToggle = (suggestedUserId: number) => {
@@ -153,7 +153,6 @@ export function SuggestForYou({ userId }: { userId: number }) {
       dispatch(followUser(suggestedUserId));
     }
   };
-
 
   return (
     <Box mt={"8px"} backgroundColor={"brand.profile"} height={"275px"} width={"340px"} position={"relative"} padding={"8px 0px 12px 0px"} borderRadius={"md"}>
@@ -196,6 +195,7 @@ export function SuggestForYou({ userId }: { userId: number }) {
     </Box>
   );
 }
+
 
 
 export function DevelopedBy() {

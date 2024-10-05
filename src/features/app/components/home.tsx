@@ -121,13 +121,15 @@ function WhatHappen() {
 
 
     const handleLikeReply = (replyId: number) => {
-        const isLikedReply = replyLikes[replyId]?.isLikedReply; 
-        if (isLikedReply) {
-            dispatch(unlikeReply(replyId));
+        // Find the reply from the array of replies
+        const reply = replyLikes.find(r => r.id === replyId);
+    
+        if (reply?.isLikedReply) {
+          dispatch(unlikeReply(replyId));
         } else {
-            dispatch(likeReply(replyId));
+          dispatch(likeReply(replyId));
         }
-    };
+      };
 
     useEffect(() => {
         dispatch(fetchFollowers());
@@ -159,173 +161,172 @@ function WhatHappen() {
                 <>
                     <Text color={"white"} padding={"20px 20px 8px 20px"} fontSize={"xl"} fontFamily={"Plus Jakarta Sans"} fontWeight={"bold"}>Home</Text>
                     <form onSubmit={handleSubmit(onSubmit)}>
-    <Flex padding="5px 20px 5px 20px" align="center">
-        <Avatar size="sm" src="/src/styles/cewe.png" name="Mohammed Jawahir" />
-        <Box ml="10px" width="100%">
-            <Input
-                size={"sm"}
-                border="none"
-                _focus={{ border: "none", boxShadow: "none" }}
-                borderRadius="5px"
-                backgroundColor="#1D1D1D"
-                type="text"
-                placeholder="What is happening?!"
-                _placeholder={{ color: 'brand.text-input' }}
-                color={"white"}
-                {...register("content")}
-            />
-        </Box>
-        <Flex alignItems="center" justifyContent="space-between">
-            <FormControl display="flex" alignItems="center">
-                <FormLabel cursor={"pointer"} size={"md"} color={"brand.green"} bg={"none"} _hover={{ bg: "none" }} mb="0">
-                    <GrGallery />
-                </FormLabel>
-                <Input 
-                    hidden 
-                    type="file" 
-                    accept="image/*" 
-                    {...register("image", { onChange: handleChangeImage })} 
-                />
-            </FormControl>
-        </Flex>
-        <Button
-            type="submit"
-            mr="7px"
-            size={"sm"}
-            bg={"brand.green-disabled"}
-            fontSize={"11px"}
-            fontWeight={"500"}
-            color={"white"}
-            padding={"8px 16px"}
-            _active={{ bg: "brand.green" }}
-            borderRadius={"30px"}
-            _hover={{ bg: "brand.green" }}
-            position="relative"
-        >
-            {isSubmitting ? (
-                <Spinner size={"sm"} position="absolute" top="30%" left="27%" transform="translate(-50%, -50%)" />
-            ) : "Post"}
-        </Button>
-    </Flex>
+                    <Flex padding="5px 20px 5px 20px" align="center">
+                        <Avatar size="sm" src="https://res.cloudinary.com/db2rr1kej/image/upload/v1728142149/uploads/o8ivurqezrpbzwpj7k0y.png" name="Mohammed Jawahir" />
+                        <Box ml="10px" width="100%">
+                            <Input
+                                size={"sm"}
+                                border="none"
+                                _focus={{ border: "none", boxShadow: "none" }}
+                                borderRadius="5px"
+                                backgroundColor="#1D1D1D"
+                                type="text"
+                                placeholder="What is happening?!"
+                                _placeholder={{ color: 'brand.text-input' }}
+                                color={"white"}
+                                {...register("content")}
+                            />
+                        </Box>
+                        <Flex alignItems="center" justifyContent="space-between">
+                            <FormControl display="flex" alignItems="center">
+                                <FormLabel cursor={"pointer"} size={"md"} color={"brand.green"} bg={"none"} _hover={{ bg: "none" }} mb="0">
+                                    <GrGallery />
+                                </FormLabel>
+                                <Input 
+                                    hidden 
+                                    type="file" 
+                                    accept="image/*" 
+                                    {...register("image", { onChange: handleChangeImage })} 
+                                />
+                            </FormControl>
+                        </Flex>
+                        <Button
+                            type="submit"
+                            mr="7px"
+                            size={"sm"}
+                            bg={"brand.green-disabled"}
+                            fontSize={"11px"}
+                            fontWeight={"500"}
+                            color={"white"}
+                            padding={"8px 16px"}
+                            _active={{ bg: "brand.green" }}
+                            borderRadius={"30px"}
+                            _hover={{ bg: "brand.green" }}
+                            position="relative"
+                        >
+                            {isSubmitting ? (
+                                <Spinner size={"sm"} position="absolute" top="30%" left="27%" transform="translate(-50%, -50%)" />
+                            ) : "Post"}
+                        </Button>
+                    </Flex>
 
-    {show && (
-        <Box position="relative" ml={"75px"} mb={"20px"}>
-            <Img 
-                src={image || ""} // Menggunakan state image
-                width={"350px"}
-                height={"390px"}
-                borderRadius={"10px"}
-            />
-            <Icon 
-                as={IoIosCloseCircle} 
-                color="white" 
-                position="absolute" 
-                top="10px" 
-                fontSize={"20px"}
-                right="120px" 
-                cursor="pointer" 
-                _hover={{ color: "white" }} 
-                zIndex="10" 
-                onClick={() => {
-                    setShow(false); // Menghilangkan preview
-                }}
-            />
-        </Box>
-    )}
-</form>
-
+                    {show && (
+                            <Box position="relative" ml={"75px"} mb={"20px"}>
+                                <Img 
+                                    src={image || ""} // Menggunakan state image
+                                    width={"350px"}
+                                    height={"390px"}
+                                    borderRadius={"10px"}
+                                />
+                                <Icon 
+                                    as={IoIosCloseCircle} 
+                                    color="white" 
+                                    position="absolute" 
+                                    top="10px" 
+                                    fontSize={"20px"}
+                                    right="120px" 
+                                    cursor="pointer" 
+                                    _hover={{ color: "white" }} 
+                                    zIndex="10" 
+                                    onClick={() => {
+                                        setShow(false); // Menghilangkan preview
+                                    }}
+                                />
+                            </Box>
+                    )}
+                    </form>
 
                     {/* Thread */}
                     {Array.isArray(data) ? (
-                        data.map((thread) => {
-                        const likeData = likes[thread.id] || { isLiked: false, likesCount: 0 };
-                        return (
-                            <Flex
-                            key={thread.id}
-                            border="1px solid #545454"
-                            padding="12px 16px"
-                            height={"auto"}
-                            width={"545px"}
-                            cursor="pointer"
-                            >
-                            <Box>
-                                <Avatar
-                                size="sm"
-                                src={thread.user.image}
-                                name={thread.user.fullName}
-                                onClick={() => goToProfile(thread.user.id, thread, thread.user)}
-                                />
-                            </Box>
-                            <Box
-                                ml="10px"
-                                width="100%"
-                                onClick={() => {
-                                goToPostCard(thread);
-                                handleThreadClick(thread.id);
-                                }}
-                            >
-                                <Flex>
-                                <Text
-                                    fontWeight="700"
-                                    fontFamily="Plus Jakarta Sans"
-                                    fontSize="12px"
-                                >
-                                    {thread.user.fullName}
-                                </Text>
-                                <Text
-                                    ml="5px"
-                                    mb="5px"
-                                    fontFamily="Plus Jakarta Sans"
-                                    fontSize="12px"
-                                    color="gray.500"
-                                >
-                                    @{thread.user.username}
-                                    <Text as="span" color="gray.500" ml="1px" mr="1px">
-                                    •
-                                    </Text>
-                                    {new Date(thread.createdAt).toLocaleString("en-US", {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                    })}
-                                </Text>
-                                </Flex>
-                                <Text
-                                fontSize="12px"
-                                fontFamily="Plus Jakarta Sans"
-                                fontWeight="400"
-                                color="white"
-                                >
-                                {thread.content}
-                                </Text>
-                                <Img mt="10px" src={thread.image} width={"400px"} height={"300px"} />
-                                <Flex mt="10px" color="gray.500" fontSize="sm">
-                                <Flex
-                                    fontFamily="Plus Jakarta Sans"
-                                    fontWeight="400"
-                                    fontSize="12px"
-                                    alignItems="center"
-                                    mr="20px"
-                                    onClick={() => handleLike(thread.id)} 
+                                data.map((thread) => {
+                                const likeData = likes[thread.id] || { isLiked: false, likesCount: 0 };
+                                return (
+                                    <Flex
+                                    key={thread.id}
+                                    border="1px solid #545454"
+                                    padding="12px 16px"
+                                    height={"auto"}
+                                    width={"545px"}
                                     cursor="pointer"
-                                >
-                                    <Icon as={likeData.isLiked ? FcLike : FaRegHeart} size={"15px"} mr="5px" />
-                                    {thread.likes?.length}
-                                </Flex>
-                                <Flex
-                                    fontFamily="Plus Jakarta Sans"
-                                    fontWeight="400"
-                                    fontSize="12px"
-                                    alignItems="center"
-                                    mr="20px"
-                                >
-                                    <Icon as={BiMessageSquareDetail} mr="5px" />
-                                    {thread.replies?.length} Replies
-                                </Flex>
-                                </Flex>
-                            </Box>
-                            </Flex>
-                        );
-                        })
+                                    >
+                                    <Box>
+                                        <Avatar
+                                        size="sm"
+                                        src={thread.user.image}
+                                        name={thread.user.fullName}
+                                        onClick={() => goToProfile(thread.user.id, thread, thread.user)}
+                                        />
+                                    </Box>
+                                    <Box
+                                        ml="10px"
+                                        width="100%"
+                                        onClick={() => {
+                                        goToPostCard(thread);
+                                        handleThreadClick(thread.id);
+                                        }}
+                                    >
+                                        <Flex>
+                                        <Text
+                                            fontWeight="700"
+                                            fontFamily="Plus Jakarta Sans"
+                                            fontSize="12px"
+                                        >
+                                            {thread.user.fullName}
+                                        </Text>
+                                        <Text
+                                            ml="5px"
+                                            mb="5px"
+                                            fontFamily="Plus Jakarta Sans"
+                                            fontSize="12px"
+                                            color="gray.500"
+                                        >
+                                            @{thread.user.username}
+                                            <Text as="span" color="gray.500" ml="1px" mr="1px">
+                                            •
+                                            </Text>
+                                            {new Date(thread.createdAt).toLocaleString("en-US", {
+                                            hour: "numeric",
+                                            minute: "numeric",
+                                            })}
+                                        </Text>
+                                        </Flex>
+                                        <Text
+                                        fontSize="12px"
+                                        fontFamily="Plus Jakarta Sans"
+                                        fontWeight="400"
+                                        color="white"
+                                        >
+                                        {thread.content}
+                                        </Text>
+                                        <Img mt="10px" src={thread.image} width={"400px"} height={"300px"} />
+                                        <Flex mt="10px" color="gray.500" fontSize="sm">
+                                        <Flex
+                                            fontFamily="Plus Jakarta Sans"
+                                            fontWeight="400"
+                                            fontSize="12px"
+                                            alignItems="center"
+                                            mr="20px"
+                                            onClick={() => handleLike(thread.id)} 
+                                            cursor="pointer"
+                                        >
+                                            <Icon as={likeData.isLiked ? FcLike : FaRegHeart} size={"15px"} mr="5px" />
+                                            {thread.likes?.length}
+                                        </Flex>
+                                        <Flex
+                                            fontFamily="Plus Jakarta Sans"
+                                            fontWeight="400"
+                                            fontSize="12px"
+                                            alignItems="center"
+                                            mr="20px"
+                                        >
+                                            <Icon as={BiMessageSquareDetail} mr="5px" />
+                                            {thread.replies?.length} Replies
+                                        </Flex>
+                                        </Flex>
+                                    </Box>
+                                    </Flex>
+                                );
+                                })
                     ) : null}
                 </>
             )}
@@ -638,12 +639,26 @@ function WhatHappen() {
                                         <Text fontSize="12px" fontFamily={"Plus Jakarta Sans"} fontWeight="400" color="white">
                                             {reply.content}
                                         </Text>
+                                        <Img mt="10px" src={reply.image} width="380px" height="300px" />
                                         <Flex mt="10px" color="gray.500" fontSize="sm">
-                                            <Flex onClick={() => handleLikeReply(reply.id)} fontFamily={"Plus Jakarta Sans"} fontWeight="400" fontSize={"12px"} alignItems="center" mr="20px">
-                                                <Icon as={replyLikes[reply.id]?.isLikedReply ? FcLike : FaRegHeart} mr="5px" />
-                                                {reply.likes?.length}
-                                            </Flex> 
-                                        </Flex>
+                                            <Flex 
+                                                onClick={() => handleLikeReply(reply.id)} 
+                                                cursor={"pointer"} 
+                                                fontFamily={"Plus Jakarta Sans"} 
+                                                fontWeight="400" 
+                                                fontSize={"12px"} 
+                                                alignItems="center" 
+                                                mr="20px"
+                                            >
+                                                {/* Gunakan 'find' untuk mendapatkan data reply yang benar */}
+                                                <Icon 
+                                                as={replyLikes.find(r => r.id === reply.id)?.isLikedReply ? FcLike : FaRegHeart} 
+                                                mr="5px" 
+                                                />
+                                                {/* Gunakan 'likesCount' untuk menampilkan jumlah likes */}
+                                                {replyLikes.find(r => r.id === reply.id)?.likesCount || 0}
+                                            </Flex>
+                                            </Flex>
                                         </Box>
                                     </Flex>
                                     </Box>

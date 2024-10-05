@@ -110,7 +110,7 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
       </Flex>
       
       <Flex width="100%" align="center">
-        <Avatar size="sm" src="/src/styles/cewe.png" name="Mohammed Jawahir" />
+        <Avatar size="sm" src="https://res.cloudinary.com/db2rr1kej/image/upload/v1728142149/uploads/o8ivurqezrpbzwpj7k0y.png" name="Mohammed Jawahir" />
         <Input
           ml="10px"
           size={"sm"}

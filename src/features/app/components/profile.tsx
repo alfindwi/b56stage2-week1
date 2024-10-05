@@ -45,7 +45,7 @@ export function Profile(){
 export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () => void }){
     const dispatch = useAppDispatch();
     const user = useSelector((state: RootState) => state.auth);
-    const { followed} = useSelector((state: RootState) => state.following);
+    const { following } = useSelector((state: RootState) => state.following);
     const { followers } = useSelector((state: RootState) => state.follows);
 
     useEffect(() => {
@@ -105,7 +105,7 @@ export function ProfileContent({ onEditProfileClick }: { onEditProfileClick: () 
                     <Text fontFamily={"Plus Jakarta Sans"} fontSize={"10px"} color={"#909090"}>@{user.username}</Text>
                     <Text fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"400"} >{user.bio}</Text>
                     <Flex align={"center"} padding={"4px 0px"}>
-                        <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>{followed.length}</Text>
+                        <Text fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>{following.length}</Text>
                         <Text ml="4px" color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Following</Text>
                         <Text ml="20px" fontWeight="700" fontSize={"13px"} fontFamily={"Plus Jakarta Sans"} >{followers.length}</Text>
                         <Text ml="4px"  color={"#909090"} fontSize={"13px"} fontFamily={"Plus Jakarta Sans"}>Followers</Text>
