@@ -69,7 +69,7 @@ export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
           <Text padding={"5px 20px"} fontFamily={"Plus Jakarta Sans"} fontWeight={"550"} fontSize={"14px"}>
             My Profile
           </Text>
-          <Image src={backgroundImage || "/src/styles/image.png" } width="435px" height={"65px"} padding={"0px 15px"} borderRadius="3xl" />
+          <Image src={backgroundImage || "https://res.cloudinary.com/db2rr1kej/image/upload/v1728136949/uploads/dxudu0wusd9ww8r3chjw.png" } width="435px" height={"65px"} padding={"0px 15px"} borderRadius="3xl" />
           <Avatar
             size="lg"
             position={"absolute"}
@@ -134,7 +134,7 @@ export function ProfileRight({ onEditProfileClick }: RigthBarProps) {
 
 export function SuggestForYou({ userId }: { userId: number }) {
   const dispatch = useAppDispatch();
-  const { users: suggestedUsers } = useAppSelector((state) => state.suggestion);
+  const { users: suggestedUsers} = useAppSelector((state) => state.suggestion);
   const { followers } = useAppSelector((state) => state.follows);
 
   useEffect(() => {
@@ -142,16 +142,18 @@ export function SuggestForYou({ userId }: { userId: number }) {
     dispatch(fetchSuggestedUsers(userId));
   }, [dispatch, userId]);
 
-  const isFollowing = (userId: number) => followers.some((follow) => follow.follower.id === userId);
+  const isFollowing = (suggestedUserId: number) => {
+    return followers.some((follow) => follow.follower.id === suggestedUserId);
+  };
 
   const handleFollowToggle = (suggestedUserId: number) => {
-    const isUserFollowing = isFollowing(suggestedUserId);
-    if (isUserFollowing) {
-      dispatch(unfollowUser(suggestedUserId));
+    if (isFollowing(suggestedUserId)) {
+      dispatch(unfollowUser(suggestedUserId)); 
     } else {
       dispatch(followUser(suggestedUserId));
     }
   };
+
 
   return (
     <Box mt={"8px"} backgroundColor={"brand.profile"} height={"275px"} width={"340px"} position={"relative"} padding={"8px 0px 12px 0px"} borderRadius={"md"}>
@@ -182,8 +184,7 @@ export function SuggestForYou({ userId }: { userId: number }) {
             color={isFollowing(user.id) ? "#909090" : "white"} 
             fontFamily={"Plus Jakarta Sans"} 
             fontWeight={"500"} 
-            _hover={{ color: "none" }} 
-            _active={{ color: "none" }}
+            _hover={{ bg: "#e0e0e0" }} 
             borderRadius={"50px"} 
             fontSize={"11px"}
             onClick={() => handleFollowToggle(user.id)}

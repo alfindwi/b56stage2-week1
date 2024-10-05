@@ -25,7 +25,6 @@ export const fetchSuggestedUsers = createAsyncThunk(
   }
 );
 
-// Redux slice untuk suggested users
 const suggestedUsersSlice = createSlice({
   name: 'suggestedUsers',
   initialState,
