@@ -88,7 +88,7 @@ function WhatHappen() {
 
     const goToProfile = (userId: number, thread: ThreadEntity, user: UserEntity) => {
         dispatch(fetchThreadsProfile(userId));
-        
+        console.log(user)
         dispatch(fetchSelectedUser(userId));
 
         setCurrentView('profile');
@@ -151,11 +151,6 @@ function WhatHappen() {
         }
     };
     
-
-    const handleClosePreview = () => {
-        setShow(false); // Hide the preview
-        setImage(null); // Clear the image
-    };
 
       return (
         <>  

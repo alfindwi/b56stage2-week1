@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Flex, FormControl, FormLabel, Icon, Img, Input, Spinner, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FaRegHeart } from "react-icons/fa";
 import { GrGallery } from "react-icons/gr";
