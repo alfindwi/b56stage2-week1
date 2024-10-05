@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { apiV1 } from "../libs/api";
 import { FollowEntity } from "../entities/follow";
+import Cookies from "js-cookie";
+
 
 interface FollowersState {
   followed: FollowEntity[]; 
@@ -18,7 +20,13 @@ export const fetchFolloweds = createAsyncThunk(
   "followeds/fetchFolloweds",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiV1.get(`/following`);
+      const response = await apiV1.get(`/following`, 
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`
+          },
+        }
+      );
       return response.data.map((followed: any) => ({
         ...followed,
         followeds: followed.following,
@@ -33,7 +41,13 @@ export const followedUser = createAsyncThunk(
   'following/followedUser',
   async (userId: number, { rejectWithValue }) => {
     try {
-      await apiV1.post(`/follow`, { followingId: userId });
+      await apiV1.post(`/follow`, { followingId: userId },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
       return userId; 
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || "Failed to follow user");
@@ -45,7 +59,13 @@ export const unfollowUser = createAsyncThunk(
   "followers/unfollowUser",
   async (userId: number, { rejectWithValue }) => {
     try {
-      await apiV1.post(`/unfollow`, { followingId: userId });
+      await apiV1.post(`/unfollow`, { followingId: userId },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
       return userId;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || "Failed to unfollow user");

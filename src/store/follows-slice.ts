@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiV1 } from "../libs/api"; 
+import Cookies from "js-cookie";
 
 interface FollowState {
   following: any[];
@@ -20,7 +21,13 @@ export const followUser = createAsyncThunk(
   async (followedId: number, { rejectWithValue }) => {
     console.log("Follow user ID: ", followedId); 
     try {
-      const response = await apiV1.post("/follow", { followedId });
+      const response = await apiV1.post("/follow", { followedId },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
       return { userId: followedId, ...response.data };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || "Failed to follow user");
@@ -33,7 +40,13 @@ export const unfollowUser = createAsyncThunk(
   "follows/unfollowUser",
   async (followedId: number, { rejectWithValue }) => {
     try {
-      const response = await apiV1.post("/unfollow", { followedId });
+      const response = await apiV1.post("/unfollow", { followedId },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
       return { userId: followedId, ...response.data };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.error || "Failed to unfollow user");
