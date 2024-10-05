@@ -160,41 +160,46 @@ export function SuggestForYou({ userId }: { userId: number }) {
         Suggested for you
       </Heading>
 
-      {Array.isArray(suggestedUsers) && suggestedUsers.map((user) => (
-        <Flex key={user.id} alignItems="center" mt={"12px"} padding="0 24px" justifyContent="space-between">
-          <Flex alignItems="center">
-            <Avatar size='sm' src={user.image || '/default_profile.png'} name={user.fullName} />
-            <Box ml="12px">
-              <Text fontSize={"12px"} fontWeight={"600"} fontFamily={"Plus Jakarta Sans"}>
-                {user.fullName}
-              </Text>
-              <Text fontSize={"12px"} fontWeight={"400"} fontFamily={"Plus Jakarta Sans"} color={"#909090"}>
-                @{user.username}
-              </Text>
-            </Box>
-          </Flex>
+      {Array.isArray(suggestedUsers) && suggestedUsers.length > 0 ? (
+        suggestedUsers.map((user) => (
+          user.id && ( // Pastikan user.id ada
+            <Flex key={user.id} alignItems="center" mt={"12px"} padding="0 24px" justifyContent="space-between">
+              <Flex alignItems="center">
+                <Avatar size='sm' src={user.image || '/default_profile.png'} name={user.fullName} />
+                <Box ml="12px">
+                  <Text fontSize={"12px"} fontWeight={"600"} fontFamily={"Plus Jakarta Sans"}>
+                    {user.fullName}
+                  </Text>
+                  <Text fontSize={"12px"} fontWeight={"400"} fontFamily={"Plus Jakarta Sans"} color={"#909090"}>
+                    @{user.username}
+                  </Text>
+                </Box>
+              </Flex>
 
-          <Button
-            display={"flex"}
-            justifyItems={"center"}
-            size={"sm"}
-            border={"1px solid #909090"} 
-            bg={"transparent"} 
-            color={isFollowing(user.id) ? "#909090" : "white"} 
-            fontFamily={"Plus Jakarta Sans"} 
-            fontWeight={"500"} 
-            _hover={{ bg: "#e0e0e0" }} 
-            borderRadius={"50px"} 
-            fontSize={"11px"}
-            onClick={() => handleFollowToggle(user.id)}
-          >
-            {isFollowing(user.id) ? "Following" : "Follow"}
-          </Button>
-        </Flex>
-      ))}
+              <Button
+                display={"flex"}
+                justifyItems={"center"}
+                size={"sm"}
+                border={"1px solid #909090"} 
+                bg={"transparent"} 
+                color={isFollowing(user.id) ? "#909090" : "white"} 
+                fontFamily={"Plus Jakarta Sans"} 
+                fontWeight={"500"} 
+                _hover={{ bg: "#e0e0e0" }} 
+                borderRadius={"50px"} 
+                fontSize={"11px"}
+                onClick={() => handleFollowToggle(user.id)}
+              >
+                {isFollowing(user.id) ? "Following" : "Follow"}
+              </Button>
+            </Flex>
+          )
+        ))
+      ) : null}
     </Box>
   );
 }
+
 
 
 
