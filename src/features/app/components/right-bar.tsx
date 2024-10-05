@@ -197,9 +197,6 @@ export function SuggestForYou({ userId }: { userId: number }) {
 }
 
 
-
-
-
 export function DevelopedBy() {
     return (
         <Box mt={"13px"} backgroundColor={"brand.profile"} height={"75px"} width={"340px"} position={"relative"} padding={"6px 0px 12px 0px"} borderRadius={"md"}>
@@ -219,7 +216,7 @@ export function DevelopedBy() {
                 </a>
             </Text>
             <Text fontSize={"9px"} padding={"0px 15px"}  fontFamily={"Plus Jakarta Sans"} fontWeight={"500"} display={"flex"} alignItems={"center"}>
-                Powered by <Image ml={"5px"} mr={"5px"} src="/src/styles/dw.png" width={"17px"} height={"9px"} alt=""/> DumbWays Indonesia • #1 Coding Bootcamp
+                Powered by <Image ml={"5px"} mr={"5px"} src="https://res.cloudinary.com/db2rr1kej/image/upload/v1728067866/uploads/heoqhnkhffnqknxltbju.png" width={"17px"} height={"9px"} alt=""/> DumbWays Indonesia • #1 Coding Bootcamp
             </Text>
         </Box>
     );

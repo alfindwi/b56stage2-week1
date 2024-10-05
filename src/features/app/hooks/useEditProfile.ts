@@ -9,6 +9,7 @@ import { userSchema } from "../../auth/schemas/user";
 import { updateUserDTO } from "../types/users";
 import { updateUsers } from "../../../store/auth-slice";
 import { useToast } from "@chakra-ui/react";
+import Cookies from "js-cookie";
 
   export function useEditProfile() {
     const {
@@ -40,6 +41,7 @@ import { useToast } from "@chakra-ui/react";
         formData,
         {
           headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
             "Content-Type": "multipart/form-data",
           },
         }

@@ -361,7 +361,7 @@ function WhatHappen() {
                      </Text>
                      </Flex>
                      <Image 
-                     src={selectedUser.backgroundImage || "/src/styles/image.png" }
+                     src={selectedUser.backgroundImage || "https://res.cloudinary.com/db2rr1kej/image/upload/v1728136949/uploads/dxudu0wusd9ww8r3chjw.png" }
                      width="708px" 
                      height={"100px"}
                      padding={"0px 15px"} 
