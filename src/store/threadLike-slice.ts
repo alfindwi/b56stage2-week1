@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiV1 } from "../libs/api";
+import Cookies from "js-cookie";
 
 interface LikeState {
   likes: {
@@ -22,7 +23,13 @@ export const likeThread = createAsyncThunk(
   "likes/likeThread",
   async (threadId: number, { rejectWithValue }) => {
     try {
-      const response = await apiV1.post(`/threads/${threadId}/like`);
+      const response = await apiV1.post(`/threads/${threadId}/like`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || "Error liking thread");
@@ -34,7 +41,13 @@ export const unlikeThread = createAsyncThunk(
   "likes/unlikeThread",
   async (threadId: number, { rejectWithValue }) => {
     try {
-      const response = await apiV1.delete(`/threads/${threadId}/unlike`);
+      const response = await apiV1.delete(`/threads/${threadId}/unlike`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || "Error unliking thread");
