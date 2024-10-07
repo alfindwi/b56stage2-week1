@@ -14,46 +14,46 @@ export function AppRoute() {
     const router = createBrowserRouter([
         {
             path: "/login",
-            element: <LoginRoute/>
+            element: <LoginRoute />,
         },
         {
             path: "/register",
-            element: <RegisterRoute/>,
+            element: <RegisterRoute />,
         },
         {
-            element: <ProtectedRoute/>,
+            element: <ProtectedRoute />,
             children: [
                 {
                     path: "/",
-                    element: <HomeRoute/>
+                    element: <HomeRoute />,
                 },
                 {
                     path: "/follows",
-                    element: <FollowsRoute/>
+                    element: <FollowsRoute />,
                 },
                 {
                     path: "/search",
-                    element: <SearchRoute/>
+                    element: <SearchRoute />,
                 },
                 {
                     path: "/profile",
-                    element: <ProfileRoute/>
+                    element: <ProfileRoute />,
                 },
                 {
                     path: "/form-post",
-                    element: <FormPostRoute/>
+                    element: <FormPostRoute />,
                 },
                 {
                     path: "/forgotpassword",
-                    element: <ForgotRoute/>
+                    element: <ForgotRoute />,
                 },
                 {
                     path: "/resetpassword",
-                    element: <ResetRoute/>
-                }
-            ]
+                    element: <ResetRoute />,
+                },
+            ],
         },
-    ])
-    
-    return <RouterProvider router={router}/>
+    ]);
+
+    return <RouterProvider router={router} />;
 }
