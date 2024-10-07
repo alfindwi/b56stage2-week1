@@ -61,8 +61,8 @@ export function CreatePost({ onClose }: { onClose: () => void }) {
 
 
     const handleClosePreview = () => {
-      setShow(false); // Hide the preview
-      setImage(null); // Clear the image
+      setShow(false);
+      setImage(null);
   };
 
   const [show, setShow] = useState(false);

@@ -18,7 +18,7 @@ export function AppRoute() {
         },
         {
             path: "/register",
-            element: <RegisterRoute/>
+            element: <RegisterRoute/>,
         },
         {
             element: <ProtectedRoute/>,
@@ -56,5 +56,4 @@ export function AppRoute() {
     ])
     
     return <RouterProvider router={router}/>
-    return
 }
