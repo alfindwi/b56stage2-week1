@@ -1,4 +1,3 @@
-// store/replyLikeSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiV1 } from "../libs/api";
 import Cookies from "js-cookie";
@@ -20,7 +19,6 @@ const initialState: ReplyLikeState = {
   error: null,
 };
 
-// Async thunk untuk toggle like pada reply
 export const toggleLikeReply = createAsyncThunk(
   "replyLikes/toggleLikeReply",
   async (replyId: number, { rejectWithValue }) => {
@@ -46,7 +44,7 @@ export const toggleLikeReply = createAsyncThunk(
   }
 );
 
-const replyLikes = createSlice({
+const replyLikesSlice = createSlice({
   name: "replyLikes",
   initialState,
   reducers: {},
@@ -58,8 +56,9 @@ const replyLikes = createSlice({
       })
       .addCase(toggleLikeReply.fulfilled, (state, action) => {
         state.loading = false;
-        const replyId = action.payload.replyId;
-        const isLiked = action.payload.isLiked;
+        const { replyId, isLiked } = action.payload;
+
+        console.log("Reply Like State before update: ", state.replyLikes); // Debugging
 
         if (!state.replyLikes[replyId]) {
           state.replyLikes[replyId] = { isLiked: false, likesCount: 0 };
@@ -74,6 +73,8 @@ const replyLikes = createSlice({
             state.replyLikes[replyId].likesCount -= 1;
           }
         }
+
+        console.log("Reply Like State after update: ", state.replyLikes); // Debugging
       })
       .addCase(toggleLikeReply.rejected, (state, action) => {
         state.loading = false;
@@ -82,4 +83,4 @@ const replyLikes = createSlice({
   },
 });
 
-export default replyLikes.reducer;
+export default replyLikesSlice.reducer;

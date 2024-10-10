@@ -135,11 +135,11 @@ function WhatHappen() {
     setThreadId(id);
   };
 
+  const { replyLikes } = useAppSelector((state) => state.reply);
+
   const handleLikeReply = (replyId: number) => {
     dispatch(toggleLikeReply(replyId));
-  }
-
-  const currentUserId = useAppSelector((state) => state.auth.id);
+  };
 
   useEffect(() => {
     dispatch(fetchFollowers());
@@ -894,97 +894,100 @@ function WhatHappen() {
 
               {/* Main Post Reply*/}
               {Array.isArray(replyData)
-                ? replyData.map((reply) => (
-                    <Box key={reply.id}>
-                      <Flex border={"1px solid #545454"} padding="12px 16px">
-                        <Avatar
-                          size="sm"
-                          src={reply.user.image}
-                          name={reply.user.fullName}
-                        />
-                        <Box ml="10px" width="100%">
-                          <Flex>
-                            <Text
-                              fontWeight="700"
-                              fontFamily={"Plus Jakarta Sans"}
-                              fontSize="12px"
-                            >
-                              {reply.user.fullName}
-                            </Text>
-                            <Text
-                              ml="5px"
-                              mb={"5px"}
-                              fontFamily={"Plus Jakarta Sans"}
-                              fontSize="12px"
-                              color="gray.500"
-                            >
-                              @{reply.user.username}{" "}
-                              <Text
-                                as={"span"}
-                                color="gray.500"
-                                ml={"1px"}
-                                mr={"1px"}
-                              >
-                                •
-                              </Text>{" "}
-                              {new Date(reply.createdAt).toLocaleString(
-                                "en-US",
-                                {
-                                  hour: "numeric",
-                                  minute: "numeric",
-                                }
-                              )}
-                            </Text>
-                          </Flex>
-                          <Text
-                            fontSize="12px"
-                            fontFamily={"Plus Jakarta Sans"}
-                            fontWeight="400"
-                            color="white"
-                          >
-                            {reply.content}
-                          </Text>
-                          {reply.image && reply.image !== "" && (
-                            <Img
-                              mt="10px"
-                              src={reply.image}
-                              width="380px"
-                              height="300px"
-                              objectFit={"contain"}
-                            />
-                          )}
+                ? replyData.map((reply) => {
+                    // Mengambil state like untuk setiap reply dari Redux
+                    const replyLike = replyLikes[reply.id] || {
+                      isLiked: false,
+                      likesCount: reply.likes || 0,
+                    };
 
-                          <Flex mt="10px" color="gray.500" fontSize="sm">
-                            <Flex
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleLikeReply(reply.id); 
-                              }}
-                              cursor={"pointer"}
+                    return (
+                      <Box key={reply.id}>
+                        <Flex border={"1px solid #545454"} padding="12px 16px">
+                          <Avatar
+                            size="sm"
+                            src={reply.user.image}
+                            name={reply.user.fullName}
+                          />
+                          <Box ml="10px" width="100%">
+                            <Flex>
+                              <Text
+                                fontWeight="700"
+                                fontFamily={"Plus Jakarta Sans"}
+                                fontSize="12px"
+                              >
+                                {reply.user.fullName}
+                              </Text>
+                              <Text
+                                ml="5px"
+                                mb={"5px"}
+                                fontFamily={"Plus Jakarta Sans"}
+                                fontSize="12px"
+                                color="gray.500"
+                              >
+                                @{reply.user.username}{" "}
+                                <Text
+                                  as={"span"}
+                                  color="gray.500"
+                                  ml={"1px"}
+                                  mr={"1px"}
+                                >
+                                  •
+                                </Text>{" "}
+                                {new Date(reply.createdAt).toLocaleString(
+                                  "en-US",
+                                  {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                  }
+                                )}
+                              </Text>
+                            </Flex>
+                            <Text
+                              fontSize="12px"
                               fontFamily={"Plus Jakarta Sans"}
                               fontWeight="400"
-                              fontSize={"12px"}
-                              alignItems="center"
-                              mr="20px"
+                              color="white"
                             >
-                              <Icon
-                                as={
-                                  reply.likes?.some(
-                                    (like) => like.userId === currentUserId
-                                  )
-                                    ? FcLike
-                                    : FaRegHeart
-                                }
-                                mr="5px"
-                              />{" "}
-                              {reply.likes?.length || 0}
+                              {reply.content}
+                            </Text>
+                            {reply.image && reply.image !== "" && (
+                              <Img
+                                mt="10px"
+                                src={reply.image}
+                                width="380px"
+                                height="300px"
+                                objectFit={"contain"}
+                              />
+                            )}
+
+                            {/* Render Like Button */}
+                            <Flex mt="10px" color="gray.500" fontSize="sm">
+                              <Flex
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleLikeReply(reply.id);
+                                }}
+                                cursor={"pointer"}
+                                fontFamily={"Plus Jakarta Sans"}
+                                fontWeight="400"
+                                fontSize={"12px"}
+                                alignItems="center"
+                                mr="20px"
+                              >
+                                <Icon
+                                  as={replyLike.isLiked ? FcLike : FaRegHeart}
+                                  mr="5px"
+                                />{" "}
+                                {reply.likes?.length || 0}
+                              </Flex>
                             </Flex>
-                          </Flex>
-                        </Box>
-                      </Flex>
-                    </Box>
-                  ))
-                : null}
+                          </Box>
+                        </Flex>
+                      </Box>
+                    );
+                  })
+                : null} 
             </Flex>
           </>
         </Flex>

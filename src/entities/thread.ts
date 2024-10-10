@@ -31,6 +31,7 @@ export interface ReplyEntity {
 export interface likeEntity {
   id: number;
   threadId: number;
+  replyId: number;
   userId: number;
   createdAt: Date;
   updatedAt: Date;

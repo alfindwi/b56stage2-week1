@@ -31,6 +31,8 @@ export function Profile() {
     setEditProfileVisible(false);
   };
 
+ 
+
   return (
     <Flex
       direction="column"
@@ -269,7 +271,10 @@ export function PostCard() {
                       )}
                       <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
                         <Flex
-                          onClick={() => handleLike(thread.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLike(thread.id);
+                          }}
                           cursor="pointer"
                           fontFamily="Plus Jakarta Sans"
                           fontWeight="400"
@@ -278,9 +283,10 @@ export function PostCard() {
                           mr="20px"
                         >
                           <Icon
-                            as={likeData.isLiked ? FaRegHeart : FcLike}
-                            mr="5px"
-                          />
+                          as={likeData.isLiked ? FcLike : FaRegHeart}
+                          size={"15px"}
+                          mr="5px"
+                        />
                           {thread.likes?.length}
                         </Flex>
                         <Flex
