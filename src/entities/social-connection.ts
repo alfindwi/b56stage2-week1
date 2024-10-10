@@ -1,5 +1,5 @@
-export enum socialConnection{
-    GOOGLE = "GOOGLE",
-    FACEBOOK = "FACEBOOK",
-    GITHUB = "GITHUB"
+export enum socialConnection {
+  GOOGLE = "GOOGLE",
+  FACEBOOK = "FACEBOOK",
+  GITHUB = "GITHUB",
 }

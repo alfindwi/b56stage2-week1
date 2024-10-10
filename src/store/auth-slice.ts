@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserStoreDTO } from "../features/auth/types/dto/dto";
 import { apiV1 } from "../libs/api";
+import Cookies from "js-cookie";
 
 const initialState: UserStoreDTO = {
   id: 0,
@@ -55,7 +56,8 @@ const authSlice = createSlice({
       return {} as UserStoreDTO;
     },
     logout() {
-      return initialState;
+      Cookies.remove("token"); 
+      return {} as UserStoreDTO; 
     },
   },
 });

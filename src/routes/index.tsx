@@ -21,6 +21,14 @@ export function AppRoute() {
             element: <RegisterRoute />,
         },
         {
+            path: "/forgotpassword",
+            element: <ForgotRoute />,
+        },
+        {
+            path: "/resetpassword",
+            element: <ResetRoute />,
+        },
+        {
             element: <ProtectedRoute />,
             children: [
                 {
@@ -42,14 +50,6 @@ export function AppRoute() {
                 {
                     path: "/form-post",
                     element: <FormPostRoute />,
-                },
-                {
-                    path: "/forgotpassword",
-                    element: <ForgotRoute />,
-                },
-                {
-                    path: "/resetpassword",
-                    element: <ResetRoute />,
                 },
             ],
         },

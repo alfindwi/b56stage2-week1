@@ -17,7 +17,7 @@ export function useFetchUsers() {
           throw new Error(`Error: ${response.status}`);
         }
         const data: UserEntity[] = await response.json();
-        console.log("data", data)
+        console.log("data", data);
         setUsers(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -29,7 +29,8 @@ export function useFetchUsers() {
     fetchUsers();
 
     return () => {
-      setUsers([]);};
+      setUsers([]);
+    };
   }, [url]);
 
   return { users, loading, error };

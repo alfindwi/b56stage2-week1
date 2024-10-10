@@ -5,31 +5,31 @@ import { useLocation } from "react-router-dom";
 import { EditProfile } from "../components/edit-profile";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-    const [showCreatePost, setShowCreatePost] = useState(false);
-    const [showEditProfile, setShowEditProfile] = useState(false);
-    const location = useLocation();
-    const isProfileVisible = location.pathname === "/profile";
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const location = useLocation();
+  const isProfileVisible = location.pathname === "/profile";
 
-    const handleOpenCreatePost = () => setShowCreatePost(true);
-    const handleCloseCreatePost = () => setShowCreatePost(false);
+  const handleOpenCreatePost = () => setShowCreatePost(true);
+  const handleCloseCreatePost = () => setShowCreatePost(false);
 
-    const handleOpenEditProfile = () => {
-        console.log("Edit Profile button clicked");
-        setShowEditProfile(true);
-    };
+  const handleOpenEditProfile = () => {
+    console.log("Edit Profile button clicked");
+    setShowEditProfile(true);
+  };
 
-    const handleCloseEditProfile = () => setShowEditProfile(false);
+  const handleCloseEditProfile = () => setShowEditProfile(false);
 
-    return (
-        <>
-            <LeftBar onOpenCreatePost={handleOpenCreatePost} />
-            {children}
-            <RightBar 
-                isProfileVisible={isProfileVisible} 
-                onEditProfileClick={handleOpenEditProfile} 
-            />
-            {showCreatePost && <CreatePost onClose={handleCloseCreatePost} />}
-            {showEditProfile && <EditProfile onClose={handleCloseEditProfile} />}
-        </>
-    );
+  return (
+    <>
+      <LeftBar onOpenCreatePost={handleOpenCreatePost} />
+      {children}
+      <RightBar
+        isProfileVisible={isProfileVisible}
+        onEditProfileClick={handleOpenEditProfile}
+      />
+      {showCreatePost && <CreatePost onClose={handleCloseCreatePost} />}
+      {showEditProfile && <EditProfile onClose={handleCloseEditProfile} />}
+    </>
+  );
 }

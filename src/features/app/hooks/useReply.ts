@@ -1,17 +1,21 @@
-import { useToast } from '@chakra-ui/react';
+import { useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { useForm } from "react-hook-form";
 import { ReplyEntity } from "../../../entities/thread";
 import { apiV1 } from "../../../libs/api";
-import { CreateReplyFormInputs, createReplySchema } from '../../auth/schemas/reply';
-import { CreateReplyDTO } from '../types/reply';
+import {
+  CreateReplyFormInputs,
+  createReplySchema,
+} from "../../auth/schemas/reply";
+import { CreateReplyDTO } from "../types/reply";
 
 export function useReply(threadId: number) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<CreateReplyFormInputs>({
     resolver: zodResolver(createReplySchema),
@@ -19,11 +23,14 @@ export function useReply(threadId: number) {
 
   async function getRepliesByThreadId(): Promise<ReplyEntity[]> {
     try {
-      const response = await apiV1.get<null, { data: ReplyEntity[] }>(`/replies/${threadId}`, {
-        headers: {
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-      });
+      const response = await apiV1.get<null, { data: ReplyEntity[] }>(
+        `/replies/${threadId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching replies:", error);
@@ -31,58 +38,65 @@ export function useReply(threadId: number) {
     }
   }
 
-  const { data, isLoading, error } = useQuery<ReplyEntity[], Error, ReplyEntity[]>({
+  const { data, isLoading, error } = useQuery<
+    ReplyEntity[],
+    Error,
+    ReplyEntity[]
+  >({
     queryKey: ["replies", threadId],
     queryFn: getRepliesByThreadId,
-    enabled: !!threadId, 
+    enabled: !!threadId,
   });
 
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  async function createReply(data: CreateReplyDTO, threadId: number): Promise<ReplyEntity> {
+  async function createReply(
+    data: CreateReplyDTO,
+    threadId: number
+  ): Promise<ReplyEntity> {
     const formData = new FormData();
     formData.append("content", data.content);
     formData.append("threadId", threadId.toString());
 
     if (data.image && data.image[0]) {
-        formData.append("image", data.image[0]);
+      formData.append("image", data.image[0]);
     }
 
     try {
-        const response = await apiV1.post<null, { data: ReplyEntity }>(
-            "/replies",
-            formData,
-            {
-                headers: {
-                    Authorization: `Bearer ${Cookies.get("token")}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            }
-        );
-        queryClient.invalidateQueries({ queryKey: ["replies", threadId] });
-        return response.data;
+      const response = await apiV1.post<null, { data: ReplyEntity }>(
+        "/replies",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      queryClient.invalidateQueries({ queryKey: ["replies", threadId] });
+      return response.data;
     } catch (error) {
-        console.error("Error saat membuat reply:", error);
-        throw error;
+      console.error("Error saat membuat reply:", error);
+      throw error;
     }
-}
+  }
 
-  const { mutateAsync: createReplyAsync } = useMutation<ReplyEntity, Error, CreateReplyDTO>(
-    {
-        mutationKey: ["createReply"],
-        mutationFn: (data) => createReply(data, threadId),
-    }
-  );
-
-
+  const { mutateAsync: createReplyAsync } = useMutation<
+    ReplyEntity,
+    Error,
+    CreateReplyDTO
+  >({
+    mutationKey: ["createReply"],
+    mutationFn: (data) => createReply(data, threadId),
+  });
 
   async function onSubmit(data: CreateReplyFormInputs) {
     try {
       const createReplyDTO: CreateReplyDTO = {
         ...data,
         threadId: threadId,
-      }
+      };
       await createReplyAsync(createReplyDTO);
       toast({
         title: "Reply berhasil dibuat!",
@@ -92,6 +106,7 @@ export function useReply(threadId: number) {
         isClosable: true,
         position: "top",
       });
+      reset();
     } catch (error) {
       console.error("Error saat membuat reply:", error);
       toast({
@@ -112,7 +127,6 @@ export function useReply(threadId: number) {
     onSubmit,
     data,
     isLoading,
-    error, 
+    error,
   };
 }
-

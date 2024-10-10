@@ -19,7 +19,7 @@ export interface ThreadEntity {
 export interface ReplyEntity {
   id: number;
   content: string;
-  image: string;
+  image?: string | null;
   likes?: likeEntity[];
   user: UserEntity;
   threadId: number;

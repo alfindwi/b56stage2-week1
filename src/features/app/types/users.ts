@@ -15,4 +15,4 @@ export type updateUserDTO = {
   bio?: string;
   image?: FileList;
   backgroundImage?: FileList;
-}
+};

@@ -8,6 +8,4 @@ export const userSchema = z.object({
   backgroundImage: z.instanceof(FileList || null),
 });
 
-
 export type updateUser = z.infer<typeof userSchema>;
-

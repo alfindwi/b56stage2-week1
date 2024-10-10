@@ -1,105 +1,85 @@
+// store/replyLikeSlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { apiV1 } from "../libs/api"; 
+import { apiV1 } from "../libs/api";
 import Cookies from "js-cookie";
 
-interface Reply {
-  id: number;
-  content: string;
-  likesCount: number;
-  isLikedReply: boolean; 
-}
-
-interface ReplyState {
-  replies: Reply[];
+interface ReplyLikeState {
+  replyLikes: {
+    [replyId: number]: {
+      isLiked: boolean;
+      likesCount: number;
+    };
+  };
   loading: boolean;
   error: string | null;
 }
 
-const initialState: ReplyState = {
-  replies: [],
+const initialState: ReplyLikeState = {
+  replyLikes: {},
   loading: false,
   error: null,
 };
 
-// Fetching replies for a thread
-export const fetchReplies = createAsyncThunk("replies/fetchReplies", async (threadId: number) => {
-  const response = await apiV1.get(`/threads/${threadId}/replies`, {
-    headers: {
-      Authorization: `Bearer ${Cookies.get("token")}`,
+// Async thunk untuk toggle like pada reply
+export const toggleLikeReply = createAsyncThunk(
+  "replyLikes/toggleLikeReply",
+  async (replyId: number, { rejectWithValue }) => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+      const response = await apiV1.post(`/replies/${replyId}/like`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      return {
+        replyId,
+        isLiked: response.data.isLiked,
+        message: response.data.message,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Error toggling like");
     }
-  });
-  return response.data;
-});
-
-// Like a reply
-export const likeReply = createAsyncThunk(
-  "replies/likeReply",
-  async (replyId: number) => {
-    const response = await apiV1.post(`/replies/${replyId}/like`, {
-      headers: {
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
-    });
-    return response.data; 
   }
 );
 
-// Unlike a reply
-export const unlikeReply = createAsyncThunk(
-  "replies/unlikeReply",
-  async (replyId: number) => {
-    const response = await apiV1.delete(`/replies/${replyId}/like`, {
-      headers: {
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
-    });
-    return response.data; 
-  }
-);
-
-const replySlice = createSlice({
-  name: "replies",
+const replyLikes = createSlice({
+  name: "replyLikes",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetching replies
-      .addCase(fetchReplies.pending, (state) => {
+      .addCase(toggleLikeReply.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchReplies.fulfilled, (state, action) => {
+      .addCase(toggleLikeReply.fulfilled, (state, action) => {
         state.loading = false;
-        state.replies = action.payload.map((reply: Reply) => ({
-          ...reply,
-          isLikedReply: false, // Initialize isLikedReply to false
-        }));
-      })
-      .addCase(fetchReplies.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to load replies";
-      })
+        const replyId = action.payload.replyId;
+        const isLiked = action.payload.isLiked;
 
-      // Liking a reply
-      .addCase(likeReply.fulfilled, (state, action) => {
-        const replyId = action.meta.arg; // Get replyId from the thunk argument
-        const reply = state.replies.find((r) => r.id === replyId); // Find the reply in state
-        if (reply) {
-          reply.likesCount += 1; // Increment the like count
-          reply.isLikedReply = true; // Set isLikedReply to true
+        if (!state.replyLikes[replyId]) {
+          state.replyLikes[replyId] = { isLiked: false, likesCount: 0 };
+        }
+
+        if (isLiked) {
+          state.replyLikes[replyId].isLiked = true;
+          state.replyLikes[replyId].likesCount += 1;
+        } else {
+          state.replyLikes[replyId].isLiked = false;
+          if (state.replyLikes[replyId].likesCount > 0) {
+            state.replyLikes[replyId].likesCount -= 1;
+          }
         }
       })
-
-      // Unliking a reply
-      .addCase(unlikeReply.fulfilled, (state, action) => {
-        const replyId = action.meta.arg; // Get replyId from the thunk argument
-        const reply = state.replies.find((r) => r.id === replyId); // Find the reply in state
-        if (reply) {
-          reply.likesCount -= 1; // Decrement the like count
-          reply.isLikedReply = false; // Set isLikedReply to false
-        }
+      .addCase(toggleLikeReply.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });
 
-export default replySlice.reducer;
+export default replyLikes.reducer;

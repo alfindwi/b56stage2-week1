@@ -12,12 +12,11 @@ export interface UserEntity {
   username: string;
   socialConnection: socialConnection | null;
   role: string;
-  followeds: FollowDTO[]; 
-  followers: FollowDTO[]; 
+  followeds: FollowDTO[];
+  followers: FollowDTO[];
   createdAt: Date;
   updatedAt: Date;
 }
-
 
 export interface SearchResultEntity {
   id: number;
