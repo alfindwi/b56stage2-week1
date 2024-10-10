@@ -958,10 +958,6 @@ function WhatHappen() {
                             <Flex
                               onClick={(e) => {
                                 e.stopPropagation();
-                                const isLikedReply =
-                                  reply.likes?.some(
-                                    (like) => like.userId === currentUserId
-                                  ) || false;
                                 handleLikeReply(reply.id); 
                               }}
                               cursor={"pointer"}
