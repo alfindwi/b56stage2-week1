@@ -111,7 +111,7 @@ export function RegisterForm() {
             borderRadius="20px"
             padding="10px"
           >
-            {isSubmitting ? <Spinner color="white" /> : "Create"}{" "}
+            {isSubmitting ? <Spinner color="white" /> : "Create"}
           </Button>
         </Box>
       </form>
@@ -121,7 +121,7 @@ export function RegisterForm() {
         fontSize="12px"
         marginTop={"10px"}
       >
-        Already have account?
+        Already have an account?
         <ChakraLink
           as={ReactRouterLink}
           to="/login"

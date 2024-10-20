@@ -9,8 +9,13 @@ import "../styles/styles.css";
 import { LoginRequestDTO, LoginResponseDTO } from "../types/dto/dto";
 import { apiV1 } from "../../../libs/api";
 import { z } from "zod";
+import { useToast } from "@chakra-ui/react";
 
 export function useLoginForm() {
+  const toast = useToast();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -19,14 +24,10 @@ export function useLoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   async function onSubmit(data: LoginFormInput) {
     try {
-      const parsedData = loginSchema.parse(data);
+      const parsedData = loginSchema.parse(data); 
 
-      // Kirim data ke backend
       const response = await apiV1.post<
         null,
         { data: LoginResponseDTO },
@@ -43,20 +44,42 @@ export function useLoginForm() {
 
       const { user, token } = response.data;
 
-      // Simpan token ke cookies
       Cookies.set("token", token, { expires: 1 });
 
-      // Simpan data user ke state
       dispatch(setUser(user));
 
-      // Arahkan user ke halaman utama
+      toast({
+        title: "Logged in successfully.",
+        description: "Welcome to Circle!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+
       navigate("/");
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.error("Validation error:", error.errors);
+        toast({
+          title: "Validation error",
+          description: error.errors.map((e) => e.message).join(", "),
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
       } else {
-        console.error("Error response:", (error as any).response?.data);
-        console.error("Error message:", (error as any).message);
+        const errorMessage =
+          (error as any).response?.data?.message || "Failed to log in.";
+
+        toast({
+          title: "Login failed",
+          description: errorMessage,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
   }
@@ -66,6 +89,7 @@ export function useLoginForm() {
     handleSubmit,
     onSubmit,
     errors,
-    isSubmitting,
+    isSubmitting, 
   };
 }
+

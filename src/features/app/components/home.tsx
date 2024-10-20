@@ -6,7 +6,6 @@ import {
   FormControl,
   FormLabel,
   Icon,
-  Image,
   Img,
   Input,
   Spinner,
@@ -18,7 +17,6 @@ import { FaRegHeart } from "react-icons/fa";
 import { FcLike } from "react-icons/fc";
 import { GrGallery } from "react-icons/gr";
 import { IoIosArrowRoundBack, IoIosCloseCircle } from "react-icons/io";
-import { useSelector } from "react-redux";
 import { ThreadEntity } from "../../../entities/thread";
 import { UserEntity } from "../../../entities/user";
 import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
@@ -27,17 +25,18 @@ import {
   fetchFollowers,
   fetchFollowing,
   followUser,
-  unfollowUser,
+  unfollowUser
 } from "../../../store/follows-slice";
 import {
   fetchSelectedUser,
   fetchThreadsProfile,
 } from "../../../store/profile-user-slice";
 import { toggleLikeReply } from "../../../store/replyLike-slice";
-import { RootState } from "../../../store/store";
 import { toggleLikeThread } from "../../../store/threadLike-slice";
 import { useHome } from "../hooks/useHome";
 import { useReply } from "../hooks/useReply";
+import { RootState } from "../../../store/store";
+import { useSelector } from "react-redux";
 
 export function Home() {
   const [isWhatHappenVisible, setIsWhatHappenVisible] = useState(true);
@@ -48,7 +47,7 @@ export function Home() {
   return (
     <Flex
       direction="column"
-      width={`calc(100vw - 749px)`}
+      width={`calc(100vw - 736px)`}
       height="auto"
       bg="brand.bg"
       color="white"
@@ -290,8 +289,8 @@ function WhatHappen() {
                   key={thread.id}
                   border="1px solid #545454"
                   padding="12px 16px"
-                  height={"auto"}
-                  width={"545px"}
+                  height="auto"
+                  width="100%"
                   cursor="pointer"
                 >
                   <Box>
@@ -317,6 +316,9 @@ function WhatHappen() {
                         fontWeight="700"
                         fontFamily="Plus Jakarta Sans"
                         fontSize="12px"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                        textOverflow="ellipsis"
                       >
                         {thread.user.fullName}
                       </Text>
@@ -342,6 +344,8 @@ function WhatHappen() {
                       fontFamily="Plus Jakarta Sans"
                       fontWeight="400"
                       color="white"
+                      width="100%"
+                      wordBreak="break-word"
                     >
                       {thread.content}
                     </Text>
@@ -349,9 +353,9 @@ function WhatHappen() {
                       <Img
                         mt="10px"
                         src={thread.image}
-                        width={"400px"}
-                        height={"300px"}
-                        objectFit={"contain"}
+                        width="100%"
+                        height="auto"
+                        objectFit="contain"
                       />
                     )}
                     <Flex mt="10px" color="gray.500" fontSize="sm">
@@ -395,12 +399,10 @@ function WhatHappen() {
       {/* Profile */}
       {currentView === "profile" && (
         <>
-          {selectedUser &&
-            (console.log("selectedUser", selectedUser),
-            (
+            {selectedUser && (
               <Box
                 height={"300px"}
-                width={"530px"}
+                width={"100%"}
                 position={"relative"}
                 borderRadius={"md"}
               >
@@ -411,7 +413,6 @@ function WhatHappen() {
                 >
                   <Flex>
                     <Button
-                      onClick={goToWhatHappen}
                       leftIcon={<IoIosArrowRoundBack size="30px" />}
                       bg="transparent"
                       _active={{ color: "white", bg: "none" }}
@@ -422,23 +423,27 @@ function WhatHappen() {
                       mt="10px"
                       fontFamily="Plus Jakarta Sans"
                       _hover={{ textDecoration: "none", bg: "none" }}
+                      onClick={goToWhatHappen}
                     />
                     <Text
                       padding={"10px 0px"}
                       fontFamily={"Plus Jakarta Sans"}
                       fontWeight={"550"}
                       fontSize={"23px"}
+                      width={"100%"}
+                      overflow="hidden"
+                      whiteSpace="nowrap"
+                      textOverflow="ellipsis"
                     >
-                      {" "}
                       {selectedUser.fullName}
                     </Text>
                   </Flex>
-                  <Image
+                  <Img
                     src={
                       selectedUser.backgroundImage ||
                       "https://res.cloudinary.com/db2rr1kej/image/upload/v1728136949/uploads/dxudu0wusd9ww8r3chjw.png"
                     }
-                    width="708px"
+                    width="100%"
                     height={"100px"}
                     padding={"0px 15px"}
                     borderRadius="3xl"
@@ -484,12 +489,14 @@ function WhatHappen() {
                         : "Follow"
                       : "Loading..."}
                   </Button>
-
-                  <Box margin={"20px 10px"}>
+  
+                  <Box margin={"20px 10px"} width="100%">
                     <Text
                       fontFamily={"Plus Jakarta Sans"}
                       fontSize={"18px"}
                       fontWeight={"700"}
+                      width="100%"
+                      wordBreak="break-word"
                     >
                       {selectedUser.fullName}
                     </Text>
@@ -504,6 +511,8 @@ function WhatHappen() {
                       fontSize={"13px"}
                       fontFamily={"Plus Jakarta Sans"}
                       fontWeight={"400"}
+                      width="100%"
+                      wordBreak="break-word"
                     >
                       {selectedUser.bio}
                     </Text>
@@ -543,116 +552,116 @@ function WhatHappen() {
                   </Box>
                 </Box>
               </Box>
-            ))}
-
-          <Flex direction="column" width="520px" ml={"5px"}>
-            {profiles?.map((thread) => {
-              const likeData = likes[thread.id] || {
-                isLiked: false,
-                likesCount: 0,
-              };
-
-              return (
-                <Flex
-                  key={thread.id}
-                  direction="column"
-                  mt="10px"
-                  mb="0px"
-                  width="100%"
-                >
-                  <Flex mt="10px" borderBottom="1px solid #545454">
-                    <Avatar
-                      size="sm"
-                      src={thread.user.image}
-                      name={thread.user.fullName}
-                    />
-                    <Box ml="10px" width="100%">
-                      <Flex>
+            )}
+  
+            <Flex direction="column" width="calc(100% - 50px)" ml={"5px"}>
+              {profiles?.map((thread) => {
+                const likeData = likes[thread.id] || {
+                  isLiked: false,
+                  likesCount: 0,
+                };
+  
+                return (
+                  <Flex
+                    key={thread.id}
+                    direction="column"
+                    mt="10px"
+                    mb="0px"
+                    width="100%"
+                  >
+                    <Flex mt="10px" borderBottom="1px solid #545454">
+                      <Avatar
+                        size="sm"
+                        src={thread.user.image}
+                        name={thread.user.fullName}
+                      />
+                      <Box ml="10px" width="100%">
+                        <Flex>
+                          <Text
+                            fontWeight="700"
+                            fontFamily="Plus Jakarta Sans"
+                            fontSize="12px"
+                          >
+                            {thread.user.fullName}
+                          </Text>
+                          <Text
+                            ml="5px"
+                            mb="5px"
+                            fontFamily="Plus Jakarta Sans"
+                            fontSize="12px"
+                            color="gray.500"
+                          >
+                            @{thread.user.username}{" "}
+                            <Text as="span" color="gray.500" ml="1px" mr="1px">
+                              •
+                            </Text>{" "}
+                            {new Date(thread.createdAt)
+                              .toTimeString()
+                              .toString()
+                              .slice(0, 5)}
+                          </Text>
+                        </Flex>
                         <Text
-                          fontWeight="700"
-                          fontFamily="Plus Jakarta Sans"
                           fontSize="12px"
-                        >
-                          {thread.user.fullName}
-                        </Text>
-                        <Text
-                          ml="5px"
-                          mb="5px"
-                          fontFamily="Plus Jakarta Sans"
-                          fontSize="12px"
-                          color="gray.500"
-                        >
-                          @{thread.user.username}{" "}
-                          <Text as="span" color="gray.500" ml="1px" mr="1px">
-                            •
-                          </Text>{" "}
-                          {new Date(thread.createdAt)
-                            .toTimeString()
-                            .toString()
-                            .slice(0, 5)}
-                        </Text>
-                      </Flex>
-                      <Text
-                        fontSize="12px"
-                        fontFamily="Plus Jakarta Sans"
-                        fontWeight="400"
-                        color="white"
-                      >
-                        {thread.content}
-                      </Text>
-                      {thread.image && thread.image !== "" && (
-                        <Img
-                          mt="10px"
-                          src={thread.image}
-                          width={"400px"}
-                          height={"300px"}
-                        />
-                      )}
-
-                      <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
-                        <Flex
                           fontFamily="Plus Jakarta Sans"
                           fontWeight="400"
-                          fontSize="12px"
-                          alignItems="center"
-                          mr="20px"
-                          cursor={"pointer"}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleLike(thread.id);
-                          }}
+                          color="white"
                         >
-                          <Icon
-                            as={likeData.isLiked ? FcLike : FaRegHeart}
-                            mr="5px"
+                          {thread.content}
+                        </Text>
+                        {thread.image && thread.image !== "" && (
+                          <Img
+                            mt="10px"
+                            src={thread.image}
+                            width={"400px"}
+                            height={"300px"}
                           />
-                          {thread.likes?.length}
+                        )}
+  
+                        <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
+                          <Flex
+                            fontFamily="Plus Jakarta Sans"
+                            fontWeight="400"
+                            fontSize="12px"
+                            alignItems="center"
+                            mr="20px"
+                            cursor={"pointer"}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleLike(thread.id);
+                            }}
+                          >
+                            <Icon
+                              as={likeData.isLiked ? FcLike : FaRegHeart}
+                              mr="5px"
+                            />
+                            {thread.likes?.length}
+                          </Flex>
+                          <Flex
+                            fontFamily="Plus Jakarta Sans"
+                            fontWeight="400"
+                            fontSize="12px"
+                            alignItems="center"
+                            mr="20px"
+                          >
+                            <Icon as={BiMessageSquareDetail} mr="5px" />
+                            {thread.replies?.length} Replies
+                          </Flex>
                         </Flex>
-                        <Flex
-                          fontFamily="Plus Jakarta Sans"
-                          fontWeight="400"
-                          fontSize="12px"
-                          alignItems="center"
-                          mr="20px"
-                        >
-                          <Icon as={BiMessageSquareDetail} mr="5px" />
-                          {thread.replies?.length} Replies
-                        </Flex>
-                      </Flex>
-                    </Box>
+                      </Box>
+                    </Flex>
                   </Flex>
-                </Flex>
-              );
-            })}
-          </Flex>
-        </>
+                );
+              })}
+            </Flex>
+      </>
       )}
 
       {/* Replies */}
       {currentView === "postCard" && (
-        <Flex direction="column" width="545px">
+        <Flex direction="column" width="100&">
           <>
-            <Flex direction="column" width="545px">
+            <Flex direction="column" width="100%">
               <Flex>
                 <Button
                   onClick={goToWhatHappen}
@@ -681,7 +690,7 @@ function WhatHappen() {
 
               {/* User Thread*/}
               {selectedThread && (
-                <Flex padding="12px 16px" key={selectedThread.id}>
+                <Flex padding="12px 16px" key={selectedThread.id} width="calc(100% - 32px)">
                   <Box>
                     <Avatar
                       size="sm"
@@ -987,7 +996,7 @@ function WhatHappen() {
                       </Box>
                     );
                   })
-                : null} 
+                : null}
             </Flex>
           </>
         </Flex>

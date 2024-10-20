@@ -1,14 +1,14 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ProtectedRoute } from "./_protected";
+import FollowsRoute from "./follows";
 import ForgotRoute from "./forgot";
+import FormPostRoute from "./form-post";
 import HomeRoute from "./home";
 import LoginRoute from "./login";
+import ProfileRoute from "./profile";
 import RegisterRoute from "./register";
 import ResetRoute from "./reset";
-import FormPostRoute from "./form-post";
-import ProfileRoute from "./profile";
 import SearchRoute from "./seacrh";
-import FollowsRoute from "./follows";
-import { ProtectedRoute } from "./_protected";
 
 export function AppRoute() {
     const router = createBrowserRouter([

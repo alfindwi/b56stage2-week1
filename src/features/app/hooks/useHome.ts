@@ -93,7 +93,6 @@ export function useHome() {
       
       reset();
     } catch (error) {
-      console.error("Error saat membuat thread:", error);
       toast({
         title: "Gagal membuat thread.",
         status: "error",

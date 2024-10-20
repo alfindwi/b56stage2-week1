@@ -1,10 +1,10 @@
-import { Box, Button, Link as ChakraLink, Input, Text } from "@chakra-ui/react";
+import { Box, Button, Link as ChakraLink, Input, Spinner, Text } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useLoginForm } from "../hooks/use-login-form";
 import "../styles/styles.css";
 
 export function LoginForm() {
-  const { register, onSubmit, handleSubmit, errors } = useLoginForm();
+  const { register, onSubmit, handleSubmit, errors, isSubmitting } = useLoginForm();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -38,6 +38,18 @@ export function LoginForm() {
             _placeholder={{ color: "brand.text-input" }}
             color={"white"}
           />
+          {errors.identifier && (
+            <p
+              style={{
+                color: "red",
+                margin: 0,
+                fontFamily: "Plus Jakarta Sans",
+              }}
+            >
+              {errors.identifier.message}
+            </p>
+          )}
+
           <Input
             {...register("passwordUsers")}
             size={"md"}
@@ -80,8 +92,9 @@ export function LoginForm() {
             border="none"
             borderRadius="20px"
             padding="5px"
+            
           >
-            Login
+            {isSubmitting ? <Spinner color="white" /> : "Login"}
           </Button>
         </Box>
         <Text

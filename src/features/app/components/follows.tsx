@@ -19,7 +19,7 @@ export function Follows() {
   return (
     <Flex
       direction="column"
-      width={`calc(100vw - 749px)`}
+      width={`calc(100vw - 736px)`}
       height="auto"
       bg="brand.bg"
       color="white"

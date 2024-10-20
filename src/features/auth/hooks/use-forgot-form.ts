@@ -3,7 +3,7 @@ import { apiV1 } from '../../../libs/api';
 import { useToast } from '@chakra-ui/react';
 
 const useForgotPassword = () => {
-    const toast = useToast(); // Initialize the toast
+    const toast = useToast();
     const [loading, setLoading] = useState(false);
 
     const forgotPassword = async (email: string) => {

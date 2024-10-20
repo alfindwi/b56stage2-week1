@@ -9,12 +9,12 @@ export function ForgotForm() {
     const [email, setEmail] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value); // Update the email state on input change
+        setEmail(e.target.value); 
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent the default form submission
-        await forgotPassword(email); // Call the forgotPassword function from the hook
+        e.preventDefault(); 
+        await forgotPassword(email); 
     };
 
     return (

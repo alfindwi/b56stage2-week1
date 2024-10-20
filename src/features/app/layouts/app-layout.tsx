@@ -14,7 +14,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const handleCloseCreatePost = () => setShowCreatePost(false);
 
   const handleOpenEditProfile = () => {
-    console.log("Edit Profile button clicked");
     setShowEditProfile(true);
   };
 

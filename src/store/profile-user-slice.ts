@@ -5,7 +5,7 @@ import { apiV1 } from "../libs/api";
 // State interface untuk Profile
 interface ProfileState {
   threads: ThreadEntity[];
-  selectedUser: any; // Sesuaikan dengan tipe user jika ada interface user
+  selectedUser: any; 
   error: string | null;
 }
 
@@ -30,14 +30,13 @@ export const fetchThreadsProfile = createAsyncThunk(
   }
 );
 
-// Thunk untuk fetch selected user berdasarkan userId
 export const fetchSelectedUser = createAsyncThunk(
   "profile/fetchSelectedUser",
   async (userId: number) => {
     try {
       const response = await apiV1.get(`/users/${userId}`);
       console.log("API Response (Selected User):", response.data);
-      return response.data; // Mengembalikan data user dari API
+      return response.data; 
     } catch (error) {
       console.error("Error fetching selected user:", error);
       return (error as Error).message;
@@ -45,7 +44,6 @@ export const fetchSelectedUser = createAsyncThunk(
   }
 );
 
-// Slice untuk profile yang mengelola state threads dan selectedUser
 const profileSlice = createSlice({
   name: "profile",
   initialState,

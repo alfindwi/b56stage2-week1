@@ -31,12 +31,10 @@ export function Profile() {
     setEditProfileVisible(false);
   };
 
- 
-
   return (
     <Flex
       direction="column"
-      width={`calc(100vw - 749px)`}
+      width={`calc(100vw - 736px)`}
       height="auto"
       bg="brand.bg"
       color="white"
@@ -66,22 +64,28 @@ export function ProfileContent({
   useEffect(() => {
     dispatch(fetchFolloweds());
   }, [dispatch]);
+
   return (
     <Box
       ml="3px"
       height={"300px"}
-      width={"530px"}
+      width="100%"
+      maxW="100%"
       position={"relative"}
       borderRadius={"md"}
     >
-      <Box display="flex" flexDirection="column" alignItems="flex-start">
+      <Box
+        display="flex"
+        flexDirection="column"
+        width={"calc(100vw - 736px)"}
+        alignItems="flex-start"
+      >
         <Text
           padding={"10px 20px"}
           fontFamily={"Plus Jakarta Sans"}
           fontWeight={"550"}
           fontSize={"23px"}
         >
-          {" "}
           {user.fullName}
         </Text>
         <Image
@@ -89,10 +93,9 @@ export function ProfileContent({
             user.backgroundImage ||
             "https://res.cloudinary.com/db2rr1kej/image/upload/v1728136949/uploads/dxudu0wusd9ww8r3chjw.png"
           }
-          width="708px"
-          height={"100px"}
-          padding={"0px 15px"}
-          borderRadius="3xl"
+          width="100%"
+          height="100px"
+          borderRadius="xl"
         />
         <Avatar
           size="lg"
@@ -188,7 +191,7 @@ export function PostCard() {
   const dispatch = useAppDispatch();
 
   const threads = useAppSelector((state) => state.thread.threads);
-  const userId = useAppSelector((state) => state.auth.id); 
+  const userId = useAppSelector((state) => state.auth.id);
   const { likes } = useAppSelector((state) => state.like);
 
   const handleLike = (threadId: number) => {
@@ -213,7 +216,7 @@ export function PostCard() {
               likesCount: 0,
             };
             return (
-              <Flex width="520px" key={thread.id}>
+              <Flex width="calc(100% - 50px)" key={thread.id}>
                 <Flex
                   direction="column"
                   mt="10px"
@@ -283,10 +286,10 @@ export function PostCard() {
                           mr="20px"
                         >
                           <Icon
-                          as={likeData.isLiked ? FcLike : FaRegHeart}
-                          size={"15px"}
-                          mr="5px"
-                        />
+                            as={likeData.isLiked ? FcLike : FaRegHeart}
+                            size={"15px"}
+                            mr="5px"
+                          />
                           {thread.likes?.length}
                         </Flex>
                         <Flex
