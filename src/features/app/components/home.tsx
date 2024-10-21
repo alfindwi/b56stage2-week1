@@ -17,6 +17,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { FcLike } from "react-icons/fc";
 import { GrGallery } from "react-icons/gr";
 import { IoIosArrowRoundBack, IoIosCloseCircle } from "react-icons/io";
+import { useSelector } from "react-redux";
 import { ThreadEntity } from "../../../entities/thread";
 import { UserEntity } from "../../../entities/user";
 import { useAppDispatch, useAppSelector } from "../../../hooks/use-store";
@@ -25,18 +26,17 @@ import {
   fetchFollowers,
   fetchFollowing,
   followUser,
-  unfollowUser
+  unfollowUser,
 } from "../../../store/follows-slice";
 import {
   fetchSelectedUser,
   fetchThreadsProfile,
 } from "../../../store/profile-user-slice";
 import { toggleLikeReply } from "../../../store/replyLike-slice";
+import { RootState } from "../../../store/store";
 import { toggleLikeThread } from "../../../store/threadLike-slice";
 import { useHome } from "../hooks/useHome";
 import { useReply } from "../hooks/useReply";
-import { RootState } from "../../../store/store";
-import { useSelector } from "react-redux";
 
 export function Home() {
   const [isWhatHappenVisible, setIsWhatHappenVisible] = useState(true);
@@ -399,262 +399,262 @@ function WhatHappen() {
       {/* Profile */}
       {currentView === "profile" && (
         <>
-            {selectedUser && (
+          {selectedUser && (
+            <Box
+              height={"300px"}
+              width={"100%"}
+              position={"relative"}
+              borderRadius={"md"}
+            >
               <Box
-                height={"300px"}
-                width={"100%"}
-                position={"relative"}
-                borderRadius={"md"}
+                display="flex"
+                flexDirection="column"
+                alignItems="flex-start"
               >
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="flex-start"
-                >
-                  <Flex>
-                    <Button
-                      leftIcon={<IoIosArrowRoundBack size="30px" />}
-                      bg="transparent"
-                      _active={{ color: "white", bg: "none" }}
-                      fontWeight="500"
-                      justifyContent="start"
-                      padding="0px 10px"
-                      color="white"
-                      mt="10px"
-                      fontFamily="Plus Jakarta Sans"
-                      _hover={{ textDecoration: "none", bg: "none" }}
-                      onClick={goToWhatHappen}
-                    />
-                    <Text
-                      padding={"10px 0px"}
-                      fontFamily={"Plus Jakarta Sans"}
-                      fontWeight={"550"}
-                      fontSize={"23px"}
-                      width={"100%"}
-                      overflow="hidden"
-                      whiteSpace="nowrap"
-                      textOverflow="ellipsis"
-                    >
-                      {selectedUser.fullName}
-                    </Text>
-                  </Flex>
-                  <Img
-                    src={
-                      selectedUser.backgroundImage ||
-                      "https://res.cloudinary.com/db2rr1kej/image/upload/v1728136949/uploads/dxudu0wusd9ww8r3chjw.png"
-                    }
-                    width="100%"
-                    height={"100px"}
-                    padding={"0px 15px"}
-                    borderRadius="3xl"
-                  />
-                  <Avatar
-                    size="lg"
-                    position={"absolute"}
-                    top={"55%"}
-                    left={"7%"}
-                    transform={"translate(-50%, -50%)"}
-                    zIndex={"1"}
-                    border={"2px solid black"}
-                    margin={"0px 30px"}
-                    src={selectedUser.image}
-                    name={selectedUser.fullName}
-                  />
+                <Flex>
                   <Button
-                    left={"83%"}
-                    top={"10px"}
-                    size={"sm"}
-                    border={"1px solid white"}
-                    bg={"transparent"}
-                    color={isFollowing(selectedUser.id) ? "#909090" : "white"}
+                    leftIcon={<IoIosArrowRoundBack size="30px" />}
+                    bg="transparent"
+                    _active={{ color: "white", bg: "none" }}
+                    fontWeight="500"
+                    justifyContent="start"
+                    padding="0px 10px"
+                    color="white"
+                    mt="10px"
+                    fontFamily="Plus Jakarta Sans"
+                    _hover={{ textDecoration: "none", bg: "none" }}
+                    onClick={goToWhatHappen}
+                  />
+                  <Text
+                    padding={"10px 0px"}
                     fontFamily={"Plus Jakarta Sans"}
-                    fontWeight={"500"}
-                    _hover={{ color: "none" }}
-                    _active={{ color: "none" }}
-                    borderRadius={"50px"}
-                    fontSize={"10px"}
-                    onClick={() => {
-                      if (selectedUser) {
-                        if (isFollowing(selectedUser.id)) {
-                          handleUnfollow(selectedUser.id);
-                        } else {
-                          handleFollow(selectedUser.id);
-                        }
-                      }
-                    }}
+                    fontWeight={"550"}
+                    fontSize={"23px"}
+                    width={"100%"}
+                    overflow="hidden"
+                    whiteSpace="nowrap"
+                    textOverflow="ellipsis"
                   >
-                    {selectedUser
-                      ? isFollowing(selectedUser.id)
-                        ? "Following"
-                        : "Follow"
-                      : "Loading..."}
-                  </Button>
-  
-                  <Box margin={"20px 10px"} width="100%">
+                    {selectedUser.fullName}
+                  </Text>
+                </Flex>
+                <Img
+                  src={
+                    selectedUser.backgroundImage ||
+                    "https://res.cloudinary.com/db2rr1kej/image/upload/v1728136949/uploads/dxudu0wusd9ww8r3chjw.png"
+                  }
+                  width="100%"
+                  height={"100px"}
+                  padding={"0px 15px"}
+                  borderRadius="3xl"
+                />
+                <Avatar
+                  size="lg"
+                  position={"absolute"}
+                  top={"55%"}
+                  left={"7%"}
+                  transform={"translate(-50%, -50%)"}
+                  zIndex={"1"}
+                  border={"2px solid black"}
+                  margin={"0px 30px"}
+                  src={selectedUser.image}
+                  name={selectedUser.fullName}
+                />
+                <Button
+                  left={"83%"}
+                  top={"10px"}
+                  size={"sm"}
+                  border={"1px solid white"}
+                  bg={"transparent"}
+                  color={isFollowing(selectedUser.id) ? "#909090" : "white"}
+                  fontFamily={"Plus Jakarta Sans"}
+                  fontWeight={"500"}
+                  _hover={{ color: "none" }}
+                  _active={{ color: "none" }}
+                  borderRadius={"50px"}
+                  fontSize={"10px"}
+                  onClick={() => {
+                    if (selectedUser) {
+                      if (isFollowing(selectedUser.id)) {
+                        handleUnfollow(selectedUser.id);
+                      } else {
+                        handleFollow(selectedUser.id);
+                      }
+                    }
+                  }}
+                >
+                  {selectedUser
+                    ? isFollowing(selectedUser.id)
+                      ? "Following"
+                      : "Follow"
+                    : "Loading..."}
+                </Button>
+
+                <Box margin={"20px 10px"} width="100%">
+                  <Text
+                    fontFamily={"Plus Jakarta Sans"}
+                    fontSize={"18px"}
+                    fontWeight={"700"}
+                    width="100%"
+                    wordBreak="break-word"
+                  >
+                    {selectedUser.fullName}
+                  </Text>
+                  <Text
+                    fontFamily={"Plus Jakarta Sans"}
+                    fontSize={"10px"}
+                    color={"#909090"}
+                  >
+                    @{selectedUser.username}
+                  </Text>
+                  <Text
+                    fontSize={"13px"}
+                    fontFamily={"Plus Jakarta Sans"}
+                    fontWeight={"400"}
+                    width="100%"
+                    wordBreak="break-word"
+                  >
+                    {selectedUser.bio}
+                  </Text>
+                  <Flex align={"center"} padding={"4px 0px"}>
                     <Text
-                      fontFamily={"Plus Jakarta Sans"}
-                      fontSize={"18px"}
-                      fontWeight={"700"}
-                      width="100%"
-                      wordBreak="break-word"
-                    >
-                      {selectedUser.fullName}
-                    </Text>
-                    <Text
-                      fontFamily={"Plus Jakarta Sans"}
-                      fontSize={"10px"}
-                      color={"#909090"}
-                    >
-                      @{selectedUser.username}
-                    </Text>
-                    <Text
+                      fontWeight="700"
                       fontSize={"13px"}
                       fontFamily={"Plus Jakarta Sans"}
-                      fontWeight={"400"}
-                      width="100%"
-                      wordBreak="break-word"
                     >
-                      {selectedUser.bio}
+                      {selectedUser.followers?.length || 0}
                     </Text>
-                    <Flex align={"center"} padding={"4px 0px"}>
-                      <Text
-                        fontWeight="700"
-                        fontSize={"13px"}
-                        fontFamily={"Plus Jakarta Sans"}
-                      >
-                        {selectedUser.followers?.length || 0}
-                      </Text>
-                      <Text
-                        ml="4px"
-                        color={"#909090"}
-                        fontSize={"13px"}
-                        fontFamily={"Plus Jakarta Sans"}
-                      >
-                        Followers
-                      </Text>
-                      <Text
-                        ml="20px"
-                        fontWeight="700"
-                        fontSize={"13px"}
-                        fontFamily={"Plus Jakarta Sans"}
-                      >
-                        {selectedUser.followeds?.length || 0}
-                      </Text>
-                      <Text
-                        ml="4px"
-                        color={"#909090"}
-                        fontSize={"13px"}
-                        fontFamily={"Plus Jakarta Sans"}
-                      >
-                        Following
-                      </Text>
-                    </Flex>
-                  </Box>
+                    <Text
+                      ml="4px"
+                      color={"#909090"}
+                      fontSize={"13px"}
+                      fontFamily={"Plus Jakarta Sans"}
+                    >
+                      Followers
+                    </Text>
+                    <Text
+                      ml="20px"
+                      fontWeight="700"
+                      fontSize={"13px"}
+                      fontFamily={"Plus Jakarta Sans"}
+                    >
+                      {selectedUser.followeds?.length || 0}
+                    </Text>
+                    <Text
+                      ml="4px"
+                      color={"#909090"}
+                      fontSize={"13px"}
+                      fontFamily={"Plus Jakarta Sans"}
+                    >
+                      Following
+                    </Text>
+                  </Flex>
                 </Box>
               </Box>
-            )}
-  
-            <Flex direction="column" width="calc(100% - 50px)" ml={"5px"}>
-              {profiles?.map((thread) => {
-                const likeData = likes[thread.id] || {
-                  isLiked: false,
-                  likesCount: 0,
-                };
-  
-                return (
-                  <Flex
-                    key={thread.id}
-                    direction="column"
-                    mt="10px"
-                    mb="0px"
-                    width="100%"
-                  >
-                    <Flex mt="10px" borderBottom="1px solid #545454">
-                      <Avatar
-                        size="sm"
-                        src={thread.user.image}
-                        name={thread.user.fullName}
-                      />
-                      <Box ml="10px" width="100%">
-                        <Flex>
-                          <Text
-                            fontWeight="700"
-                            fontFamily="Plus Jakarta Sans"
-                            fontSize="12px"
-                          >
-                            {thread.user.fullName}
-                          </Text>
-                          <Text
-                            ml="5px"
-                            mb="5px"
-                            fontFamily="Plus Jakarta Sans"
-                            fontSize="12px"
-                            color="gray.500"
-                          >
-                            @{thread.user.username}{" "}
-                            <Text as="span" color="gray.500" ml="1px" mr="1px">
-                              •
-                            </Text>{" "}
-                            {new Date(thread.createdAt)
-                              .toTimeString()
-                              .toString()
-                              .slice(0, 5)}
-                          </Text>
-                        </Flex>
+            </Box>
+          )}
+
+          <Flex direction="column" width="calc(100% - 50px)" ml={"5px"}>
+            {profiles?.map((thread) => {
+              const likeData = likes[thread.id] || {
+                isLiked: false,
+                likesCount: 0,
+              };
+
+              return (
+                <Flex
+                  key={thread.id}
+                  direction="column"
+                  mt="10px"
+                  mb="0px"
+                  width="100%"
+                >
+                  <Flex mt="10px" borderBottom="1px solid #545454">
+                    <Avatar
+                      size="sm"
+                      src={thread.user.image}
+                      name={thread.user.fullName}
+                    />
+                    <Box ml="10px" width="100%">
+                      <Flex>
                         <Text
+                          fontWeight="700"
+                          fontFamily="Plus Jakarta Sans"
                           fontSize="12px"
+                        >
+                          {thread.user.fullName}
+                        </Text>
+                        <Text
+                          ml="5px"
+                          mb="5px"
+                          fontFamily="Plus Jakarta Sans"
+                          fontSize="12px"
+                          color="gray.500"
+                        >
+                          @{thread.user.username}{" "}
+                          <Text as="span" color="gray.500" ml="1px" mr="1px">
+                            •
+                          </Text>{" "}
+                          {new Date(thread.createdAt)
+                            .toTimeString()
+                            .toString()
+                            .slice(0, 5)}
+                        </Text>
+                      </Flex>
+                      <Text
+                        fontSize="12px"
+                        fontFamily="Plus Jakarta Sans"
+                        fontWeight="400"
+                        color="white"
+                      >
+                        {thread.content}
+                      </Text>
+                      {thread.image && thread.image !== "" && (
+                        <Img
+                          mt="10px"
+                          src={thread.image}
+                          width={"400px"}
+                          height={"300px"}
+                        />
+                      )}
+
+                      <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
+                        <Flex
                           fontFamily="Plus Jakarta Sans"
                           fontWeight="400"
-                          color="white"
+                          fontSize="12px"
+                          alignItems="center"
+                          mr="20px"
+                          cursor={"pointer"}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleLike(thread.id);
+                          }}
                         >
-                          {thread.content}
-                        </Text>
-                        {thread.image && thread.image !== "" && (
-                          <Img
-                            mt="10px"
-                            src={thread.image}
-                            width={"400px"}
-                            height={"300px"}
+                          <Icon
+                            as={likeData.isLiked ? FcLike : FaRegHeart}
+                            mr="5px"
                           />
-                        )}
-  
-                        <Flex mb="10px" mt="10px" color="gray.500" fontSize="sm">
-                          <Flex
-                            fontFamily="Plus Jakarta Sans"
-                            fontWeight="400"
-                            fontSize="12px"
-                            alignItems="center"
-                            mr="20px"
-                            cursor={"pointer"}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleLike(thread.id);
-                            }}
-                          >
-                            <Icon
-                              as={likeData.isLiked ? FcLike : FaRegHeart}
-                              mr="5px"
-                            />
-                            {thread.likes?.length}
-                          </Flex>
-                          <Flex
-                            fontFamily="Plus Jakarta Sans"
-                            fontWeight="400"
-                            fontSize="12px"
-                            alignItems="center"
-                            mr="20px"
-                          >
-                            <Icon as={BiMessageSquareDetail} mr="5px" />
-                            {thread.replies?.length} Replies
-                          </Flex>
+                          {thread.likes?.length}
                         </Flex>
-                      </Box>
-                    </Flex>
+                        <Flex
+                          fontFamily="Plus Jakarta Sans"
+                          fontWeight="400"
+                          fontSize="12px"
+                          alignItems="center"
+                          mr="20px"
+                        >
+                          <Icon as={BiMessageSquareDetail} mr="5px" />
+                          {thread.replies?.length} Replies
+                        </Flex>
+                      </Flex>
+                    </Box>
                   </Flex>
-                );
-              })}
-            </Flex>
-      </>
+                </Flex>
+              );
+            })}
+          </Flex>
+        </>
       )}
 
       {/* Replies */}
@@ -690,7 +690,11 @@ function WhatHappen() {
 
               {/* User Thread*/}
               {selectedThread && (
-                <Flex padding="12px 16px" key={selectedThread.id} width="calc(100% - 32px)">
+                <Flex
+                  padding="12px 16px"
+                  key={selectedThread.id}
+                  width="calc(100% - 32px)"
+                >
                   <Box>
                     <Avatar
                       size="sm"

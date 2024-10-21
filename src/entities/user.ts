@@ -8,7 +8,7 @@ export interface UserEntity {
   image: string;
   backgroundImage: string;
   bio?: string;
-  passwordUsers: string;
+  passwordUsers?: string;
   username: string;
   socialConnection: socialConnection | null;
   role: string;

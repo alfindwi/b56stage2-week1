@@ -19,7 +19,7 @@ import {
   followUser,
   unfollowUser,
 } from "../../../store/follows-slice";
-import { resetSearch, setQuery } from "../../../store/search-slice";
+import { fetchDummyUsers, resetSearch, setQuery } from "../../../store/search-slice";
 import { AppDispatch, RootState } from "../../../store/store";
 
 export function Search() {
@@ -43,6 +43,13 @@ export function SearchContent() {
   const dispatch: AppDispatch = useDispatch();
   const searchQuery = useSelector((state: RootState) => state.search.query);
   const searchResults = useSelector((state: RootState) => state.search.results);
+
+  useEffect(() => {
+    if (searchQuery) {
+      dispatch(fetchDummyUsers(searchQuery)); 
+    }
+  }, [dispatch, searchQuery]);
+
   const { following } = useSelector((state: RootState) => state.follows);
 
   useEffect(() => {
@@ -95,7 +102,6 @@ export function SearchContent() {
         {searchQuery &&
           filteredResults.map(
             (search) => (
-              console.log("Filtered Results:", filteredResults),
               (
                 <Flex
                   alignItems="center"
@@ -182,7 +188,7 @@ export function SearchContent() {
           </Flex>
         )}
 
-        {!searchQuery && filteredResults.length === 0 && (
+        {!searchQuery && (
           <Flex
             alignItems={"center"}
             justifyContent={"center"}
